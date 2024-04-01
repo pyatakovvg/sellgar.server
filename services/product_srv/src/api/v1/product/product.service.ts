@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@/prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 
-import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 export interface IProductFindAllParams {
@@ -137,7 +136,7 @@ export class ProductService {
     });
   }
 
-  update(uuid: string, updateShopDto: UpdateProductDto) {
+  update(uuid: string, updateЗкщвгсеDto: UpdateProductDto) {
     return `This action updates a #${uuid} shop`;
   }
 

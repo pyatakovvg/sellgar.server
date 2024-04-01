@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RabbitMQModule, QueueAdapterType } from '@mkfyi/nestjs-rmq';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { RabbitMQModule } from '@mkfyi/nestjs-rmq';
 
 import { ApiV1Module } from '@/api/v1/api.module';
 import { PrismaModule } from '@/prisma/prisma.module';

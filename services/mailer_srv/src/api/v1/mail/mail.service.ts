@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
-import { CreateMailDto } from './dto/create-mail.dto';
-
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  create(createCategoryDto: CreateMailDto) {
+  create() {
     return 'This action adds a new mail';
   }
 

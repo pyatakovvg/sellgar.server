@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
 import { ApiTags, ApiProperty } from '@nestjs/swagger';
 
 import { MailService } from './mail.service';
-import { CreateMailDto } from './dto/create-mail.dto';
 
 @Controller('mail')
 @ApiTags('Mail')
@@ -26,7 +25,7 @@ export class MailController {
 
   @Post()
   @ApiProperty()
-  send(@Body() body: CreateMailDto) {
+  send() {
     return this.mailService.send();
   }
 }
