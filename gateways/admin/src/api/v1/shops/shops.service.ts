@@ -1,43 +1,42 @@
 import { Injectable } from '@nestjs/common';
-
-import { Fetch } from '@helper/fetch';
+import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 
-import { IShop } from './shops.types';
+import { map } from 'rxjs';
+
+import { CreateShopDto } from './dto/create-shop.dto';
+import { UpdateShopDto } from './dto/update-shop.dto';
+
+import type { IShop } from './shops.types';
 
 @Injectable()
 export class ShopsService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly http: HttpService,
+  ) {}
 
-  private readonly shopsFetch: Fetch = new Fetch({
-    baseURL: this.config.get('API_PRODUCTS_SRV'),
-  });
-
-  async findOneByUuid(uuid: string): Promise<IShop | null> {
-    return this.shopsFetch.send({
-      url: '/shops/' + uuid,
-    });
+  findOneByUuid(uuid: string) {
+    return this.http
+      .get<IShop | null>(this.config.get('API_PRODUCTS_SRV') + '/shops/' + uuid)
+      .pipe(map((res) => res.data));
   }
 
-  async updateShopByUuid(uuid: string, body: any): Promise<IShop> {
-    return await this.shopsFetch.send({
-      url: '/shops/' + uuid,
-      method: 'put',
-      data: body,
-    });
+  updateShopByUuid(uuid: string, body: UpdateShopDto) {
+    return this.http
+      .put<IShop>(this.config.get('API_PRODUCTS_SRV') + '/shops/' + uuid, body)
+      .pipe(map((res) => res.data));
   }
 
-  async createShop(body: any): Promise<IShop> {
-    return await this.shopsFetch.send({
-      url: '/shops',
-      method: 'post',
-      data: body,
-    });
+  createShop(body: CreateShopDto) {
+    return this.http.post<IShop>(this.config.get('API_PRODUCTS_SRV') + '/shops', body).pipe(map((res) => res.data));
   }
 
-  async findAll(): Promise<IShop[]> {
-    return this.shopsFetch.send({
-      url: '/shops',
-    });
+  deleteShopById(uuid: string) {
+    return this.http.delete<string>(this.config.get('API_PRODUCTS_SRV') + '/shops' + uuid).pipe(map((res) => res.data));
+  }
+
+  async findAll() {
+    return this.http.get<IShop[]>(this.config.get('API_PRODUCTS_SRV') + '/shops').pipe(map((res) => res.data));
   }
 }

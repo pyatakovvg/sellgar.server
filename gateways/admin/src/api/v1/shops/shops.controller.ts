@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Put, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Post, Delete } from '@nestjs/common';
 
 import { ShopsService } from './shops.service';
+import { CreateShopDto } from './dto/create-shop.dto';
+import { UpdateShopDto } from './dto/update-shop.dto';
 
 @Controller('shops')
 export class ShopsController {
@@ -12,17 +14,22 @@ export class ShopsController {
   }
 
   @Put(':uuid')
-  updateShop(@Body() body: any, @Param('uuid') uuid: string) {
+  updateShop(@Body() body: UpdateShopDto, @Param('uuid') uuid: string) {
     return this.shopsService.updateShopByUuid(uuid, body);
   }
 
   @Post()
-  createShop(@Body() body: any) {
+  createShop(@Body() body: CreateShopDto) {
     return this.shopsService.createShop(body);
   }
 
   @Get()
   findAll() {
     return this.shopsService.findAll();
+  }
+
+  @Delete()
+  removeShop(uuid: string) {
+    return this.shopsService.deleteShopById(uuid);
   }
 }

@@ -21,6 +21,7 @@
   "dependencies": {
     "@helper/fetch": "0.0.1",
     "@mkfyi/nestjs-rmq": "1.4.3",
+    "@nestjs/axios": "3.0.2",
     "@nestjs/common": "10.3.3",
     "@nestjs/config": "3.2.0",
     "@nestjs/core": "10.3.3",
