@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "name": "@helper/fetch",
+  "version": "0.0.1",
+  "description": "users",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "types": "types",
+  "scripts": {
+    "clean": "rimraf lib types",
+    "build": "echo '>-Start build \"@helper/fetch\"->' && yarn run clean && yarn run build:compile && yarn run build:types && echo '<-Finish build \"@helper/fetch\"-<'",
+    "build:types": "echo 'Building types \"@helper/fetch\"' && cross-env NODE_ENV=production tsc --project tsconfig.json",
+    "build:compile": "echo 'Build package \"@helper/fetch\"' && cross-env NODE_ENV=production babel ./src --out-dir ./lib --extensions '.ts,.tsx' --copy-files",
+    "start": "npm-run-all --parallel clean start:watch start:types",
+    "start:types": "tsc-watch --noClear --noColors",
+    "start:watch": "cross-env NODE_ENV=development babel ./src --out-dir ./lib --extensions '.ts,.tsx' --copy-files --watch"
+  },
+  "dependencies": {
+    "@nestjs/common": "10.3.3",
+    "axios": "1.6.7"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.23.9",
+    "@babel/core": "7.24.0",
+    "@babel/plugin-proposal-class-properties": "7.18.6",
+    "@babel/plugin-proposal-decorators": "7.24.0",
+    "@babel/preset-env": "7.24.0",
+    "@babel/preset-typescript": "7.23.3",
+    "babel-plugin-transform-typescript-metadata": "0.3.2",
+    "cross-env": "7.0.3",
+    "npm-run-all": "4.1.5",
+    "rimraf": "5.0.5",
+    "tsc": "2.0.4",
+    "tsc-watch": "6.0.4",
+    "typescript": "5.3.3"
+  }
+}
