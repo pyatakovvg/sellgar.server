@@ -284,7 +284,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/viktor/projects/my/sellgar-server/services/product_srv/prisma/client",
+      "value": "/home/viktor/projects/my/sellgar.server/services/product_srv/prisma/client",
       "fromEnvVar": null
     },
     "config": {

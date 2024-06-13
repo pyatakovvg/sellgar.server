@@ -8,25 +8,24 @@ import { PrismaModule } from './prisma/prisma.module';
   imports: [
     ConfigModule.forRoot({ envFilePath: './.env', isGlobal: true }),
 
-    RabbitMQModule.forRootAsync({
-      connection: {
-        imports: [ConfigModule],
-        useFactory: (config: ConfigService) => ({
-          hostname: config.get('AMQP_HOSTNAME'),
-          username: config.get('AMQP_USERNAME'),
-          password: config.get('AMQP_PASSWORD'),
-        }),
-        inject: [ConfigService],
-      },
-
-      // adapters: [
-      //   {
-      //     name: 'user.adapter.mq',
-      //     queue: 'admin_gw.user.update',
-      //     type: QueueAdapterType.Worker
-      //   }
-      // ]
-    }),
+    // RabbitMQModule.forRootAsync({
+    //   connection: {
+    //     imports: [ConfigModule],
+    //     useFactory: (config: ConfigService) => ({
+    //       hostname: config.get('AMQP_HOSTNAME'),
+    //       username: config.get('AMQP_USERNAME'),
+    //       password: config.get('AMQP_PASSWORD'),
+    //     }),
+    //     inject: [ConfigService],
+    //   },
+    //   adapters: [
+    //     {
+    //       name: 'user.adapter.mq',
+    //       queue: 'admin_gw.user.update',
+    //       type: QueueAdapterType.Worker
+    //     }
+    //   ]
+    // }),
 
     PrismaModule,
     ApiV1Module,

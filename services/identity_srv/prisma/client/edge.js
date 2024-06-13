@@ -160,7 +160,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/viktor/projects/my/sellgar-server/services/identity_srv/prisma/client",
+      "value": "/home/viktor/projects/my/sellgar.server/services/identity_srv/prisma/client",
       "fromEnvVar": null
     },
     "config": {
