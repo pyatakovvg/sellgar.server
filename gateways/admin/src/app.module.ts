@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 // import { QueueAdapterType, RabbitMQModule } from '@mkfyi/nestjs-rmq';
 
-import { ApiV1Module } from '@/api/v1/api.module';
+import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { ApiV1Module } from '@/api/v1/api.module';
     // ]
     // }),
 
-    ApiV1Module,
+    ApiIdentityV1Module,
   ],
   controllers: [],
 })

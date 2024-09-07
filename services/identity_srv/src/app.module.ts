@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ApiV1Module } from '@/api/v1/api.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RabbitMQModule } from '@mkfyi/nestjs-rmq';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
