@@ -1,13 +1,8 @@
-import { IsString, IsNotEmpty, IsEmail, IsArray, IsOptional } from 'class-validator';
+import { IsUUID } from 'class-validator';
 
-export class UserUpdateDto {
-  @IsNotEmpty()
-  @IsString()
-  @IsEmail()
-  login: string;
+import { UserCreateDto } from './user-create.dto';
 
-  @IsOptional()
-  @IsString({ each: true })
-  @IsArray()
-  roles: string[];
+export class UserUpdateDto extends UserCreateDto {
+  @IsUUID()
+  uuid: string;
 }

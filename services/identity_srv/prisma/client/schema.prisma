@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "./client"
+  output   = "./client"
 }
 
 generator prismaClassGenerator {
@@ -23,9 +23,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  claims       Claim[]
-  roles        Role[]        @relation("role_on_user")
-  person       Person?
+  claims Claim[]
+  roles  Role[]  @relation("role_on_user")
+  person Person?
 
   @@index([uuid, email, isBlocked])
   @@map("user")

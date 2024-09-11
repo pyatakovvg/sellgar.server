@@ -21,7 +21,7 @@ const {
   warnOnce,
   defineDmmfProperty,
   Public,
-  detectRuntime,
+  getRuntime
 } = require('./runtime/edge.js')
 
 
@@ -31,12 +31,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 5.10.2
- * Query Engine version: 5a9203d0590c951969e85a7d07215503f4672eb9
+ * Prisma Client JS version: 5.15.0
+ * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
  */
 Prisma.prismaVersion = {
-  client: "5.10.2",
-  engine: "5a9203d0590c951969e85a7d07215503f4672eb9"
+  client: "5.15.0",
+  engine: "12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -181,12 +181,13 @@ const config = {
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "..",
-  "clientVersion": "5.10.2",
-  "engineVersion": "5a9203d0590c951969e85a7d07215503f4672eb9",
+  "clientVersion": "5.15.0",
+  "engineVersion": "12e25d8d06f6ea5a0252864dd9a03b1bb51f3022",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -195,8 +196,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output = \"./client\"\n}\n\ngenerator prismaClassGenerator {\n  provider = \"prisma-class-generator\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  uuid      String   @id @default(uuid()) @db.Uuid\n  email     String   @unique\n  password  String?\n  isBlocked Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  claims       Claim[]\n  roles        Role[]        @relation(\"role_on_user\")\n  person       Person?\n\n  @@index([uuid, email, isBlocked])\n  @@map(\"user\")\n}\n\nmodel Claim {\n  uuid  String @id @default(uuid()) @db.Uuid\n  key   String\n  value String\n\n  users    User   @relation(fields: [userUuid], references: [uuid])\n  userUuid String @db.Uuid\n\n  @@map(\"claim\")\n}\n\nmodel Role {\n  code        String @id @unique @db.VarChar(255)\n  displayName String @unique\n\n  permissions Permission[] @relation(\"permission_on_role\")\n  users       User[]       @relation(\"role_on_user\")\n\n  @@map(\"role\")\n}\n\nmodel Permission {\n  code        String @id @unique\n  displayName String @unique\n\n  roles Role[] @relation(\"permission_on_role\")\n\n  @@map(\"permission\")\n}\n\nenum PersonSexEnum {\n  MALE\n  FEMALE\n}\n\nmodel Person {\n  uuid       String        @id @default(uuid()) @db.Uuid\n  firstName  String\n  middleName String?\n  lastName   String\n  birthday   DateTime\n  sex        PersonSexEnum\n\n  user     User   @relation(fields: [userUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)\n  userUuid String @db.Uuid\n\n  @@unique([userUuid])\n  @@index([uuid, firstName, lastName, sex, birthday])\n  @@map(\"person\")\n}\n",
-  "inlineSchemaHash": "9c4aa211f5395d04d471160bebb79b3edae694baaafd205231b1287fb0a5ac8d",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator prismaClassGenerator {\n  provider = \"prisma-class-generator\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  uuid      String   @id @default(uuid()) @db.Uuid\n  email     String   @unique\n  password  String?\n  isBlocked Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  claims Claim[]\n  roles  Role[]  @relation(\"role_on_user\")\n  person Person?\n\n  @@index([uuid, email, isBlocked])\n  @@map(\"user\")\n}\n\nmodel Claim {\n  uuid  String @id @default(uuid()) @db.Uuid\n  key   String\n  value String\n\n  users    User   @relation(fields: [userUuid], references: [uuid])\n  userUuid String @db.Uuid\n\n  @@map(\"claim\")\n}\n\nmodel Role {\n  code        String @id @unique @db.VarChar(255)\n  displayName String @unique\n\n  permissions Permission[] @relation(\"permission_on_role\")\n  users       User[]       @relation(\"role_on_user\")\n\n  @@map(\"role\")\n}\n\nmodel Permission {\n  code        String @id @unique\n  displayName String @unique\n\n  roles Role[] @relation(\"permission_on_role\")\n\n  @@map(\"permission\")\n}\n\nenum PersonSexEnum {\n  MALE\n  FEMALE\n}\n\nmodel Person {\n  uuid       String        @id @default(uuid()) @db.Uuid\n  firstName  String\n  middleName String?\n  lastName   String\n  birthday   DateTime\n  sex        PersonSexEnum\n\n  user     User   @relation(fields: [userUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)\n  userUuid String @db.Uuid\n\n  @@unique([userUuid])\n  @@index([uuid, firstName, lastName, sex, birthday])\n  @@map(\"person\")\n}\n",
+  "inlineSchemaHash": "344432bb07c632a72028c89a004ddc3dc6db6b4e87d9eb5579ab8ace9f080ffa",
   "copyEngine": true
 }
 config.dirname = '/'

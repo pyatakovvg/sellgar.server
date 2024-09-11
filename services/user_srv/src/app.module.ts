@@ -4,10 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { PrismaModule } from './prisma/prisma.module';
 
-import { AuthModule } from './api/auth/auth.module';
 import { UserModule } from './api/user/user.module';
-import { RoleModule } from './api/role/role.module';
-import { PermissionModule } from './api/permission/permission.module';
 
 @Module({
   imports: [
@@ -34,10 +31,7 @@ import { PermissionModule } from './api/permission/permission.module';
 
     PrismaModule,
 
-    AuthModule,
     UserModule,
-    RoleModule,
-    PermissionModule,
   ],
   controllers: [],
   providers: [],

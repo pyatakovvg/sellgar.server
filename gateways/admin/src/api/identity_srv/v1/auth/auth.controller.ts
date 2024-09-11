@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, Res, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Response } from 'express';
 
-import { UserDto } from './dto/user.dto';
+import { Public } from '@/common/decorators/public.decorator';
+
+import { SignInDto } from './dto/sign-in.dto';
 
 import { AuthService } from './auth.service';
 
@@ -14,21 +16,26 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get('profile')
-  getProfile() {
-    throw new UnauthorizedException();
-  }
-
+  @Public()
   @Post('sign-in')
-  async signIn(@Body() body: UserDto, @Res() res: Response) {
+  async signIn(@Body() body: SignInDto, @Res() res: Response) {
     const result = await this.authService.login(body);
 
-    res.cookie(this.config.get('AUTH_COOKIE'), result, {
+    res.cookie(this.config.get('AUTH_COOKIE'), JSON.stringify(result), {
+      maxAge: this.config.get('AUTH_COOKIE_EXTEND'),
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
     });
 
     res.json({ message: 'Logged in successfully' });
+  }
+
+  @Public()
+  @Post('sign-up')
+  signUp() {}
+
+  @Post('sign-out')
+  signOut(@Res({ passthrough: true }) res: Response) {
+    res.cookie('token', '', { expires: new Date() });
   }
 }

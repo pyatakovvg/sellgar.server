@@ -7,6 +7,6 @@ export class GetUserByCredentialUseCase {
   constructor(private readonly userService: UserService) {}
 
   execute(login: string, password: string) {
-    return this.userService.findByCredentials(login, password);
+    return this.userService.getByCredentials(login, password);
   }
 }

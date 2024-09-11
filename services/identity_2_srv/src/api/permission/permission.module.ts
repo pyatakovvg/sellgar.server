@@ -12,7 +12,7 @@ import { PermissionController } from './permission.controller';
 @Module({
   controllers: [PermissionController],
   imports: [ConfigModule],
-  exports: [PermissionService],
   providers: [PrismaService, ConfigService, PermissionService, PermissionRepository],
+  exports: [PermissionService],
 })
 export class PermissionModule {}

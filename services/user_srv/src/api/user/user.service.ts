@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+
+import { plainToInstance } from 'class-transformer';
 
 import { UserCreateDto } from './repository/dto/user-create.dto';
 import { UserUpdateDto } from './repository/dto/user-update.dto';
 import { GetAllUserFilterDto } from './repository/dto/get-all-user-filter.dto';
 
+import { UserEntity } from './user.entity';
 import { UserRepository } from './repository/user.repository';
 
 @Injectable()
@@ -13,26 +15,38 @@ export class UserService {
 
   async findAll(params: GetAllUserFilterDto) {
     return {
-      data: await this.userRepository.findAll(params),
+      data: plainToInstance(UserEntity, await this.userRepository.findAll(params)),
       meta: {
         totalRows: await this.userRepository.count(params),
       },
     };
   }
 
-  findByUuid(uuid: string) {
-    return this.userRepository.findOneByFilter({ uuid });
+  async findByUuid(uuid: string) {
+    return {
+      data: plainToInstance(UserEntity, await this.userRepository.findOneByFilter({ authUuid: uuid })),
+      meta: {},
+    };
   }
 
-  findByCredentials(login: string, password: string) {
-    return this.userRepository.findOneByFilter({ login, password });
+  async findByCredentials(filter: any) {
+    return {
+      data: plainToInstance(UserEntity, await this.userRepository.findOneByFilter(filter)),
+      meta: {},
+    };
   }
 
-  create(data: UserCreateDto) {
-    return this.userRepository.create(data);
+  async create(data: UserCreateDto) {
+    return {
+      data: plainToInstance(UserEntity, await this.userRepository.create(data)),
+      meta: {},
+    };
   }
 
-  update(uuid: string, data: UserUpdateDto) {
-    return this.userRepository.update(uuid, data);
+  async update(uuid: string, data: UserUpdateDto) {
+    return {
+      data: plainToInstance(UserEntity, await this.userRepository.update(uuid, data)),
+      meta: {},
+    };
   }
 }

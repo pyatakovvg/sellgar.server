@@ -11,11 +11,6 @@ import { Request as ExpressRequest } from 'express';
 import { TokenService } from '@/common/services/token.service';
 import { IS_PUBLIC_KEY } from '@/common/decorators/public.decorator';
 
-interface ICookie {
-  accessToken: string;
-  refreshToken: string;
-}
-
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
@@ -39,32 +34,25 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
+    const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
 
-    const accessToken = this.extractTokenFromHeader(request);
-
-    if (!accessToken) {
-      throw new UnauthorizedException();
-    }
+    const accessToken = this.tokenService.extractAccessTokenFromCookie(cookie);
+    const refreshToken = this.tokenService.extractRefreshTokenFromCookie(cookie);
 
     try {
-      const payload = await this.jwtService.verifyAsync(accessToken, {
-        secret: this.config.get('ACCESS_TOKEN_SECRET'),
-      });
-
-      request.user = payload.user;
+      const payload = await this.encodeAccessToken(accessToken);
+      request.user = payload.sub;
     } catch (e) {
       if (e instanceof TokenExpiredError) {
-        const refreshToken = this.extractRefreshTokenFromHeader(request);
-
         const identityFetch = new Fetch({
           baseURL: this.config.get('API_IDENTITY_SRV'),
         });
 
         const result = await identityFetch.send({
-          url: '/identity/refresh',
+          url: '/auth/access-refresh',
           method: 'post',
           data: {
-            token: refreshToken,
+            refreshToken: refreshToken,
           },
         });
 
@@ -81,6 +69,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
               secure: true,
             },
           );
+
+          const payload = await this.encodeAccessToken(result.accessToken);
+          request.user = payload.sub;
+
           return true;
         }
       }
@@ -89,11 +81,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return true;
   }
 
+  private async encodeAccessToken(accessToken: string) {
+    return await this.jwtService.verifyAsync(accessToken, {
+      secret: this.config.get('ACCESS_TOKEN_SECRET'),
+    });
+  }
+
   private extractTokenFromHeader(request: ExpressRequest): string {
     const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
+
     if (cookie) {
-      const result = JSON.parse(cookie) as ICookie;
-      return result?.accessToken ?? null;
+      const encodedCookie = JSON.parse(cookie);
+      if (encodedCookie) {
+        return encodedCookie.accessToken ?? null;
+      }
     }
     return null;
   }
@@ -102,8 +103,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
 
     if (cookie) {
-      const result = JSON.parse(cookie) as ICookie;
-      return result.refreshToken;
+      const encodedCookie = JSON.parse(cookie);
+      if (encodedCookie) {
+        return encodedCookie.refreshToken ?? null;
+      }
     }
     return null;
   }

@@ -18,6 +18,9 @@ export class AuthController {
 
   @Post('access-refresh')
   refreshAccess(@Body() body: RefreshDto) {
-    return this.authService.refreshAccessToken(body.accessToken);
+    return this.authService.refreshAccessToken(body.refreshToken);
   }
+
+  @Post('sign-up')
+  signUp() {}
 }

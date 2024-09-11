@@ -284,8 +284,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 5.10.2
-   * Query Engine version: 5a9203d0590c951969e85a7d07215503f4672eb9
+   * Prisma Client JS version: 5.15.0
+   * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
    */
   export type PrismaVersion = {
     client: string
@@ -412,6 +412,11 @@ export namespace Prisma {
     include: any
   }
 
+  type SelectAndOmit = {
+    select: any
+    omit: any
+  }
+
   /**
    * Get the type of the value, that the Promise holds.
    */
@@ -460,7 +465,9 @@ export namespace Prisma {
   } &
     (T extends SelectAndInclude
       ? 'Please either choose `select` or `include`.'
-      : {})
+      : T extends SelectAndOmit
+        ? 'Please either choose `select` or `omit`.'
+        : {})
 
   /**
    * Subset + Intersection
@@ -754,6 +761,10 @@ export namespace Prisma {
             args: Prisma.UserCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
           delete: {
             args: Prisma.UserDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$UserPayload>
@@ -819,6 +830,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.ClaimCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ClaimCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ClaimPayload>[]
           }
           delete: {
             args: Prisma.ClaimDeleteArgs<ExtArgs>,
@@ -886,6 +901,10 @@ export namespace Prisma {
             args: Prisma.RoleCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.RoleCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$RolePayload>[]
+          }
           delete: {
             args: Prisma.RoleDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$RolePayload>
@@ -952,6 +971,10 @@ export namespace Prisma {
             args: Prisma.PermissionCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.PermissionCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PermissionPayload>[]
+          }
           delete: {
             args: Prisma.PermissionDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$PermissionPayload>
@@ -1017,6 +1040,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.PersonCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PersonCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PersonPayload>[]
           }
           delete: {
             args: Prisma.PersonDeleteArgs<ExtArgs>,
@@ -1157,6 +1184,7 @@ export namespace Prisma {
     | 'findFirstOrThrow'
     | 'create'
     | 'createMany'
+    | 'createManyAndReturn'
     | 'update'
     | 'updateMany'
     | 'upsert'
@@ -1221,7 +1249,6 @@ export namespace Prisma {
   }
 
   // Custom InputTypes
-
   /**
    * UserCountOutputType without action
    */
@@ -1232,7 +1259,6 @@ export namespace Prisma {
     select?: UserCountOutputTypeSelect<ExtArgs> | null
   }
 
-
   /**
    * UserCountOutputType without action
    */
@@ -1240,14 +1266,12 @@ export namespace Prisma {
     where?: ClaimWhereInput
   }
 
-
   /**
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoleWhereInput
   }
-
 
 
   /**
@@ -1265,7 +1289,6 @@ export namespace Prisma {
   }
 
   // Custom InputTypes
-
   /**
    * RoleCountOutputType without action
    */
@@ -1276,7 +1299,6 @@ export namespace Prisma {
     select?: RoleCountOutputTypeSelect<ExtArgs> | null
   }
 
-
   /**
    * RoleCountOutputType without action
    */
@@ -1284,14 +1306,12 @@ export namespace Prisma {
     where?: PermissionWhereInput
   }
 
-
   /**
    * RoleCountOutputType without action
    */
   export type RoleCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
   }
-
 
 
   /**
@@ -1307,7 +1327,6 @@ export namespace Prisma {
   }
 
   // Custom InputTypes
-
   /**
    * PermissionCountOutputType without action
    */
@@ -1318,14 +1337,12 @@ export namespace Prisma {
     select?: PermissionCountOutputTypeSelect<ExtArgs> | null
   }
 
-
   /**
    * PermissionCountOutputType without action
    */
   export type PermissionCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoleWhereInput
   }
-
 
 
   /**
@@ -1510,6 +1527,15 @@ export namespace Prisma {
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
+  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    email?: boolean
+    password?: boolean
+    isBlocked?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["user"]>
+
   export type UserSelectScalar = {
     uuid?: boolean
     email?: boolean
@@ -1525,7 +1551,7 @@ export namespace Prisma {
     person?: boolean | User$personArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -1544,7 +1570,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
-
 
   type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
 
@@ -1571,8 +1596,8 @@ export namespace Prisma {
     ): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one User that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
      * @example
      * // Get one User
@@ -1625,7 +1650,7 @@ export namespace Prisma {
      * Find zero or more Users that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Users
      * const users = await prisma.user.findMany()
@@ -1659,19 +1684,45 @@ export namespace Prisma {
 
     /**
      * Create many Users.
-     *     @param {UserCreateManyArgs} args - Arguments to create many Users.
-     *     @example
-     *     // Create many Users
-     *     const user = await prisma.user.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {UserCreateManyArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends UserCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Users and returns the data saved in the database.
+     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Users and only return the `uuid`
+     * const userWithUuidOnly = await prisma.user.createManyAndReturn({ 
+     *   select: { uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends UserCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a User.
@@ -1950,7 +2001,6 @@ export namespace Prisma {
     
 
   // Custom InputTypes
-
   /**
    * User findUnique
    */
@@ -1960,7 +2010,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -1968,7 +2018,6 @@ export namespace Prisma {
      */
     where: UserWhereUniqueInput
   }
-
 
   /**
    * User findUniqueOrThrow
@@ -1979,7 +2028,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -1987,7 +2036,6 @@ export namespace Prisma {
      */
     where: UserWhereUniqueInput
   }
-
 
   /**
    * User findFirst
@@ -1998,7 +2046,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2036,7 +2084,6 @@ export namespace Prisma {
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
-
 
   /**
    * User findFirstOrThrow
@@ -2047,7 +2094,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2086,7 +2133,6 @@ export namespace Prisma {
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
-
   /**
    * User findMany
    */
@@ -2096,7 +2142,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2130,7 +2176,6 @@ export namespace Prisma {
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
-
   /**
    * User create
    */
@@ -2140,7 +2185,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2148,7 +2193,6 @@ export namespace Prisma {
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
   }
-
 
   /**
    * User createMany
@@ -2161,6 +2205,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  /**
+   * User createManyAndReturn
+   */
+  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
 
   /**
    * User update
@@ -2171,7 +2229,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2183,7 +2241,6 @@ export namespace Prisma {
      */
     where: UserWhereUniqueInput
   }
-
 
   /**
    * User updateMany
@@ -2199,7 +2256,6 @@ export namespace Prisma {
     where?: UserWhereInput
   }
 
-
   /**
    * User upsert
    */
@@ -2209,7 +2265,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2226,7 +2282,6 @@ export namespace Prisma {
     update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
   }
 
-
   /**
    * User delete
    */
@@ -2236,7 +2291,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     /**
@@ -2244,7 +2299,6 @@ export namespace Prisma {
      */
     where: UserWhereUniqueInput
   }
-
 
   /**
    * User deleteMany
@@ -2256,7 +2310,6 @@ export namespace Prisma {
     where?: UserWhereInput
   }
 
-
   /**
    * User.claims
    */
@@ -2266,7 +2319,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     where?: ClaimWhereInput
@@ -2277,7 +2330,6 @@ export namespace Prisma {
     distinct?: ClaimScalarFieldEnum | ClaimScalarFieldEnum[]
   }
 
-
   /**
    * User.roles
    */
@@ -2287,7 +2339,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     where?: RoleWhereInput
@@ -2298,7 +2350,6 @@ export namespace Prisma {
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
 
-
   /**
    * User.person
    */
@@ -2308,12 +2359,11 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     where?: PersonWhereInput
   }
-
 
   /**
    * User without action
@@ -2324,11 +2374,10 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
   }
-
 
 
   /**
@@ -2490,6 +2539,14 @@ export namespace Prisma {
     users?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["claim"]>
 
+  export type ClaimSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    key?: boolean
+    value?: boolean
+    userUuid?: boolean
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["claim"]>
+
   export type ClaimSelectScalar = {
     uuid?: boolean
     key?: boolean
@@ -2500,7 +2557,9 @@ export namespace Prisma {
   export type ClaimInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type ClaimIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $ClaimPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Claim"
@@ -2515,7 +2574,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["claim"]>
     composites: {}
   }
-
 
   type ClaimGetPayload<S extends boolean | null | undefined | ClaimDefaultArgs> = $Result.GetResult<Prisma.$ClaimPayload, S>
 
@@ -2542,8 +2600,8 @@ export namespace Prisma {
     ): Prisma__ClaimClient<$Result.GetResult<Prisma.$ClaimPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Claim that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Claim that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {ClaimFindUniqueOrThrowArgs} args - Arguments to find a Claim
      * @example
      * // Get one Claim
@@ -2596,7 +2654,7 @@ export namespace Prisma {
      * Find zero or more Claims that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ClaimFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {ClaimFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Claims
      * const claims = await prisma.claim.findMany()
@@ -2630,19 +2688,45 @@ export namespace Prisma {
 
     /**
      * Create many Claims.
-     *     @param {ClaimCreateManyArgs} args - Arguments to create many Claims.
-     *     @example
-     *     // Create many Claims
-     *     const claim = await prisma.claim.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {ClaimCreateManyArgs} args - Arguments to create many Claims.
+     * @example
+     * // Create many Claims
+     * const claim = await prisma.claim.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends ClaimCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, ClaimCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Claims and returns the data saved in the database.
+     * @param {ClaimCreateManyAndReturnArgs} args - Arguments to create many Claims.
+     * @example
+     * // Create many Claims
+     * const claim = await prisma.claim.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Claims and only return the `uuid`
+     * const claimWithUuidOnly = await prisma.claim.createManyAndReturn({ 
+     *   select: { uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends ClaimCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClaimCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClaimPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Claim.
@@ -2915,7 +2999,6 @@ export namespace Prisma {
     
 
   // Custom InputTypes
-
   /**
    * Claim findUnique
    */
@@ -2925,7 +3008,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -2933,7 +3016,6 @@ export namespace Prisma {
      */
     where: ClaimWhereUniqueInput
   }
-
 
   /**
    * Claim findUniqueOrThrow
@@ -2944,7 +3026,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -2952,7 +3034,6 @@ export namespace Prisma {
      */
     where: ClaimWhereUniqueInput
   }
-
 
   /**
    * Claim findFirst
@@ -2963,7 +3044,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3001,7 +3082,6 @@ export namespace Prisma {
      */
     distinct?: ClaimScalarFieldEnum | ClaimScalarFieldEnum[]
   }
-
 
   /**
    * Claim findFirstOrThrow
@@ -3012,7 +3092,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3051,7 +3131,6 @@ export namespace Prisma {
     distinct?: ClaimScalarFieldEnum | ClaimScalarFieldEnum[]
   }
 
-
   /**
    * Claim findMany
    */
@@ -3061,7 +3140,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3095,7 +3174,6 @@ export namespace Prisma {
     distinct?: ClaimScalarFieldEnum | ClaimScalarFieldEnum[]
   }
 
-
   /**
    * Claim create
    */
@@ -3105,7 +3183,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3113,7 +3191,6 @@ export namespace Prisma {
      */
     data: XOR<ClaimCreateInput, ClaimUncheckedCreateInput>
   }
-
 
   /**
    * Claim createMany
@@ -3126,6 +3203,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  /**
+   * Claim createManyAndReturn
+   */
+  export type ClaimCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Claim
+     */
+    select?: ClaimSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Claims.
+     */
+    data: ClaimCreateManyInput | ClaimCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClaimIncludeCreateManyAndReturn<ExtArgs> | null
+  }
 
   /**
    * Claim update
@@ -3136,7 +3231,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3148,7 +3243,6 @@ export namespace Prisma {
      */
     where: ClaimWhereUniqueInput
   }
-
 
   /**
    * Claim updateMany
@@ -3164,7 +3258,6 @@ export namespace Prisma {
     where?: ClaimWhereInput
   }
 
-
   /**
    * Claim upsert
    */
@@ -3174,7 +3267,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3191,7 +3284,6 @@ export namespace Prisma {
     update: XOR<ClaimUpdateInput, ClaimUncheckedUpdateInput>
   }
 
-
   /**
    * Claim delete
    */
@@ -3201,7 +3293,7 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
     /**
@@ -3209,7 +3301,6 @@ export namespace Prisma {
      */
     where: ClaimWhereUniqueInput
   }
-
 
   /**
    * Claim deleteMany
@@ -3221,7 +3312,6 @@ export namespace Prisma {
     where?: ClaimWhereInput
   }
 
-
   /**
    * Claim without action
    */
@@ -3231,11 +3321,10 @@ export namespace Prisma {
      */
     select?: ClaimSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: ClaimInclude<ExtArgs> | null
   }
-
 
 
   /**
@@ -3383,6 +3472,11 @@ export namespace Prisma {
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
+  export type RoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    code?: boolean
+    displayName?: boolean
+  }, ExtArgs["result"]["role"]>
+
   export type RoleSelectScalar = {
     code?: boolean
     displayName?: boolean
@@ -3393,7 +3487,7 @@ export namespace Prisma {
     users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
-
+  export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $RolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Role"
@@ -3407,7 +3501,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["role"]>
     composites: {}
   }
-
 
   type RoleGetPayload<S extends boolean | null | undefined | RoleDefaultArgs> = $Result.GetResult<Prisma.$RolePayload, S>
 
@@ -3434,8 +3527,8 @@ export namespace Prisma {
     ): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Role that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Role that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {RoleFindUniqueOrThrowArgs} args - Arguments to find a Role
      * @example
      * // Get one Role
@@ -3488,7 +3581,7 @@ export namespace Prisma {
      * Find zero or more Roles that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoleFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {RoleFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Roles
      * const roles = await prisma.role.findMany()
@@ -3522,19 +3615,45 @@ export namespace Prisma {
 
     /**
      * Create many Roles.
-     *     @param {RoleCreateManyArgs} args - Arguments to create many Roles.
-     *     @example
-     *     // Create many Roles
-     *     const role = await prisma.role.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {RoleCreateManyArgs} args - Arguments to create many Roles.
+     * @example
+     * // Create many Roles
+     * const role = await prisma.role.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends RoleCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, RoleCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Roles and returns the data saved in the database.
+     * @param {RoleCreateManyAndReturnArgs} args - Arguments to create many Roles.
+     * @example
+     * // Create many Roles
+     * const role = await prisma.role.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Roles and only return the `code`
+     * const roleWithCodeOnly = await prisma.role.createManyAndReturn({ 
+     *   select: { code: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends RoleCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, RoleCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Role.
@@ -3807,7 +3926,6 @@ export namespace Prisma {
     
 
   // Custom InputTypes
-
   /**
    * Role findUnique
    */
@@ -3817,7 +3935,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -3825,7 +3943,6 @@ export namespace Prisma {
      */
     where: RoleWhereUniqueInput
   }
-
 
   /**
    * Role findUniqueOrThrow
@@ -3836,7 +3953,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -3844,7 +3961,6 @@ export namespace Prisma {
      */
     where: RoleWhereUniqueInput
   }
-
 
   /**
    * Role findFirst
@@ -3855,7 +3971,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -3893,7 +4009,6 @@ export namespace Prisma {
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
-
 
   /**
    * Role findFirstOrThrow
@@ -3904,7 +4019,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -3943,7 +4058,6 @@ export namespace Prisma {
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
 
-
   /**
    * Role findMany
    */
@@ -3953,7 +4067,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -3987,7 +4101,6 @@ export namespace Prisma {
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
 
-
   /**
    * Role create
    */
@@ -3997,7 +4110,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -4005,7 +4118,6 @@ export namespace Prisma {
      */
     data: XOR<RoleCreateInput, RoleUncheckedCreateInput>
   }
-
 
   /**
    * Role createMany
@@ -4018,6 +4130,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  /**
+   * Role createManyAndReturn
+   */
+  export type RoleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Role
+     */
+    select?: RoleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Roles.
+     */
+    data: RoleCreateManyInput | RoleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
 
   /**
    * Role update
@@ -4028,7 +4154,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -4040,7 +4166,6 @@ export namespace Prisma {
      */
     where: RoleWhereUniqueInput
   }
-
 
   /**
    * Role updateMany
@@ -4056,7 +4181,6 @@ export namespace Prisma {
     where?: RoleWhereInput
   }
 
-
   /**
    * Role upsert
    */
@@ -4066,7 +4190,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -4083,7 +4207,6 @@ export namespace Prisma {
     update: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
   }
 
-
   /**
    * Role delete
    */
@@ -4093,7 +4216,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     /**
@@ -4101,7 +4224,6 @@ export namespace Prisma {
      */
     where: RoleWhereUniqueInput
   }
-
 
   /**
    * Role deleteMany
@@ -4113,7 +4235,6 @@ export namespace Prisma {
     where?: RoleWhereInput
   }
 
-
   /**
    * Role.permissions
    */
@@ -4123,7 +4244,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     where?: PermissionWhereInput
@@ -4134,7 +4255,6 @@ export namespace Prisma {
     distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
   }
 
-
   /**
    * Role.users
    */
@@ -4144,7 +4264,7 @@ export namespace Prisma {
      */
     select?: UserSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
@@ -4155,7 +4275,6 @@ export namespace Prisma {
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
-
   /**
    * Role without action
    */
@@ -4165,11 +4284,10 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
   }
-
 
 
   /**
@@ -4316,6 +4434,11 @@ export namespace Prisma {
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["permission"]>
 
+  export type PermissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    code?: boolean
+    displayName?: boolean
+  }, ExtArgs["result"]["permission"]>
+
   export type PermissionSelectScalar = {
     code?: boolean
     displayName?: boolean
@@ -4325,7 +4448,7 @@ export namespace Prisma {
     roles?: boolean | Permission$rolesArgs<ExtArgs>
     _count?: boolean | PermissionCountOutputTypeDefaultArgs<ExtArgs>
   }
-
+  export type PermissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $PermissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Permission"
@@ -4338,7 +4461,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["permission"]>
     composites: {}
   }
-
 
   type PermissionGetPayload<S extends boolean | null | undefined | PermissionDefaultArgs> = $Result.GetResult<Prisma.$PermissionPayload, S>
 
@@ -4365,8 +4487,8 @@ export namespace Prisma {
     ): Prisma__PermissionClient<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Permission that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Permission that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {PermissionFindUniqueOrThrowArgs} args - Arguments to find a Permission
      * @example
      * // Get one Permission
@@ -4419,7 +4541,7 @@ export namespace Prisma {
      * Find zero or more Permissions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PermissionFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {PermissionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Permissions
      * const permissions = await prisma.permission.findMany()
@@ -4453,19 +4575,45 @@ export namespace Prisma {
 
     /**
      * Create many Permissions.
-     *     @param {PermissionCreateManyArgs} args - Arguments to create many Permissions.
-     *     @example
-     *     // Create many Permissions
-     *     const permission = await prisma.permission.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {PermissionCreateManyArgs} args - Arguments to create many Permissions.
+     * @example
+     * // Create many Permissions
+     * const permission = await prisma.permission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends PermissionCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, PermissionCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Permissions and returns the data saved in the database.
+     * @param {PermissionCreateManyAndReturnArgs} args - Arguments to create many Permissions.
+     * @example
+     * // Create many Permissions
+     * const permission = await prisma.permission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Permissions and only return the `code`
+     * const permissionWithCodeOnly = await prisma.permission.createManyAndReturn({ 
+     *   select: { code: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends PermissionCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, PermissionCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Permission.
@@ -4736,7 +4884,6 @@ export namespace Prisma {
     
 
   // Custom InputTypes
-
   /**
    * Permission findUnique
    */
@@ -4746,7 +4893,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4754,7 +4901,6 @@ export namespace Prisma {
      */
     where: PermissionWhereUniqueInput
   }
-
 
   /**
    * Permission findUniqueOrThrow
@@ -4765,7 +4911,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4773,7 +4919,6 @@ export namespace Prisma {
      */
     where: PermissionWhereUniqueInput
   }
-
 
   /**
    * Permission findFirst
@@ -4784,7 +4929,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4822,7 +4967,6 @@ export namespace Prisma {
      */
     distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
   }
-
 
   /**
    * Permission findFirstOrThrow
@@ -4833,7 +4977,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4872,7 +5016,6 @@ export namespace Prisma {
     distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
   }
 
-
   /**
    * Permission findMany
    */
@@ -4882,7 +5025,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4916,7 +5059,6 @@ export namespace Prisma {
     distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
   }
 
-
   /**
    * Permission create
    */
@@ -4926,7 +5068,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4934,7 +5076,6 @@ export namespace Prisma {
      */
     data: XOR<PermissionCreateInput, PermissionUncheckedCreateInput>
   }
-
 
   /**
    * Permission createMany
@@ -4947,6 +5088,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  /**
+   * Permission createManyAndReturn
+   */
+  export type PermissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Permission
+     */
+    select?: PermissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Permissions.
+     */
+    data: PermissionCreateManyInput | PermissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
 
   /**
    * Permission update
@@ -4957,7 +5112,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -4969,7 +5124,6 @@ export namespace Prisma {
      */
     where: PermissionWhereUniqueInput
   }
-
 
   /**
    * Permission updateMany
@@ -4985,7 +5139,6 @@ export namespace Prisma {
     where?: PermissionWhereInput
   }
 
-
   /**
    * Permission upsert
    */
@@ -4995,7 +5148,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -5012,7 +5165,6 @@ export namespace Prisma {
     update: XOR<PermissionUpdateInput, PermissionUncheckedUpdateInput>
   }
 
-
   /**
    * Permission delete
    */
@@ -5022,7 +5174,7 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
     /**
@@ -5030,7 +5182,6 @@ export namespace Prisma {
      */
     where: PermissionWhereUniqueInput
   }
-
 
   /**
    * Permission deleteMany
@@ -5042,7 +5193,6 @@ export namespace Prisma {
     where?: PermissionWhereInput
   }
 
-
   /**
    * Permission.roles
    */
@@ -5052,7 +5202,7 @@ export namespace Prisma {
      */
     select?: RoleSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: RoleInclude<ExtArgs> | null
     where?: RoleWhereInput
@@ -5063,7 +5213,6 @@ export namespace Prisma {
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
 
-
   /**
    * Permission without action
    */
@@ -5073,11 +5222,10 @@ export namespace Prisma {
      */
     select?: PermissionSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PermissionInclude<ExtArgs> | null
   }
-
 
 
   /**
@@ -5263,6 +5411,17 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["person"]>
 
+  export type PersonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    uuid?: boolean
+    firstName?: boolean
+    middleName?: boolean
+    lastName?: boolean
+    birthday?: boolean
+    sex?: boolean
+    userUuid?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["person"]>
+
   export type PersonSelectScalar = {
     uuid?: boolean
     firstName?: boolean
@@ -5276,7 +5435,9 @@ export namespace Prisma {
   export type PersonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type PersonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $PersonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Person"
@@ -5294,7 +5455,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["person"]>
     composites: {}
   }
-
 
   type PersonGetPayload<S extends boolean | null | undefined | PersonDefaultArgs> = $Result.GetResult<Prisma.$PersonPayload, S>
 
@@ -5321,8 +5481,8 @@ export namespace Prisma {
     ): Prisma__PersonClient<$Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Person that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Person that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {PersonFindUniqueOrThrowArgs} args - Arguments to find a Person
      * @example
      * // Get one Person
@@ -5375,7 +5535,7 @@ export namespace Prisma {
      * Find zero or more People that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PersonFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {PersonFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all People
      * const people = await prisma.person.findMany()
@@ -5409,19 +5569,45 @@ export namespace Prisma {
 
     /**
      * Create many People.
-     *     @param {PersonCreateManyArgs} args - Arguments to create many People.
-     *     @example
-     *     // Create many People
-     *     const person = await prisma.person.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {PersonCreateManyArgs} args - Arguments to create many People.
+     * @example
+     * // Create many People
+     * const person = await prisma.person.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends PersonCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, PersonCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many People and returns the data saved in the database.
+     * @param {PersonCreateManyAndReturnArgs} args - Arguments to create many People.
+     * @example
+     * // Create many People
+     * const person = await prisma.person.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many People and only return the `uuid`
+     * const personWithUuidOnly = await prisma.person.createManyAndReturn({ 
+     *   select: { uuid: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends PersonCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, PersonCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Person.
@@ -5697,7 +5883,6 @@ export namespace Prisma {
     
 
   // Custom InputTypes
-
   /**
    * Person findUnique
    */
@@ -5707,7 +5892,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5715,7 +5900,6 @@ export namespace Prisma {
      */
     where: PersonWhereUniqueInput
   }
-
 
   /**
    * Person findUniqueOrThrow
@@ -5726,7 +5910,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5734,7 +5918,6 @@ export namespace Prisma {
      */
     where: PersonWhereUniqueInput
   }
-
 
   /**
    * Person findFirst
@@ -5745,7 +5928,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5783,7 +5966,6 @@ export namespace Prisma {
      */
     distinct?: PersonScalarFieldEnum | PersonScalarFieldEnum[]
   }
-
 
   /**
    * Person findFirstOrThrow
@@ -5794,7 +5976,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5833,7 +6015,6 @@ export namespace Prisma {
     distinct?: PersonScalarFieldEnum | PersonScalarFieldEnum[]
   }
 
-
   /**
    * Person findMany
    */
@@ -5843,7 +6024,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5877,7 +6058,6 @@ export namespace Prisma {
     distinct?: PersonScalarFieldEnum | PersonScalarFieldEnum[]
   }
 
-
   /**
    * Person create
    */
@@ -5887,7 +6067,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5895,7 +6075,6 @@ export namespace Prisma {
      */
     data: XOR<PersonCreateInput, PersonUncheckedCreateInput>
   }
-
 
   /**
    * Person createMany
@@ -5908,6 +6087,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  /**
+   * Person createManyAndReturn
+   */
+  export type PersonCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Person
+     */
+    select?: PersonSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many People.
+     */
+    data: PersonCreateManyInput | PersonCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PersonIncludeCreateManyAndReturn<ExtArgs> | null
+  }
 
   /**
    * Person update
@@ -5918,7 +6115,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5930,7 +6127,6 @@ export namespace Prisma {
      */
     where: PersonWhereUniqueInput
   }
-
 
   /**
    * Person updateMany
@@ -5946,7 +6142,6 @@ export namespace Prisma {
     where?: PersonWhereInput
   }
 
-
   /**
    * Person upsert
    */
@@ -5956,7 +6151,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5973,7 +6168,6 @@ export namespace Prisma {
     update: XOR<PersonUpdateInput, PersonUncheckedUpdateInput>
   }
 
-
   /**
    * Person delete
    */
@@ -5983,7 +6177,7 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
     /**
@@ -5991,7 +6185,6 @@ export namespace Prisma {
      */
     where: PersonWhereUniqueInput
   }
-
 
   /**
    * Person deleteMany
@@ -6003,7 +6196,6 @@ export namespace Prisma {
     where?: PersonWhereInput
   }
 
-
   /**
    * Person without action
    */
@@ -6013,11 +6205,10 @@ export namespace Prisma {
      */
     select?: PersonSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Choose, which related nodes to fetch as well
      */
     include?: PersonInclude<ExtArgs> | null
   }
-
 
 
   /**

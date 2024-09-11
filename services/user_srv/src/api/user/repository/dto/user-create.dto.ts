@@ -1,19 +1,22 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, Length, IsArray, IsOptional, IsUUID, IsDateString } from 'class-validator';
+import { Sex } from '@/prisma/client';
 
 export class UserCreateDto {
-  @IsNotEmpty()
-  @IsString()
-  @IsEmail()
-  login: string;
+  @IsUUID()
+  authUuid: string;
 
   @IsString()
-  @IsNotEmpty()
-  @Length(8)
-  @IsOptional()
-  password?: string;
+  name: string;
 
-  @IsOptional()
-  @IsString({ each: true })
-  @IsArray()
-  roles: string[];
+  @IsString()
+  patronymic: string | null;
+
+  @IsString()
+  surname: string;
+
+  @IsString()
+  sex: Sex | null;
+
+  @IsDateString()
+  birthday: Date | null;
 }

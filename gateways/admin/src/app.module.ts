@@ -1,11 +1,20 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 // import { QueueAdapterType, RabbitMQModule } from '@mkfyi/nestjs-rmq';
 
 import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
 
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { TokenService } from './common/services/token.service';
+
 @Module({
   imports: [
+    PassportModule.register({
+      session: false,
+      defaultStrategy: 'jwt',
+    }),
     ConfigModule.forRoot({
       envFilePath: './.env',
       cache: true,
@@ -34,6 +43,13 @@ import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
     ApiIdentityV1Module,
   ],
   controllers: [],
+  providers: [
+    TokenService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 class AppModule {}
 

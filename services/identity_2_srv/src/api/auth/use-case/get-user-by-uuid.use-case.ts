@@ -7,6 +7,6 @@ export class GetUserByUuidUseCase {
   constructor(private readonly userService: UserService) {}
 
   execute(uuid: string) {
-    return this.userService.findByUuid(uuid);
+    return this.userService.getByUuid(uuid);
   }
 }
