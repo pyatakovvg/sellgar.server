@@ -5,14 +5,18 @@ export class CreateCompanyDto {
   @IsNotEmpty()
   name: string;
 
-  countryCode: string;
-  districtUuid: string;
-  regionUuid: string;
-  cityUuid: string;
+  country: string;
+  district: string;
+  region: string;
+  city: string;
 
   @IsString()
   @IsNotEmpty()
-  address: string;
+  legalAddress: string;
+
+  @IsString()
+  @IsNotEmpty()
+  actualAddress: string;
 
   @IsNumber({ maxDecimalPlaces: 4 })
   @IsNotEmpty()

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "shop" ALTER COLUMN "address" DROP NOT NULL,
-ALTER COLUMN "address" DROP DEFAULT;

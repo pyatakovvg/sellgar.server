@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 
 import { AuthUuid } from '@/common/decorators/auth-uuid.decorator';
 
-@Controller('v1/profile')
+@Controller('v1/auth/profile')
 export class ProfileController {
   constructor(
     private readonly userService: UserService,

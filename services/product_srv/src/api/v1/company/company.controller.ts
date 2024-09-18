@@ -8,8 +8,8 @@ import { CompanyEntity } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
-@Controller('company')
 @ApiTags('companies')
+@Controller('companies')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
@@ -20,7 +20,7 @@ export class CompanyController {
   }
 
   @Get()
-  @ApiOkResponse({ type: CompanyEntity, isArray: true })
+  @ApiOkResponse()
   findAll() {
     return this.companyService.findAllByFilter();
   }

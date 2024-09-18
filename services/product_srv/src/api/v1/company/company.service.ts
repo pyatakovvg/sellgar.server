@@ -1,76 +1,36 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from '@/prisma/prisma.service';
+import { CompanyRepository } from './company.repository';
 
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompanyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly companyRepository: CompanyRepository) {}
 
   create(createCompanyDto: CreateCompanyDto) {
-    return this.prisma.company.create({
-      data: createCompanyDto,
-    });
+    return this.companyRepository.create(createCompanyDto);
   }
 
-  findAllByFilter() {
-    return this.prisma.company.findMany({
-      select: {
-        uuid: true,
-        name: true,
-        shops: {
-          select: {
-            uuid: true,
-            name: true,
-            isActive: true,
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
+  async findAllByFilter() {
+    return {
+      data: await this.companyRepository.findAllByFilter(),
+      meta: {
+        totalRows: await this.companyRepository.count(),
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    };
   }
 
   async findOne(uuid: string) {
-    return this.prisma.company.findUnique({
-      where: {
-        uuid,
-      },
-      include: {
-        shops: {
-          select: {
-            uuid: true,
-            name: true,
-            isActive: true,
-          },
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
-      },
-    });
+    return this.companyRepository.findOne(uuid);
   }
 
   update(uuid: string, updateCompanyDto: UpdateCompanyDto) {
-    return this.prisma.company.update({
-      where: {
-        uuid,
-      },
-      data: updateCompanyDto,
-    });
+    return this.companyRepository.update(uuid, updateCompanyDto);
   }
 
   remove(uuid: string) {
-    return this.prisma.company.delete({
-      where: {
-        uuid,
-      },
-    });
+    return this.companyRepository.remove(uuid);
   }
 }

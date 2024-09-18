@@ -12,19 +12,22 @@ export class CompanyEntity implements Company {
   name: string;
 
   @ApiProperty({ required: true, minLength: 2 })
-  countryCode: string;
+  country: string;
 
   @ApiProperty({ required: true })
-  districtUuid: string;
+  district: string;
 
   @ApiProperty({ required: true })
-  regionUuid: string;
+  region: string;
 
   @ApiProperty({ required: true })
-  cityUuid: string;
+  city: string;
 
   @ApiProperty({ required: true, minLength: 1 })
-  address: string;
+  legalAddress: string;
+
+  @ApiProperty({ required: true, minLength: 1 })
+  actualAddress: string;
 
   @ApiProperty({ required: true, minLength: 6, maxLength: 6 })
   postalCode: number;

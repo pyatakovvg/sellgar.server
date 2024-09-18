@@ -28,9 +28,4 @@ export class ShopController {
   update(@Param('uuid') uuid: string, @Body() updateShopDto: UpdateShopDto) {
     return this.shopService.update(uuid, updateShopDto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.shopService.remove(+id);
-  }
 }

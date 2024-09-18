@@ -17,7 +17,31 @@ datasource db {
 
 model Company {
   uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String @unique @db.Text
+
+  name String
+
+  country String
+  district String
+  region String
+  city String
+
+  legalAddress String
+  actualAddress String?
+
+  postalCode Int
+
+  supportPhone String
+  supportEmail String
+
+  managerPhone String
+  managerEmail String
+
+  orderPhone String
+  orderEmail String
+
+  replayToEmail String
+
+  startYear Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

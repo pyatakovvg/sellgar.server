@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@service/identity2",
+  "name": "@service/identity",
   "version": "0.0.1",
   "description": "User service",
   "author": "Viktor Pyatakov",

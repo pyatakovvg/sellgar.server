@@ -5,6 +5,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { PrismaModule } from '@/prisma/prisma.module';
 
 import { CompanyService } from './company.service';
+import { CompanyRepository } from './company.repository';
 import { CompanyController } from './company.controller';
 
 @Module({
@@ -12,6 +13,7 @@ import { CompanyController } from './company.controller';
   imports: [PrismaModule],
   providers: [
     CompanyService,
+    CompanyRepository,
     {
       provide: 'ORDER_SERVICE',
       inject: [ConfigService],

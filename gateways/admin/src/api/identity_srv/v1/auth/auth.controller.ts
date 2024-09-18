@@ -18,7 +18,7 @@ export class AuthController {
 
   @Public()
   @Post('sign-in')
-  async signIn(@Body() body: SignInDto, @Res() res: Response) {
+  async signIn(@Body() body: SignInDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.login(body);
 
     res.cookie(this.config.get('AUTH_COOKIE'), JSON.stringify(result), {

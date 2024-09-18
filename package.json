@@ -8,7 +8,7 @@
     "dev:admin_gw": "yarn workspace @gateway/admin start:dev",
     "dev:mailer_srv": "yarn workspace @service/mailer start:dev",
     "dev:product_srv": "yarn workspace @service/product start:dev",
-    "dev:identity_srv": "yarn workspace @service/identity2 start:dev",
+    "dev:identity_srv": "yarn workspace @service/identity start:dev",
     "dev:user_srv": "yarn workspace @service/user start:dev",
     "start:admin_gw": "yarn workspace @gateway/admin start",
     "start:mailer_srv": "yarn workspace @service/mailer start",
