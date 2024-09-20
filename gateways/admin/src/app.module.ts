@@ -6,6 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 
 import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
 import { ApiProductV1Module } from './api/product_srv/v1/api.module';
+import { ApiFileV1Module } from './api/file_srv/v1/api.module';
 
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { TokenService } from './common/services/token.service';
@@ -43,6 +44,7 @@ import { TokenService } from './common/services/token.service';
 
     ApiIdentityV1Module,
     ApiProductV1Module,
+    ApiFileV1Module,
   ],
   controllers: [],
   providers: [

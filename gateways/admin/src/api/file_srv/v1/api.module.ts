@@ -5,4 +5,4 @@ import { FileModule } from './file/file.module';
 @Module({
   imports: [FileModule],
 })
-export class ApiV1Module {}
+export class ApiFileV1Module {}

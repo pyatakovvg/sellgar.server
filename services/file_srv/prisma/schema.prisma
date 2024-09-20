@@ -17,13 +17,11 @@ datasource db {
 
 model File {
   uuid  String @id @default(uuid()) @db.Uuid
-  title String @db.Text
+  name  String @db.Text
 
   mime String @db.Text
   size Int    @db.Integer
 
-  blob Bytes
-
-  @@index([uuid, title])
-  @@map("user")
+  @@index([uuid, name])
+  @@map("file")
 }
