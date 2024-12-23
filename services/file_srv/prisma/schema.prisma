@@ -22,6 +22,22 @@ model File {
   mime String @db.Text
   size Int    @db.Integer
 
+  dir  Dir[] @relation("file_to_dir")
+
   @@index([uuid, name])
   @@map("file")
+}
+
+model Dir {
+  uuid       String @id @default(uuid()) @db.Uuid
+  name       String @db.Text
+
+  parentUuid String? @db.Uuid
+  parent     Dir? @relation(fields: [parentUuid], references: [uuid], name: "directory")
+  children   Dir[] @relation("directory")
+
+  files      File[] @relation("file_to_dir")
+
+  @@index([uuid, name, parentUuid])
+  @@map("dir")
 }

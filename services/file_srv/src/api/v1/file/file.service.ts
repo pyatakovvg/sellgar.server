@@ -12,6 +12,15 @@ export class FileService {
     private readonly minioClientRepository: MinioClientRepository,
   ) {}
 
+  async getAll(folderUuid: string) {
+    return {
+      data: await this.fileRepository.getAll(folderUuid),
+      meta: {
+        totalRows: await this.fileRepository.count(folderUuid),
+      },
+    };
+  }
+
   upload(fileUploadDto: FileUploadDto) {
     this.minioClientRepository.upload(fileUploadDto.fieldname, Buffer.from(fileUploadDto.buffer), {});
 
@@ -20,5 +29,9 @@ export class FileService {
       size: fileUploadDto.size,
       mime: fileUploadDto.mimetype,
     });
+  }
+
+  getByName(fileName: string) {
+    return this.minioClientRepository.getByName(fileName);
   }
 }

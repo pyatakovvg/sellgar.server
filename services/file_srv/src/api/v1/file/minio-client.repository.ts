@@ -20,4 +20,8 @@ export class MinioClientRepository {
       });
     });
   }
+
+  async getByName(name: string) {
+    return await this.minioService.client.getObject(this.config.get('MINIO_BUCKET'), name);
+  }
 }

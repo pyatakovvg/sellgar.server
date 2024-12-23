@@ -1,0 +1,264 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+generator prismaClassGenerator {
+  provider = "prisma-class-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name String
+  description String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  brandUuid String @db.Uuid
+  brand Brand @relation(fields: [brandUuid], references: [uuid], onDelete: SetNull)
+
+  categoryUuid String @db.Uuid
+  category Category @relation(fields: [categoryUuid], references: [uuid], onDelete: SetNull)
+
+  prices PriceHistory[]
+  variants ProductVariant[]
+  properties ProductProperty[]
+
+  @@map("product")
+  @@index([uuid, name])
+}
+
+model ProductVariant {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  article String @unique
+  name String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  productUuid String @db.Uuid
+  product Product @relation(fields: [productUuid], references: [uuid])
+
+  productImage ProductImage[]
+
+  @@map("product_variant")
+  @@index([uuid])
+}
+
+model PropertyGroup {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name String
+  description String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  properties Property[]
+
+  @@map("property_group")
+  @@index([uuid, name])
+}
+
+model Unit {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  code String @unique
+
+  name String @unique
+  description String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  properties Property[]
+
+  @@map("unit")
+  @@index([code, name])
+}
+
+enum PropertyType {
+  TEXT
+  CHECKBOX
+  RADIO
+  DATE
+  RANGE
+}
+
+model Property {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  code String @unique
+
+  name String @unique
+  description String @db.Text
+
+  type PropertyType
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  groupUuid String @db.Uuid
+  group PropertyGroup @relation(fields: [groupUuid], references: [uuid])
+
+  unitUuid String? @db.Uuid
+  unit Unit? @relation(fields: [unitUuid], references: [uuid])
+
+  propertyProduct ProductProperty[]
+
+  @@map("property")
+  @@index([code, name, groupUuid, unitUuid])
+}
+
+model ProductProperty {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  value String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  productUuid String @db.Uuid
+  product Product @relation(fields: [productUuid], references: [uuid])
+
+  propertyUuid String @db.Uuid
+  property Property @relation(fields: [propertyUuid], references: [uuid])
+
+  @@map("product_property")
+  @@index([uuid, productUuid, propertyUuid])
+}
+
+model Currency {
+  code String @id @unique
+
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  priceHistory PriceHistory[]
+
+  @@map("currency")
+  @@index([code, name])
+}
+
+model PriceHistory {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  value         Float
+
+  createdAt   DateTime @default(now())
+
+  currencyCode String
+  currency Currency @relation(fields: [currencyCode], references: [code])
+
+  productUuid   String @db.Uuid
+  product Product @relation(fields: [productUuid], references: [uuid])
+
+  @@map("price_history")
+  @@index([uuid, value, currencyCode, productUuid])
+}
+
+model Image {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  imageUuid String @db.Uuid
+
+  fileName String
+
+  productImagies ProductImage[]
+  brandImagies BrandImage[]
+  categoryImagies CategoryImage[]
+
+  @@map("image")
+  @@index([uuid, imageUuid])
+}
+
+model ProductImage {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  imageUuid String @db.Uuid
+  image Image @relation(fields: [imageUuid], references: [uuid])
+
+  productVariantUuid String @db.Uuid
+  productVariant ProductVariant @relation(fields: [productVariantUuid], references: [uuid])
+
+  @@map("product_image")
+  @@index([uuid, imageUuid, productVariantUuid])
+}
+
+model Category {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name String
+  description String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  parentUuid String? @db.Uuid
+  parent Category? @relation("category_hierarchy", fields: [parentUuid], references: [uuid])
+  children Category[] @relation("category_hierarchy")
+
+  products Product[]
+  imagies CategoryImage[]
+
+  @@map("category")
+  @@index([uuid, name, parentUuid])
+}
+
+model CategoryImage {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  imageUuid String @db.Uuid
+  image Image @relation(fields: [imageUuid], references: [uuid])
+
+  categoryUuid String @db.Uuid
+  category Category @relation(fields: [categoryUuid], references: [uuid])
+
+  @@map("category_image")
+  @@index([uuid, imageUuid, categoryUuid])
+}
+
+model Brand {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  code String @unique
+
+  name String
+  description String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  products Product[]
+  imagies BrandImage[]
+
+  @@map("brand")
+}
+
+model BrandImage {
+  uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  imageUuid String @db.Uuid
+  image Image @relation(fields: [imageUuid], references: [uuid])
+
+  brandUuid String @db.Uuid
+  brand Brand @relation(fields: [brandUuid], references: [uuid])
+
+  @@map("brand_image")
+  @@index([uuid, imageUuid, brandUuid])
+}

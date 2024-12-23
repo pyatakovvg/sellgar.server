@@ -8,6 +8,7 @@
     "dev:admin_gw": "yarn workspace @gateway/admin start:dev",
     "dev:mailer_srv": "yarn workspace @service/mailer start:dev",
     "dev:product_srv": "yarn workspace @service/product start:dev",
+    "dev:product2_srv": "yarn workspace @service/product2 start:dev",
     "dev:identity_srv": "yarn workspace @service/identity start:dev",
     "dev:user_srv": "yarn workspace @service/user start:dev",
     "dev:file_srv": "yarn workspace @service/file start:dev",
@@ -24,13 +25,13 @@
     "ts-node": "10.9.2"
   },
   "devDependencies": {
-    "@types/node": "20.14.2",
-    "@typescript-eslint/eslint-plugin": "7.13.0",
-    "@typescript-eslint/parser": "7.13.0",
-    "eslint": "9.4.0",
+    "@types/node": "22.10.1",
+    "@typescript-eslint/eslint-plugin": "8.17.0",
+    "@typescript-eslint/parser": "8.17.0",
+    "eslint": "9.16.0",
     "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-prettier": "5.1.3",
-    "prettier": "3.3.2"
+    "eslint-plugin-prettier": "5.2.1",
+    "prettier": "3.4.2"
   },
   "workspaces": [
     "helpers/*",
