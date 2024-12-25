@@ -1,43 +1,6 @@
 import { Type, Expose } from 'class-transformer';
 import { IsUUID, IsString, ValidateNested, IsNumber, IsDate, IsOptional } from 'class-validator';
 
-class CurrencyEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsString()
-  code: string;
-
-  @Expose()
-  @IsString()
-  name: string;
-}
-
-export class ProductVariantPriceEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsString()
-  price: string;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => CurrencyEntity)
-  currency: CurrencyEntity;
-
-  @Expose()
-  @IsDate()
-  createdAt: string;
-
-  @Expose()
-  @IsDate()
-  updatedAt: string;
-}
-
 export class ProductVariantEntity {
   @Expose()
   @IsUUID()
@@ -54,11 +17,6 @@ export class ProductVariantEntity {
   @Expose()
   @IsString()
   description: string;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => ProductVariantPriceEntity)
-  price: ProductVariantPriceEntity;
 
   @Expose()
   @IsDate()

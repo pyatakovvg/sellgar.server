@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
+import { firstValueFrom } from 'rxjs';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { PropertyEntity, PropertyResultEntity } from '../property.entity';
 
-import { PropertyGateway } from '../gateway/property.gateway';
-
-import { UpdatePropertyDto } from '../gateway/dto/update-property.dto';
-import { CreatePropertyDto } from '../gateway/dto/create-property.dto';
+import { UpdatePropertyDto } from './dto/update-property.dto';
+import { CreatePropertyDto } from './dto/create-property.dto';
 
 @Injectable()
 export class PropertyService {
-  constructor(private readonly propertyGateway: PropertyGateway) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
-  async findAllGroups() {
-    const result = await this.propertyGateway.findAll();
+  async findAll() {
+    const message = this.productService.send({ cmd: 'property.findAll' }, {});
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyResultEntity, result, {
       strategy: 'excludeAll',
     });
@@ -25,7 +27,9 @@ export class PropertyService {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.propertyGateway.findByUuid(uuid);
+    const message = this.productService.send({ cmd: 'property.findByUuid' }, { uuid });
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyEntity, result, {
       strategy: 'excludeAll',
     });
@@ -36,7 +40,13 @@ export class PropertyService {
   }
 
   async update(uuid: string, dto: UpdatePropertyDto) {
-    const result = await this.propertyGateway.update(uuid, dto);
+    if (uuid !== dto.uuid) {
+      throw Error('Not persistent');
+    }
+
+    const message = this.productService.send({ cmd: 'property.update' }, dto);
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyEntity, result, {
       strategy: 'excludeAll',
     });
@@ -47,7 +57,9 @@ export class PropertyService {
   }
 
   async create(dto: CreatePropertyDto) {
-    const result = await this.propertyGateway.create(dto);
+    const message = this.productService.send({ cmd: 'property.create' }, dto);
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyEntity, result, {
       strategy: 'excludeAll',
     });

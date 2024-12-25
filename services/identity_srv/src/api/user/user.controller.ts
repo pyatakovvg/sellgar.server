@@ -1,5 +1,6 @@
 import { ApiTags } from '@nestjs/swagger';
 import { Param, Controller, Get } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
 
 import { UserService } from './user.service';
 

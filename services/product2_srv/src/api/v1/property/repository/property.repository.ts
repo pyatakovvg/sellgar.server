@@ -148,10 +148,10 @@ export class PropertyRepository {
     });
   }
 
-  update(uuid: string, dto: UpdatePropertyDto) {
+  update(dto: UpdatePropertyDto) {
     return this.prismaService.property.update({
       where: {
-        uuid,
+        uuid: dto.uuid,
       },
       data: {
         uuid: dto.uuid,

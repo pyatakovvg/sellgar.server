@@ -18,24 +18,6 @@ export class UnitRepository {
     return this.prismaService.unit.count();
   }
 
-  create(createBrandDto: CreateUnitDto) {
-    return this.prismaService.unit.create({
-      data: {
-        code: createBrandDto.code,
-        name: createBrandDto.name,
-        description: createBrandDto.description,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-  }
-
   async findAll() {
     const result = await this.prismaService.unit.findMany({
       select: {
@@ -79,15 +61,12 @@ export class UnitRepository {
     return resultInstance;
   }
 
-  update(uuid: string, updateBrandDto: UpdateUnitDto) {
-    return this.prismaService.unit.update({
-      where: {
-        uuid,
-      },
+  create(dto: CreateUnitDto) {
+    return this.prismaService.unit.create({
       data: {
-        code: updateBrandDto.code,
-        name: updateBrandDto.name,
-        description: updateBrandDto.description,
+        code: dto.code,
+        name: dto.name,
+        description: dto.description,
       },
       select: {
         uuid: true,
@@ -100,7 +79,28 @@ export class UnitRepository {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  update(dto: UpdateUnitDto) {
+    return this.prismaService.unit.update({
+      where: {
+        uuid: dto.uuid,
+      },
+      data: {
+        code: dto.code,
+        name: dto.name,
+        description: dto.description,
+      },
+      select: {
+        uuid: true,
+        code: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

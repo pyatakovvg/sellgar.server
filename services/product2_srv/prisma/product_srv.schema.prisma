@@ -175,8 +175,6 @@ model PriceHistory {
 model Image {
   uuid String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  imageUuid String @db.Uuid
-
   fileName String
 
   productImagies ProductImage[]
@@ -184,7 +182,7 @@ model Image {
   categoryImagies CategoryImage[]
 
   @@map("image")
-  @@index([uuid, imageUuid])
+  @@index([uuid])
 }
 
 model ProductImage {

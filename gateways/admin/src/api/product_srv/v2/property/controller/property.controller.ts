@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { PropertyService } from '../service/property.service';
-import { UpdatePropertyDto } from '../gateway/dto/update-property.dto';
-import { CreatePropertyDto } from '../gateway/dto/create-property.dto';
+
+import { UpdatePropertyDto } from '../service/dto/update-property.dto';
+import { CreatePropertyDto } from '../service/dto/create-property.dto';
 
 @Controller('v2/properties')
 export class PropertyController {
@@ -10,7 +11,7 @@ export class PropertyController {
 
   @Get('/')
   findAll() {
-    return this.propertyService.findAllGroups();
+    return this.propertyService.findAll();
   }
 
   @Get(':uuid')
@@ -19,12 +20,12 @@ export class PropertyController {
   }
 
   @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdatePropertyDto) {
-    return this.propertyService.update(uuid, updateCategoryDto);
+  update(@Param('uuid') uuid: string, @Body() dto: UpdatePropertyDto) {
+    return this.propertyService.update(uuid, dto);
   }
 
   @Post()
-  create(@Body() createCategoryDto: CreatePropertyDto) {
-    return this.propertyService.create(createCategoryDto);
+  create(@Body() dto: CreatePropertyDto) {
+    return this.propertyService.create(dto);
   }
 }

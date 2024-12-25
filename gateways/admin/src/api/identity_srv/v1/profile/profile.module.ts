@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 
 import { UserModule } from '../user/user.module';
@@ -10,7 +9,7 @@ import { ProfileService } from './profile.service';
 import { ProfileController } from './profile.controller';
 
 @Module({
-  imports: [HttpModule, UserModule, AuthModule],
+  imports: [UserModule, AuthModule],
   controllers: [ProfileController],
   providers: [ConfigService, ProfileService, ProfileGateway],
 })

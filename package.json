@@ -22,21 +22,25 @@
     "build:identity_srv": "yarn workspaces foreach -tR --from '@service/identity' run build"
   },
   "dependencies": {
+    "rimraf": "6.0.1",
     "ts-node": "10.9.2"
   },
   "devDependencies": {
-    "@types/node": "22.10.1",
-    "@typescript-eslint/eslint-plugin": "8.17.0",
-    "@typescript-eslint/parser": "8.17.0",
-    "eslint": "9.16.0",
+    "@types/node": "22.10.2",
+    "@typescript-eslint/eslint-plugin": "8.18.2",
+    "@typescript-eslint/parser": "8.18.2",
+    "eslint": "9.17.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
     "prettier": "3.4.2"
   },
   "workspaces": [
-    "helpers/*",
-    "gateways/*",
-    "services/*"
+    "helpers/**/*",
+    "gateways/**/*",
+    "services/**/*"
   ],
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "engines": {
+    "node": ">=18.20"
+  }
 }

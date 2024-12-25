@@ -26,15 +26,15 @@ export class ProductService {
     return this.productRepository.findByUuid(uuid);
   }
 
-  create(createCategoryDto: CreateProductDto) {
-    return this.productRepository.create(createCategoryDto);
+  create(dto: CreateProductDto) {
+    return this.productRepository.create(dto);
   }
 
-  update(uuid: string, updateCategoryDto: UpdateProductDto) {
-    return this.productRepository.update(uuid, updateCategoryDto);
+  update(uuid: string, dto: UpdateProductDto) {
+    return this.productRepository.update(uuid, dto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

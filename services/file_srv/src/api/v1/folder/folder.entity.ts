@@ -1,6 +1,6 @@
-import { Dir } from '@/prisma/client';
+import { Folder } from '@/prisma/client';
 
-export class FolderEntity implements Omit<Dir, 'parentUuid'> {
+export class FolderEntity implements Omit<Folder, 'parentUuid'> {
   uuid: string;
 
   name: string;

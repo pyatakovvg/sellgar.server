@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { PropertyGroupService } from '../service/property-group.service';
-import { UpdatePropertyGroupDto } from '../gateway/dto/update-property-group.dto';
-import { CreatePropertyGroupDto } from '../gateway/dto/create-property-group.dto';
+
+import { UpdatePropertyGroupDto } from '../service/dto/update-property-group.dto';
+import { CreatePropertyGroupDto } from '../service/dto/create-property-group.dto';
 
 @Controller('v2/properties/groups')
 export class PropertyGroupController {
@@ -10,7 +11,7 @@ export class PropertyGroupController {
 
   @Get('/')
   findAll() {
-    return this.unitService.findAllGroups();
+    return this.unitService.findAll();
   }
 
   @Get(':uuid')

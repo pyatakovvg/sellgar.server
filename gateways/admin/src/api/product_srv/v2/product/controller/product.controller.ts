@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { ProductService } from '../service/product.service';
-import { UpdateProductDto } from '../gateway/dto/update-product.dto';
-import { CreateProductDto } from '../gateway/dto/create-product.dto';
+import { UpdateProductDto } from '../service/dto/update-product.dto';
+import { CreateProductDto } from '../service/dto/create-product.dto';
 
 import { PriceService } from '../../price/service/price.service';
 import { CreatePriceDto } from '../../price/gateway/dto/create-price.dto';
@@ -25,13 +25,13 @@ export class ProductController {
   }
 
   @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdateProductDto) {
-    return this.productService.update(uuid, updateCategoryDto);
+  update(@Body() dto: UpdateProductDto) {
+    return this.productService.update(dto);
   }
 
   @Post()
-  create(@Body() createCategoryDto: CreateProductDto) {
-    return this.productService.create(createCategoryDto);
+  create(@Body() dto: CreateProductDto) {
+    return this.productService.create(dto);
   }
 
   @Get(':uuid/prices')
@@ -40,7 +40,7 @@ export class ProductController {
   }
 
   @Post(':uuid/prices')
-  priceCreate(@Param('uuid') uuid: string, @Body() createCategoryDto: CreatePriceDto) {
-    return this.priceService.create(uuid, createCategoryDto);
+  priceCreate(@Param('uuid') uuid: string, @Body() dto: CreatePriceDto) {
+    return this.priceService.create(uuid, dto);
   }
 }

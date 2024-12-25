@@ -30,8 +30,8 @@ export class PropertyGroupService {
     return this.propertyGroupRepository.create(dto);
   }
 
-  update(uuid: string, dto: UpdatePropertyGroupDto) {
-    return this.propertyGroupRepository.update(uuid, dto);
+  update(dto: UpdatePropertyGroupDto) {
+    return this.propertyGroupRepository.update(dto);
   }
 
   remove(uuid: string) {

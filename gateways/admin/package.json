@@ -19,7 +19,6 @@
     "test:e2e": "jest --config env.d.ts/jest-e2e.json"
   },
   "dependencies": {
-    "@mkfyi/nestjs-rmq": "1.5.0",
     "@nestjs/axios": "3.1.3",
     "@nestjs/common": "10.4.15",
     "@nestjs/config": "3.3.0",
@@ -28,6 +27,7 @@
     "@nestjs/microservices": "10.4.15",
     "@nestjs/passport": "10.0.3",
     "@nestjs/platform-express": "10.4.15",
+    "axios": "1.7.9",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
     "cookie-parser": "1.4.7",
@@ -42,15 +42,15 @@
     "sharp": "0.33.5"
   },
   "devDependencies": {
-    "@nestjs/cli": "10.4.8",
+    "@nestjs/cli": "10.4.9",
     "@nestjs/schematics": "10.2.3",
     "@nestjs/testing": "10.4.15",
-    "@prisma/client": "6.0.1",
+    "@prisma/client": "6.1.0",
     "@types/amqplib": "0.10.6",
     "@types/cookie-parser": "1.4.8",
     "@types/express": "5.0.0",
     "@types/jest": "29.5.14",
-    "@types/node": "22.10.1",
+    "@types/node": "22.10.2",
     "@types/passport-jwt": "4.0.1",
     "@types/sharp": "0.32.0",
     "@types/supertest": "6.0.2",

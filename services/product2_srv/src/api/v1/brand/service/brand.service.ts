@@ -9,10 +9,6 @@ import { BrandRepository } from '../repository/brand.repository';
 export class BrandService {
   constructor(private readonly brandRepository: BrandRepository) {}
 
-  create(createCategoryDto: CreateBrandDto) {
-    return this.brandRepository.create(createCategoryDto);
-  }
-
   async findAll() {
     return Promise.all([this.brandRepository.findAll(), this.brandRepository.count()]).then(([data, count]) => {
       return {
@@ -28,11 +24,15 @@ export class BrandService {
     return this.brandRepository.findByUuid(uuid);
   }
 
-  update(uuid: string, updateCategoryDto: UpdateBrandDto) {
-    return this.brandRepository.update(uuid, updateCategoryDto);
+  create(dto: CreateBrandDto) {
+    return this.brandRepository.create(dto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  update(dto: UpdateBrandDto) {
+    return this.brandRepository.update(dto);
+  }
+
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

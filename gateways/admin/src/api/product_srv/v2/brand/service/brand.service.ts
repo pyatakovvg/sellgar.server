@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
+import { firstValueFrom } from 'rxjs';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
+import { UpdateBrandDto } from './dto/update-brand.dto';
+import { CreateBrandDto } from './dto/create-brand.dto';
+
 import { BrandResultEntity, BrandEntity } from '../brand.entity';
-
-import { BrandGateway } from '../gateway/brand.gateway';
-
-import { UpdateBrandDto } from '../gateway/dto/update-brand.dto';
-import { CreateBrandDto } from '../gateway/dto/create-brand.dto';
 
 @Injectable()
 export class BrandService {
-  constructor(private readonly brandGateway: BrandGateway) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
-    const result = await this.brandGateway.findAll();
+    const message = this.productService.send({ cmd: 'brand.findAll' }, {});
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(BrandResultEntity, result, {
       strategy: 'excludeAll',
     });
@@ -26,7 +28,9 @@ export class BrandService {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.brandGateway.findByUuid(uuid);
+    const message = this.productService.send({ cmd: 'brand.findByUuid' }, { uuid });
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(BrandEntity, result, {
       strategy: 'excludeAll',
     });
@@ -36,11 +40,33 @@ export class BrandService {
     return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateBrandDto) {
-    return this.brandGateway.update(uuid, dto);
+  async update(uuid: string, dto: UpdateBrandDto) {
+    if (uuid !== dto.uuid) {
+      throw Error('Not persistent');
+    }
+
+    const message = this.productService.send({ cmd: 'brand.update' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(BrandEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(dto: CreateBrandDto) {
-    return this.brandGateway.create(dto);
+  async create(dto: CreateBrandDto) {
+    const message = this.productService.send({ cmd: 'brand.create' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(BrandEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

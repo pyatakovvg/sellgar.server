@@ -1,29 +1,42 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app: NestExpressApplication = await NestFactory.create(AppModule);
-  const config: ConfigService = app.get(ConfigService);
-  const port: number = config.get<number>('PORT');
+  const logger = new Logger();
+  const config = new ConfigService();
+
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        {
+          port: config.get('AMQP_PORT'),
+          hostname: config.get('AMQP_HOSTNAME'),
+          username: config.get('AMQP_USERNAME'),
+          password: config.get('AMQP_PASSWORD'),
+        },
+      ],
+      persistent: true,
+      queue: config.get('AMQP_SERVICE_QUEUE'),
+      queueOptions: {
+        durable: true,
+      },
+    },
+  });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  const configSwaggerBuilder = new DocumentBuilder()
-    .setTitle('Сервис product_srv')
-    // .setDescription('The Median API description')
-    .setVersion('0.0.1')
-    .build();
+  const port = config.get<string>('PORT');
 
-  const document = SwaggerModule.createDocument(app, configSwaggerBuilder);
-  SwaggerModule.setup('api', app, document);
-
+  await app.startAllMicroservices();
   await app.listen(port, () => {
-    console.log('[WEB]', config.get<string>('BASE_URL'));
+    logger.log('Service has been started on port ' + port);
   });
 }
 

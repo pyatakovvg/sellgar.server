@@ -1,38 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CreatePropertyGroupDto } from '../repository/dto/create-property-group.dto';
 import { UpdatePropertyGroupDto } from '../repository/dto/update-property-group.dto';
 
 import { PropertyGroupService } from '../service/property-group.service';
 
-@Controller('properties/groups')
-@ApiTags('Properties')
+@Controller()
 export class PropertyGroupController {
   constructor(private readonly propertyService: PropertyGroupService) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'property-group.findAll' })
   findAll() {
     return this.propertyService.findAll();
   }
 
-  @Get(':uuid')
-  findByUuid(@Param('uuid') uuid: string) {
+  @MessagePattern({ cmd: 'property-group.findByUuid' })
+  findByUuid(@Payload('uuid') uuid: string) {
     return this.propertyService.findByUuid(uuid);
   }
 
-  @Post()
-  create(@Body() createCategoryDto: CreatePropertyGroupDto) {
-    return this.propertyService.create(createCategoryDto);
+  @MessagePattern({ cmd: 'property-group.create' })
+  create(@Payload() dto: CreatePropertyGroupDto) {
+    return this.propertyService.create(dto);
   }
 
-  @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() dto: UpdatePropertyGroupDto) {
-    return this.propertyService.update(uuid, dto);
+  @MessagePattern({ cmd: 'property-group.update' })
+  update(@Payload() dto: UpdatePropertyGroupDto) {
+    return this.propertyService.update(dto);
   }
 
-  @Delete(':uuid')
-  remove(@Param('uuid') uuid: string) {
+  @MessagePattern({ cmd: 'property-group.delete' })
+  remove(@Payload('uuid') uuid: string) {
     return this.propertyService.remove(uuid);
   }
 }

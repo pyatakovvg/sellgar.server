@@ -109,21 +109,21 @@ export class CategoryRepository {
     return resultInstance;
   }
 
-  update(uuid: string, updateCategoryDto: UpdateCategoryDto) {
+  update(dto: UpdateCategoryDto) {
     return this.prismaService.category.update({
       where: {
-        uuid,
+        uuid: dto.uuid,
       },
       data: {
-        uuid: updateCategoryDto.uuid,
-        name: updateCategoryDto.name,
-        description: updateCategoryDto.description,
-        parentUuid: updateCategoryDto.parentUuid,
+        uuid: dto.uuid,
+        parentUuid: dto.parentUuid,
+        name: dto.name,
+        description: dto.description,
       },
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

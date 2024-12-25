@@ -1,38 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CreateUnitDto } from '../repository/dto/create-unit.dto';
 import { UpdateUnitDto } from '../repository/dto/update-unit.dto';
 
 import { UnitService } from '../service/unit.service';
 
-@Controller('units')
-@ApiTags('Units')
+@Controller()
 export class UnitController {
   constructor(private readonly unitService: UnitService) {}
 
-  @Post()
-  create(@Body() createCategoryDto: CreateUnitDto) {
-    return this.unitService.create(createCategoryDto);
-  }
-
-  @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdateUnitDto) {
-    return this.unitService.update(uuid, updateCategoryDto);
-  }
-
-  @Get()
+  @MessagePattern({ cmd: 'unit.findAll' })
   findAll() {
     return this.unitService.findAll();
   }
 
-  @Get(':uuid')
-  findByUuid(@Param('uuid') uuid: string) {
+  @MessagePattern({ cmd: 'unit.findByUuid' })
+  findByUuid(@Payload('uuid') uuid: string) {
     return this.unitService.findByUuid(uuid);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.unitService.remove(+id);
+  @MessagePattern({ cmd: 'unit.create' })
+  create(@Payload() dto: CreateUnitDto) {
+    return this.unitService.create(dto);
+  }
+
+  @MessagePattern({ cmd: 'unit.update' })
+  update(@Payload() dto: UpdateUnitDto) {
+    return this.unitService.update(dto);
+  }
+
+  @MessagePattern({ cmd: 'unit.delete' })
+  remove(@Payload('uuid') uuid: string) {
+    return this.unitService.remove(uuid);
   }
 }

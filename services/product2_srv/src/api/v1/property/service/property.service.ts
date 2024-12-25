@@ -28,11 +28,11 @@ export class PropertyService {
     return this.propertyRepository.create(dto);
   }
 
-  update(uuid: string, dto: UpdatePropertyDto) {
-    return this.propertyRepository.update(uuid, dto);
+  update(dto: UpdatePropertyDto) {
+    return this.propertyRepository.update(dto);
   }
 
   remove(uuid: string) {
-    //   return `This action removes a #${id} category`;
+    return `This action removes a #${uuid} category`;
   }
 }

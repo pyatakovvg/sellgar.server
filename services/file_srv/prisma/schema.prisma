@@ -22,21 +22,21 @@ model File {
   mime String @db.Text
   size Int    @db.Integer
 
-  dir  Dir[] @relation("file_to_dir")
+  dir  Folder[] @relation("file_to_folder")
 
   @@index([uuid, name])
   @@map("file")
 }
 
-model Dir {
+model Folder {
   uuid       String @id @default(uuid()) @db.Uuid
   name       String @db.Text
 
   parentUuid String? @db.Uuid
-  parent     Dir? @relation(fields: [parentUuid], references: [uuid], name: "directory")
-  children   Dir[] @relation("directory")
+  parent     Folder? @relation(fields: [parentUuid], references: [uuid], name: "directory")
+  children   Folder[] @relation("directory")
 
-  files      File[] @relation("file_to_dir")
+  files      File[] @relation("file_to_folder")
 
   @@index([uuid, name, parentUuid])
   @@map("dir")

@@ -28,11 +28,11 @@ export class CategoryService {
     return this.categoryRepository.findByUuid(uuid);
   }
 
-  update(uuid: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryRepository.update(uuid, updateCategoryDto);
+  update(dto: UpdateCategoryDto) {
+    return this.categoryRepository.update(dto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

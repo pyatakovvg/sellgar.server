@@ -1,38 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CreateBrandDto } from '../repository/dto/create-brand.dto';
 import { UpdateBrandDto } from '../repository/dto/update-brand.dto';
 
 import { BrandService } from '../service/brand.service';
 
-@Controller('brands')
-@ApiTags('Brands')
+@Controller()
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
-  @Post()
-  create(@Body() createCategoryDto: CreateBrandDto) {
-    return this.brandService.create(createCategoryDto);
-  }
-
-  @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdateBrandDto) {
-    return this.brandService.update(uuid, updateCategoryDto);
-  }
-
-  @Get()
+  @MessagePattern({ cmd: 'brand.findAll' })
   findAll() {
     return this.brandService.findAll();
   }
 
-  @Get(':uuid')
-  findByUuid(@Param('uuid') uuid: string) {
+  @MessagePattern({ cmd: 'brand.findByUuid' })
+  findByUuid(@Payload('uuid') uuid: string) {
     return this.brandService.findByUuid(uuid);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.brandService.remove(+id);
+  @MessagePattern({ cmd: 'brand.create' })
+  create(@Payload() dto: CreateBrandDto) {
+    return this.brandService.create(dto);
+  }
+
+  @MessagePattern({ cmd: 'brand.update' })
+  update(@Payload() dto: UpdateBrandDto) {
+    return this.brandService.update(dto);
+  }
+
+  @MessagePattern({ cmd: 'brand.delete' })
+  remove(@Payload('uuid') uuid: string) {
+    return this.brandService.remove(uuid);
   }
 }

@@ -1,11 +1,11 @@
 import { Reflector } from '@nestjs/core';
+import { HttpService } from '@nestjs/axios';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
-import { Fetch } from '@helper/fetch';
-
+import { map, firstValueFrom } from 'rxjs';
 import { Request as ExpressRequest } from 'express';
 
 import { TokenService } from '@/common/services/token.service';
@@ -17,6 +17,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     private readonly tokenService: TokenService,
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
+    private readonly httpService: HttpService,
     private readonly config: ConfigService,
   ) {
     super();
@@ -44,17 +45,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       request.user = payload.sub;
     } catch (e) {
       if (e instanceof TokenExpiredError) {
-        const identityFetch = new Fetch({
-          baseURL: this.config.get('API_IDENTITY_SRV'),
-        });
-
-        const result = await identityFetch.send({
-          url: '/auth/access-refresh',
-          method: 'post',
-          data: {
-            refreshToken: refreshToken,
-          },
-        });
+        const result = await this.getAccessRefresh(refreshToken);
 
         if (result) {
           response.cookie(
@@ -81,33 +72,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return true;
   }
 
+  private async getAccessRefresh(refreshToken: string) {
+    try {
+      const result = this.httpService
+        .post(this.config.get('API_IDENTITY_SRV') + '/auth/access-refresh', {
+          refreshToken: refreshToken,
+        })
+        .pipe(map((res) => res.data));
+
+      return await firstValueFrom(result);
+    } catch (error) {
+      return null;
+    }
+  }
+
   private async encodeAccessToken(accessToken: string) {
     return await this.jwtService.verifyAsync(accessToken, {
       secret: this.config.get('ACCESS_TOKEN_SECRET'),
     });
-  }
-
-  private extractTokenFromHeader(request: ExpressRequest): string {
-    const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
-
-    if (cookie) {
-      const encodedCookie = JSON.parse(cookie);
-      if (encodedCookie) {
-        return encodedCookie.accessToken ?? null;
-      }
-    }
-    return null;
-  }
-
-  private extractRefreshTokenFromHeader(request: ExpressRequest): any {
-    const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
-
-    if (cookie) {
-      const encodedCookie = JSON.parse(cookie);
-      if (encodedCookie) {
-        return encodedCookie.refreshToken ?? null;
-      }
-    }
-    return null;
   }
 }

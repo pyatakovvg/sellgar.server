@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
+import { firstValueFrom } from 'rxjs';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { UnitResultEntity, UnitEntity } from '../unit.entity';
 
-import { UnitGateway } from '../gateway/unit.gateway';
-
-import { UpdateUnitDto } from '../gateway/dto/update-unit.dto';
-import { CreateUnitDto } from '../gateway/dto/create-unit.dto';
+import { UpdateUnitDto } from './dto/update-unit.dto';
+import { CreateUnitDto } from './dto/create-unit.dto';
 
 @Injectable()
 export class UnitService {
-  constructor(private readonly unitGateway: UnitGateway) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
-    const result = await this.unitGateway.findAll();
+    const message = this.productService.send({ cmd: 'unit.findAll' }, {});
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(UnitResultEntity, result, {
       strategy: 'excludeAll',
     });
@@ -26,7 +28,9 @@ export class UnitService {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.unitGateway.findByUuid(uuid);
+    const message = this.productService.send({ cmd: 'unit.findByUuid' }, { uuid });
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(UnitEntity, result, {
       strategy: 'excludeAll',
     });
@@ -36,11 +40,33 @@ export class UnitService {
     return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateUnitDto) {
-    return this.unitGateway.update(uuid, dto);
+  async update(uuid: string, dto: UpdateUnitDto) {
+    if (uuid !== dto.uuid) {
+      throw Error('Not persistent');
+    }
+
+    const message = this.productService.send({ cmd: 'unit.update' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(UnitEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(dto: CreateUnitDto) {
-    return this.unitGateway.create(dto);
+  async create(dto: CreateUnitDto) {
+    const message = this.productService.send({ cmd: 'unit.create' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(UnitEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

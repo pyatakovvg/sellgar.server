@@ -49,7 +49,6 @@ export class ProductRepository {
             image: {
               select: {
                 uuid: true,
-                imageUuid: true,
                 fileName: true,
               },
             },

@@ -29,7 +29,6 @@ export class ProductVariantRepository {
             image: {
               select: {
                 uuid: true,
-                imageUuid: true,
                 fileName: true,
               },
             },
@@ -63,7 +62,6 @@ export class ProductVariantRepository {
             image: {
               select: {
                 uuid: true,
-                imageUuid: true,
                 fileName: true,
               },
             },

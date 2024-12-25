@@ -79,15 +79,15 @@ export class BrandRepository {
     return resultInstance;
   }
 
-  update(uuid: string, updateBrandDto: UpdateBrandDto) {
+  update(dto: UpdateBrandDto) {
     return this.prismaService.brand.update({
       where: {
-        uuid,
+        uuid: dto.uuid,
       },
       data: {
-        code: updateBrandDto.code,
-        name: updateBrandDto.name,
-        description: updateBrandDto.description,
+        code: dto.code,
+        name: dto.name,
+        description: dto.description,
       },
     });
   }

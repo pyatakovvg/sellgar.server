@@ -98,10 +98,10 @@ export class PropertyGroupRepository {
     });
   }
 
-  update(uuid: string, dto: UpdatePropertyGroupDto) {
+  update(dto: UpdatePropertyGroupDto) {
     return this.prismaService.propertyGroup.update({
       where: {
-        uuid,
+        uuid: dto.uuid,
       },
       data: {
         name: dto.name,

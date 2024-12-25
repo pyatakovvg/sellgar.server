@@ -9,10 +9,6 @@ import { UnitRepository } from '../repository/unit.repository';
 export class UnitService {
   constructor(private readonly unitRepository: UnitRepository) {}
 
-  create(createCategoryDto: CreateUnitDto) {
-    return this.unitRepository.create(createCategoryDto);
-  }
-
   async findAll() {
     return Promise.all([this.unitRepository.findAll(), this.unitRepository.count()]).then(([data, count]) => {
       return {
@@ -28,11 +24,15 @@ export class UnitService {
     return this.unitRepository.findByUuid(uuid);
   }
 
-  update(uuid: string, updateCategoryDto: UpdateUnitDto) {
-    return this.unitRepository.update(uuid, updateCategoryDto);
+  create(dto: CreateUnitDto) {
+    return this.unitRepository.create(dto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  update(dto: UpdateUnitDto) {
+    return this.unitRepository.update(dto);
+  }
+
+  remove(uuid: string) {
+    return `This action removes a #${uuid} category`;
   }
 }

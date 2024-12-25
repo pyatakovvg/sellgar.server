@@ -7,8 +7,18 @@ import { BrandModule } from './brand/brand.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
 import { PriceModule } from './price/price.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
-  imports: [PriceModule, ProductModule, PropertyGroupModule, PropertyModule, UnitModule, BrandModule, CategoryModule],
+  imports: [
+    PriceModule,
+    ProductModule,
+    PropertyGroupModule,
+    PropertyModule,
+    UnitModule,
+    BrandModule,
+    CategoryModule,
+    ImageModule,
+  ],
 })
 export class ApiV1Module {}
