@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-// import { QueueAdapterType, RabbitMQModule } from '@mkfyi/nestjs-rmq';
+import { HttpModule } from '@nestjs/axios';
 
 import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
-import { ApiProductV1Module } from './api/product_srv/v1/api.module';
 import { ApiProductV2Module } from './api/product_srv/v2/api.module';
 import { ApiFileV1Module } from './api/file_srv/v1/api.module';
 
@@ -14,6 +13,9 @@ import { TokenService } from './common/services/token.service';
 
 @Module({
   imports: [
+    HttpModule.register({
+      global: true,
+    }),
     PassportModule.register({
       session: false,
       defaultStrategy: 'jwt',
@@ -24,27 +26,7 @@ import { TokenService } from './common/services/token.service';
       isGlobal: true,
     }),
 
-    // RabbitMQModule.forRootAsync({
-    //   connection: {
-    //     imports: [ConfigModule],
-    //     useFactory: (config: ConfigService) => ({
-    //       hostname: config.get('AMQP_HOSTNAME'),
-    //       username: config.get('AMQP_USERNAME'),
-    //       password: config.get('AMQP_PASSWORD'),
-    //     }),
-    //     inject: [ConfigService],
-    //   },
-    // adapters: [
-    //   {
-    //     name: 'user.adapter.mq',
-    //     queue: 'admin_gw.user.update',
-    //     type: QueueAdapterType.Worker
-    //   }
-    // ]
-    // }),
-
     ApiIdentityV1Module,
-    ApiProductV1Module,
     ApiFileV1Module,
     ApiProductV2Module,
   ],

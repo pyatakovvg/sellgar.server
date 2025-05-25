@@ -12,7 +12,7 @@ export class FileController {
   constructor(private readonly fileService: FileService) {}
 
   @Get()
-  getAll(@Query('folderUuid') folderUuid: string) {
+  getAll(@Query('folderUuid') folderUuid?: string) {
     return this.fileService.getAll(folderUuid);
   }
 

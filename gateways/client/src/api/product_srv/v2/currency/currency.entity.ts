@@ -1,11 +1,7 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsNumber } from 'class-validator';
+import { IsUUID, IsString, ValidateNested, IsNumber, IsDateString } from 'class-validator';
 
 export class CurrencyEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
   @Expose()
   @IsString()
   code: string;
@@ -13,6 +9,14 @@ export class CurrencyEntity {
   @Expose()
   @IsString()
   name: string;
+
+  @Expose()
+  @IsDateString()
+  createdAt: string;
+
+  @Expose()
+  @IsDateString()
+  updatedAt: string;
 }
 
 class MetaEntity {

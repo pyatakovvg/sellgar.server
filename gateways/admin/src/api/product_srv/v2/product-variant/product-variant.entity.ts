@@ -1,5 +1,6 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsNumber, IsDateString } from 'class-validator';
+import { IsUUID, IsString, IsOptional, ValidateNested, IsNumber, IsDateString } from 'class-validator';
+import { ProductEntity } from '@/api/product_srv/v2/product/product.entity';
 
 export class ProductVariantEntity {
   @Expose()
@@ -17,6 +18,12 @@ export class ProductVariantEntity {
   @Expose()
   @IsString()
   description: string;
+
+  @Expose()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ProductEntity)
+  product: ProductEntity;
 
   @Expose()
   @IsDateString()

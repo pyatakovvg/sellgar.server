@@ -15,7 +15,7 @@ export class PriceGateway {
 
   async findAll(productUuid: string) {
     const request = this.httpService
-      .get(this.config.get('API_PRODUCT_SRV') + '/products/' + productUuid + '/prices')
+      .get(this.config.get('API_PRODUCT_SRV') + '/store/' + productUuid + '/prices')
       .pipe(map((res) => res.data));
 
     return firstValueFrom(request);
@@ -23,7 +23,7 @@ export class PriceGateway {
 
   async create(productUuid: string, dto: CreatePriceDto) {
     const request = this.httpService
-      .post(this.config.get('API_PRODUCT_SRV') + '/products/' + productUuid + '/prices', dto)
+      .post(this.config.get('API_PRODUCT_SRV') + '/store/' + productUuid + '/prices', dto)
       .pipe(map((res) => res.data));
 
     return firstValueFrom(request);

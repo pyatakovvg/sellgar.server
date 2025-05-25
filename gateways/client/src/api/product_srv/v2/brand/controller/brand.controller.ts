@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { BrandService } from '../service/brand.service';
-import { UpdateBrandDto } from '../gateway/dto/update-brand.dto';
-import { CreateBrandDto } from '../gateway/dto/create-brand.dto';
+
+import { UpdateBrandDto } from '../service/dto/update-brand.dto';
+import { CreateBrandDto } from '../service/dto/create-brand.dto';
 
 @Controller('v2/brands')
 export class BrandController {

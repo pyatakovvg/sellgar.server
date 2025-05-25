@@ -4,19 +4,18 @@ import { IsUUID, IsString, ValidateNested, IsNumber, IsDateString, IsOptional } 
 import { BrandEntity } from '@/api/product_srv/v2/brand/brand.entity';
 import { PropertyEntity } from '@/api/product_srv/v2/property/property.entity';
 import { CategoryEntity } from '@/api/product_srv/v2/category/category.entity';
-import { ProductPriceEntity } from '@/api/product_srv/v2/product-price/product-price.entity';
+import { PriceEntity } from '@/api/product_srv/v2/price/price.entity';
 import { ProductVariantEntity } from '@/api/product_srv/v2/product-variant/product-variant.entity';
 
 export class ProductPropertyEntity {
   @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
   @ValidateNested()
   @Type(() => PropertyEntity)
   property: PropertyEntity;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  propertyUuid?: string;
 
   @Expose()
   @IsString()
@@ -27,16 +26,6 @@ export class ProductEntity {
   @IsUUID()
   @Expose()
   uuid: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  categoryUuid: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  brandUuid: string;
 
   @Expose()
   @IsString()
@@ -68,8 +57,8 @@ export class ProductEntity {
 
   @Expose()
   @ValidateNested()
-  @Type(() => ProductPriceEntity)
-  price: ProductPriceEntity;
+  @Type(() => PriceEntity)
+  prices: PriceEntity[];
 
   @Expose()
   @IsDateString()

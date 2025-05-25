@@ -5,7 +5,6 @@ import { UpdateProductDto } from '../service/dto/update-product.dto';
 import { CreateProductDto } from '../service/dto/create-product.dto';
 
 import { PriceService } from '../../price/service/price.service';
-import { CreatePriceDto } from '../../price/gateway/dto/create-price.dto';
 
 @Controller('v2/products')
 export class ProductController {
@@ -32,15 +31,5 @@ export class ProductController {
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productService.create(dto);
-  }
-
-  @Get(':uuid/prices')
-  priceFindAll(@Param('uuid') uuid: string) {
-    return this.priceService.findAll(uuid);
-  }
-
-  @Post(':uuid/prices')
-  priceCreate(@Param('uuid') uuid: string, @Body() dto: CreatePriceDto) {
-    return this.priceService.create(uuid, dto);
   }
 }

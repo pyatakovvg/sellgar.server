@@ -10,7 +10,7 @@ import { FileGateway } from './file.gateway';
 export class FileService {
   constructor(private readonly fileGateway: FileGateway) {}
 
-  getAll(folderUuid: string) {
+  getAll(folderUuid?: string) {
     return this.fileGateway.getAll(folderUuid);
   }
 

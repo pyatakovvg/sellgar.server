@@ -10,7 +10,6 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    HttpModule,
     JwtModule.register({
       global: true,
       secret: 'secretKey',

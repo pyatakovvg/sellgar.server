@@ -20,7 +20,7 @@ export class ProductVariantService {
       strategy: 'excludeAll',
     });
 
-    await validateOrReject(resultInstance);
+    // await validateOrReject(resultInstance);
 
     return resultInstance;
   }
@@ -31,7 +31,7 @@ export class ProductVariantService {
       strategy: 'excludeAll',
     });
 
-    await validateOrReject(resultInstance);
+    // await validateOrReject(resultInstance);
 
     return resultInstance;
   }

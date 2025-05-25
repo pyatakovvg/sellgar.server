@@ -14,7 +14,7 @@ export class FileGateway {
     private readonly httpService: HttpService,
   ) {}
 
-  getAll(folderUuid: string) {
+  getAll(folderUuid?: string) {
     const request = this.httpService
       .get(this.config.get('API_FILE_SRV') + '/v1/files', {
         params: { folderUuid },

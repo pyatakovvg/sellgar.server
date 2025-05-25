@@ -1,19 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
+import { firstValueFrom } from 'rxjs';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+
 import { CategoryResultEntity, CategoryEntity } from '../category.entity';
-import { CategoryGateway } from '../gateway/category.gateway';
-import { UpdateCategoryDto } from '../gateway/dto/update-category.dto';
-import { CreateCategoryDto } from '../gateway/dto/create-category.dto';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryGateway: CategoryGateway) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
-    const result = await this.categoryGateway.findAll();
+    const message = this.productService.send({ cmd: 'category.findAll' }, {});
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(CategoryResultEntity, result, {
       strategy: 'excludeAll',
     });
@@ -24,7 +28,9 @@ export class CategoryService {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.categoryGateway.findByUuid(uuid);
+    const message = this.productService.send({ cmd: 'category.findByUuid' }, { uuid });
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(CategoryEntity, result, {
       strategy: 'excludeAll',
     });
@@ -34,11 +40,33 @@ export class CategoryService {
     return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateCategoryDto) {
-    return this.categoryGateway.update(uuid, dto);
+  async update(uuid: string, dto: UpdateCategoryDto) {
+    if (uuid !== dto.uuid) {
+      throw Error('Not persistent');
+    }
+
+    const message = this.productService.send({ cmd: 'category.update' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(CategoryEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(dto: CreateCategoryDto) {
-    return this.categoryGateway.create(dto);
+  async create(dto: CreateCategoryDto) {
+    const message = this.productService.send({ cmd: 'category.create' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(CategoryEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

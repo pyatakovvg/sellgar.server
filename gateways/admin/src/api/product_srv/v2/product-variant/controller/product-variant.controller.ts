@@ -1,30 +1,18 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { ProductVariantService } from '../service/product-variant.service';
-import { UpdateProductDto } from '../gateway/dto/update-product.dto';
-import { CreateProductDto } from '../gateway/dto/create-product.dto';
 
-@Controller('v2/products')
+@Controller('v2/variants')
 export class ProductVariantController {
-  constructor(private readonly productService: ProductVariantService) {}
+  constructor(private readonly productVariantService: ProductVariantService) {}
 
-  @Get('/')
+  @Get()
   findAll() {
-    return this.productService.findAll();
+    return this.productVariantService.findAll();
   }
 
   @Get(':uuid')
   findByUuid(@Param('uuid') uuid: string) {
-    return this.productService.findByUuid(uuid);
-  }
-
-  @Patch(':uuid')
-  update(@Param('uuid') uuid: string, @Body() updateCategoryDto: UpdateProductDto) {
-    return this.productService.update(uuid, updateCategoryDto);
-  }
-
-  @Post()
-  create(@Body() createCategoryDto: CreateProductDto) {
-    return this.productService.create(createCategoryDto);
+    return this.productVariantService.findByUuid(uuid);
   }
 }

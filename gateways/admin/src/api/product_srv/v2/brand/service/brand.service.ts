@@ -16,8 +16,8 @@ export class BrandService {
 
   async findAll() {
     const message = this.productService.send({ cmd: 'brand.findAll' }, {});
-
     const result = await firstValueFrom(message);
+
     const resultInstance = plainToInstance(BrandResultEntity, result, {
       strategy: 'excludeAll',
     });

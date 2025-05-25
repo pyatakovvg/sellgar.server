@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
+import { firstValueFrom } from 'rxjs';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { PropertyGroupEntity, PropertyGroupResultEntity } from '../property-group.entity';
 
-import { PropertyGroupGateway } from '../gateway/property-group.gateway';
-
-import { UpdatePropertyGroupDto } from '../gateway/dto/update-property-group.dto';
-import { CreatePropertyGroupDto } from '../gateway/dto/create-property-group.dto';
+import { UpdatePropertyGroupDto } from './dto/update-property-group.dto';
+import { CreatePropertyGroupDto } from './dto/create-property-group.dto';
 
 @Injectable()
 export class PropertyGroupService {
-  constructor(private readonly propertyGateway: PropertyGroupGateway) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
-  async findAllGroups() {
-    const result = await this.propertyGateway.findAll();
+  async findAll() {
+    const message = this.productService.send({ cmd: 'property-group.findAll' }, {});
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyGroupResultEntity, result, {
       strategy: 'excludeAll',
     });
@@ -26,7 +28,9 @@ export class PropertyGroupService {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.propertyGateway.findByUuid(uuid);
+    const message = this.productService.send({ cmd: 'property-group.findByUuid' }, { uuid });
+
+    const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(PropertyGroupEntity, result, {
       strategy: 'excludeAll',
     });
@@ -36,11 +40,33 @@ export class PropertyGroupService {
     return resultInstance;
   }
 
-  update(uuid: string, dto: UpdatePropertyGroupDto) {
-    return this.propertyGateway.update(uuid, dto);
+  async update(uuid: string, dto: UpdatePropertyGroupDto) {
+    if (uuid !== dto.uuid) {
+      throw Error('Not persistent');
+    }
+
+    const message = this.productService.send({ cmd: 'property-group.update' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(PropertyGroupEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(dto: CreatePropertyGroupDto) {
-    return this.propertyGateway.create(dto);
+  async create(dto: CreatePropertyGroupDto) {
+    const message = this.productService.send({ cmd: 'property-group.create' }, dto);
+
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(PropertyGroupEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

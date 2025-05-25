@@ -46,6 +46,7 @@ export class ProductEntity {
   brand: BrandEntity;
 
   @Expose()
+  @IsOptional()
   @ValidateNested()
   @Type(() => ProductVariantEntity)
   variants: ProductVariantEntity[];
@@ -54,11 +55,6 @@ export class ProductEntity {
   @ValidateNested()
   @Type(() => ProductPropertyEntity)
   properties: ProductPropertyEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => PriceEntity)
-  prices: PriceEntity[];
 
   @Expose()
   @IsDateString()

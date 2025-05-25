@@ -12,6 +12,7 @@ import { PriceModule } from '../price/price.module';
   providers: [ConfigService, ProductService],
   imports: [
     PriceModule,
+
     ClientsModule.registerAsync({
       clients: [
         {

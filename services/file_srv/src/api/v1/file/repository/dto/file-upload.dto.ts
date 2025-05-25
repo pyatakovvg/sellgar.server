@@ -4,5 +4,7 @@ export interface FileUploadDto {
   encoding: string;
   mimetype: string;
   size: number;
-  buffer: Buffer | string;
+  width: number;
+  height: number;
+  buffer: string;
 }
