@@ -4,14 +4,9 @@ import { ProductService } from '../service/product.service';
 import { UpdateProductDto } from '../service/dto/update-product.dto';
 import { CreateProductDto } from '../service/dto/create-product.dto';
 
-import { PriceService } from '../../price/service/price.service';
-
 @Controller('v2/products')
 export class ProductController {
-  constructor(
-    private readonly priceService: PriceService,
-    private readonly productService: ProductService,
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
   @Get()
   findAll() {

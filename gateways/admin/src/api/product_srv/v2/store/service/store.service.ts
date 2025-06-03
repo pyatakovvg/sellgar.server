@@ -12,13 +12,12 @@ import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class StoreService {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly storeService: ClientProxy) {}
 
   async findAll() {
-    const message = this.productService.send({ cmd: 'store.findAll' }, {});
+    const message = this.storeService.send({ cmd: 'store.findAll' }, {});
 
     const result = await firstValueFrom(message);
-    console.log(result);
 
     const resultInstance = plainToInstance(StoreResultEntity, result, {
       strategy: 'excludeAll',
@@ -30,7 +29,7 @@ export class StoreService {
   }
 
   async findByUuid(uuid: string) {
-    const message = this.productService.send({ cmd: 'store.findByUuid' }, { uuid });
+    const message = this.storeService.send({ cmd: 'store.findByUuid' }, { uuid });
 
     const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(StoreEntity, result, {
@@ -43,7 +42,8 @@ export class StoreService {
   }
 
   async update(dto: UpdateProductDto) {
-    const message = this.productService.send({ cmd: 'store.update' }, dto);
+    console.log(dto);
+    const message = this.storeService.send({ cmd: 'store.update' }, dto);
 
     const result = await firstValueFrom<StoreEntity>(message);
     const resultInstance = plainToInstance(StoreEntity, result, {
@@ -56,7 +56,7 @@ export class StoreService {
   }
 
   async create(dto: CreateProductDto) {
-    const message = this.productService.send({ cmd: 'store.create' }, dto);
+    const message = this.storeService.send({ cmd: 'store.create' }, dto);
 
     const result = await firstValueFrom<StoreEntity>(message);
     const resultInstance = plainToInstance(StoreEntity, result, {

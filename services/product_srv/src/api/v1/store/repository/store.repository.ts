@@ -152,10 +152,15 @@ export class StoreRepository {
   create(dto: CreateProductDto) {
     return this.prismaService.store.create({
       data: {
-        uuid: '',
-        variantUuid: '',
-        count: 0,
-        showing: true,
+        variantUuid: dto.variantUuid,
+        count: dto.count,
+        showing: dto.showing,
+        prices: {
+          create: {
+            value: dto.price,
+            currencyCode: 'RUB',
+          },
+        },
       },
       select: this.storeSelect,
     });
@@ -167,10 +172,20 @@ export class StoreRepository {
         uuid,
       },
       data: {
-        uuid: '',
-        variantUuid: '',
-        count: 0,
-        showing: true,
+        uuid,
+        variantUuid: dto.variantUuid,
+        count: dto.count,
+        showing: dto.showing,
+        ...(dto.price
+          ? {
+              prices: {
+                create: {
+                  value: dto.price,
+                  currencyCode: 'RUB',
+                },
+              },
+            }
+          : {}),
       },
       select: this.storeSelect,
     });

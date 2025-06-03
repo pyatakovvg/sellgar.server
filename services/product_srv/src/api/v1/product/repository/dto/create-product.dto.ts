@@ -1,5 +1,4 @@
 import { Type } from 'class-transformer';
-import { ProductPropertyEntity } from '../..//product.entity';
 import { ValidateNested, IsUUID, IsString, IsOptional } from 'class-validator';
 
 class ProductVariant {
@@ -49,8 +48,4 @@ export class CreateProductDto {
   @ValidateNested()
   @Type(() => ProductProperty)
   properties: ProductProperty[];
-
-  @IsString()
-  @IsOptional()
-  price?: string;
 }

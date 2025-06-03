@@ -1,55 +1,16 @@
-import { Type } from 'class-transformer';
-import { ValidateNested, IsUUID, IsString, IsOptional } from 'class-validator';
-
-class ProductVariant {
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @IsString()
-  article: string;
-
-  @IsString()
-  name: string;
-
-  @IsString()
-  description: string;
-}
-
-class ProductProperty {
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @IsUUID()
-  propertyUuid: string;
-
-  @IsString()
-  value: string;
-}
+import { IsUUID, IsNumber, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
-  @IsString()
-  name: string;
-
-  @IsString()
-  description: string;
-
   @IsUUID()
-  categoryUuid: string;
+  variantUuid: string;
 
-  @IsUUID()
-  brandUuid: string;
+  @IsNumber()
+  count: number;
 
-  @ValidateNested()
-  @Type(() => ProductVariant)
-  variants: ProductVariant[];
+  @IsBoolean()
+  showing: boolean;
 
-  @ValidateNested()
-  @Type(() => ProductProperty)
-  properties: ProductProperty[];
-
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  price?: string;
+  price?: number;
 }
