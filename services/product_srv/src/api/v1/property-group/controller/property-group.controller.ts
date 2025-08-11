@@ -29,9 +29,4 @@ export class PropertyGroupController {
   update(@Payload() dto: UpdatePropertyGroupDto) {
     return this.propertyService.update(dto);
   }
-
-  @MessagePattern({ cmd: 'property-group.delete' })
-  remove(@Payload('uuid') uuid: string) {
-    return this.propertyService.remove(uuid);
-  }
 }

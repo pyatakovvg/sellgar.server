@@ -23,7 +23,7 @@ async function bootstrap() {
         },
       ],
       persistent: true,
-      queue: config.get('AMQP_SERVICE_QUEUE'),
+      queue: config.get('AMQP_PRODUCT_SRV_QUEUE'),
       queueOptions: {
         durable: true,
       },
@@ -42,7 +42,7 @@ async function bootstrap() {
         },
       ],
       persistent: true,
-      queue: config.get('AMQP_FILE_SERVICE_QUEUE'),
+      queue: config.get('AMQP_FILE_SRV_QUEUE'),
       queueOptions: {
         durable: true,
       },

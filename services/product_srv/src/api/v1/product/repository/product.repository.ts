@@ -97,10 +97,11 @@ export class ProductRepository {
     const result = await this.prismaService.product.findMany({
       select: this.productSelect,
     });
+    const resultInstance = result.map((entity) => plainToInstance(ProductEntity, entity));
 
-    return plainToInstance(ProductEntity, result, {
-      strategy: 'excludeAll',
-    });
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {
@@ -110,7 +111,6 @@ export class ProductRepository {
       },
       select: this.productSelect,
     });
-
     const resultInstance = plainToInstance(ProductEntity, result, {
       strategy: 'excludeAll',
     });
@@ -120,8 +120,8 @@ export class ProductRepository {
     return resultInstance;
   }
 
-  create(dto: CreateProductDto) {
-    return this.prismaService.product.create({
+  async create(dto: CreateProductDto) {
+    const result = await this.prismaService.product.create({
       data: {
         name: dto.name,
         description: dto.description,
@@ -143,12 +143,17 @@ export class ProductRepository {
       },
       select: this.productSelect,
     });
+    const resultInstance = plainToInstance(ProductEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateProductDto) {
-    return this.prismaService.product.update({
+  async update(dto: UpdateProductDto) {
+    const result = await this.prismaService.product.update({
       where: {
-        uuid,
+        uuid: dto.uuid,
       },
       data: {
         name: dto.name,
@@ -166,6 +171,12 @@ export class ProductRepository {
               name: v.name,
               description: v.description,
             })),
+          update: dto.variants.map((v) => ({
+            where: {
+              uuid: v.uuid,
+            },
+            data: v,
+          })),
         },
         properties: {
           deleteMany: {
@@ -181,9 +192,10 @@ export class ProductRepository {
       },
       select: this.productSelect,
     });
-  }
+    const resultInstance = plainToInstance(ProductEntity, result);
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

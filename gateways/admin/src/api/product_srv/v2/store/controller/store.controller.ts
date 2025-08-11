@@ -3,9 +3,9 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { StoreService } from '../service/store.service';
 import { UpdateProductDto } from '../service/dto/update-product.dto';
 import { CreateProductDto } from '../service/dto/create-product.dto';
+import { CreatePriceDto } from '../../price/gateway/dto/create-price.dto';
 
 import { PriceService } from '../../price/service/price.service';
-import { CreatePriceDto } from '../../price/gateway/dto/create-price.dto';
 
 @Controller('v2/store')
 export class StoreController {

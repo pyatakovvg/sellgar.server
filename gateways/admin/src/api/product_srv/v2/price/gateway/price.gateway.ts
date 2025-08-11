@@ -1,31 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
-
-import { firstValueFrom, map } from 'rxjs';
+import { Injectable, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { firstValueFrom } from 'rxjs';
 
 import { CreatePriceDto } from './dto/create-price.dto';
 
+import { PriceEntity, PriceResultEntity } from '../price.entity';
+
 @Injectable()
 export class PriceGateway {
-  constructor(
-    private readonly config: ConfigService,
-    private readonly httpService: HttpService,
-  ) {}
+  constructor(@Inject('PRODUCT_SERVICE') private readonly productProxy: ClientProxy) {}
 
-  async findAll(productUuid: string) {
-    const request = this.httpService
-      .get(this.config.get('API_PRODUCT_SRV') + '/store/' + productUuid + '/prices')
-      .pipe(map((res) => res.data));
+  async findAll(uuid: string) {
+    const message = this.productProxy.send({ cmd: 'store.price.findAll' }, { uuid });
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(PriceResultEntity, result);
 
-    return firstValueFrom(request);
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  async create(productUuid: string, dto: CreatePriceDto) {
-    const request = this.httpService
-      .post(this.config.get('API_PRODUCT_SRV') + '/store/' + productUuid + '/prices', dto)
-      .pipe(map((res) => res.data));
+  async create(uuid: string, dto: CreatePriceDto) {
+    const message = this.productProxy.send({ cmd: 'store.price.create' }, { uuid, ...dto });
 
-    return firstValueFrom(request);
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(PriceEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

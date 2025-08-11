@@ -1,23 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
 
 import { firstValueFrom, map } from 'rxjs';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
+
+import { ProductVariantResultEntity } from '../product-variant.entity';
 
 @Injectable()
 export class ProductVariantGateway {
   constructor(
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
+    @Inject('PRODUCT_SERVICE') private readonly productProxy: ClientProxy,
   ) {}
 
   async findAll() {
-    const request = this.httpService.get(this.config.get('API_PRODUCT_SRV') + '/variants').pipe(map((res) => res.data));
+    const message = this.productProxy.send({ cmd: 'product.variant.findAll' }, {});
+    const result = await firstValueFrom(message);
+    const resultInstance = plainToInstance(ProductVariantResultEntity, result);
 
-    return firstValueFrom(request);
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {

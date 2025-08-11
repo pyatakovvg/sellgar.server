@@ -24,7 +24,7 @@ async function bootstrap() {
         },
       ],
       persistent: true,
-      queue: config.get('AMQP_FILE_SRV_QUEUE'),
+      queue: config.get('AMQP_IDENTITY_SRV_QUEUE'),
       queueOptions: {
         durable: true,
       },

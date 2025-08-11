@@ -1,8 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-
-import { CreateProductDto } from '../repository/dto/create-product.dto';
-import { UpdateProductDto } from '../repository/dto/update-product.dto';
+import { MessagePattern } from '@nestjs/microservices';
 
 import { ProductVariantService } from '../service/product-variant.service';
 
@@ -11,7 +9,7 @@ import { ProductVariantService } from '../service/product-variant.service';
 export class ProductVariantController {
   constructor(private readonly productVariantService: ProductVariantService) {}
 
-  @Get()
+  @MessagePattern({ cmd: 'product.variant.findAll' })
   findAll() {
     return this.productVariantService.findAll();
   }
@@ -19,10 +17,5 @@ export class ProductVariantController {
   @Get(':uuid')
   findByUuid(@Param('uuid') uuid: string) {
     return this.productVariantService.findByUuid(uuid);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productVariantService.remove(+id);
   }
 }

@@ -29,9 +29,4 @@ export class UnitController {
   update(@Payload() dto: UpdateUnitDto) {
     return this.unitService.update(dto);
   }
-
-  @MessagePattern({ cmd: 'unit.delete' })
-  remove(@Payload('uuid') uuid: string) {
-    return this.unitService.remove(uuid);
-  }
 }

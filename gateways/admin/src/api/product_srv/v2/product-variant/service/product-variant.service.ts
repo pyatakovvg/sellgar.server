@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { ProductVariantResultEntity, ProductVariantEntity } from '../product-variant.entity';
+import { ProductVariantEntity } from '../product-variant.entity';
 
 import { ProductVariantGateway } from '../gateway/product-variant.gateway';
 
@@ -15,14 +15,7 @@ export class ProductVariantService {
   constructor(private readonly productGateway: ProductVariantGateway) {}
 
   async findAll() {
-    const result = await this.productGateway.findAll();
-    const resultInstance = plainToInstance(ProductVariantResultEntity, result, {
-      strategy: 'excludeAll',
-    });
-
-    // await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.productGateway.findAll();
   }
 
   async findByUuid(uuid: string) {
@@ -31,7 +24,7 @@ export class ProductVariantService {
       strategy: 'excludeAll',
     });
 
-    // await validateOrReject(resultInstance);
+    await validateOrReject(resultInstance);
 
     return resultInstance;
   }

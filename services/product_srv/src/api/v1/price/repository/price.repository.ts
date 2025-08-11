@@ -43,17 +43,15 @@ export class PriceRepository {
         createdAt: true,
       },
     });
-    const resultInstance = plainToInstance(PriceEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const resultInstance = result.map((item) => plainToInstance(PriceEntity, item));
 
-    // await validateOrReject(resultInstance);
+    await Promise.all(resultInstance.map((instance) => validateOrReject(instance)));
 
     return resultInstance;
   }
 
-  create(storeUuid: string, dto: CreatePriceDto) {
-    return this.prismaService.priceHistory.create({
+  async create(storeUuid: string, dto: CreatePriceDto) {
+    const result = await this.prismaService.priceHistory.create({
       data: {
         storeUuid,
         value: dto.value,
@@ -66,10 +64,17 @@ export class PriceRepository {
           select: {
             code: true,
             name: true,
+            createdAt: true,
+            updatedAt: true,
           },
         },
         createdAt: true,
       },
     });
+    const instanceResult = plainToInstance(PriceEntity, result);
+
+    await validateOrReject(instanceResult);
+
+    return instanceResult;
   }
 }

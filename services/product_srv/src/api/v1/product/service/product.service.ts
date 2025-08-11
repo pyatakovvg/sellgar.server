@@ -1,3 +1,5 @@
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 
 import { CreateProductDto } from '../repository/dto/create-product.dto';
@@ -11,15 +13,22 @@ import { ProductRepository } from '../repository/product.repository';
 export class ProductService {
   constructor(private readonly productRepository: ProductRepository) {}
 
-  async findAll(): Promise<ProductResultEntity> {
-    return Promise.all([this.productRepository.findAll(), this.productRepository.count()]).then(([data, count]) => {
-      return {
-        data: data,
-        meta: {
-          totalRows: count,
-        },
-      };
-    });
+  async findAll() {
+    const result = await Promise.all([this.productRepository.findAll(), this.productRepository.count()]).then(
+      ([data, count]) => {
+        return {
+          data: data,
+          meta: {
+            totalRows: count,
+          },
+        };
+      },
+    );
+    const resultInstance = plainToInstance(ProductResultEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
   findByUuid(uuid: string) {
@@ -30,11 +39,7 @@ export class ProductService {
     return this.productRepository.create(dto);
   }
 
-  update(uuid: string, dto: UpdateProductDto) {
-    return this.productRepository.update(uuid, dto);
-  }
-
-  remove(uuid: string) {
-    return `This action removes a #${uuid} category`;
+  update(dto: UpdateProductDto) {
+    return this.productRepository.update(dto);
   }
 }

@@ -9,6 +9,7 @@ import { StoreModule } from './store/store.module';
 import { ProductModule } from './product/product.module';
 import { PriceModule } from './price/price.module';
 import { PropertyModule } from './property/property.module';
+import { CurrencyModule } from './currency/currency.module';
 import { ProductVariantModule } from './product-variant/product-variant.module';
 import { PropertyGroupModule } from './property-group/property-group.module';
 
@@ -23,6 +24,7 @@ import { PropertyGroupModule } from './property-group/property-group.module';
     UnitModule,
     BrandModule,
     CategoryModule,
+    CurrencyModule,
 
     ClientsModule.registerAsync({
       isGlobal: true,

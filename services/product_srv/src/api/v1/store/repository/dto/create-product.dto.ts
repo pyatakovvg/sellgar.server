@@ -1,4 +1,4 @@
-import { IsUUID, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { IsUUID, IsNumber, IsString, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsUUID()
@@ -13,4 +13,7 @@ export class CreateProductDto {
   @IsNumber()
   @IsOptional()
   price?: number;
+
+  @IsString()
+  currencyCode: string;
 }

@@ -1,22 +1,24 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { CreatePriceDto } from '../repository/dto/create-price.dto';
+import { CreatePriceDto } from './dto/create-price.dto';
+import { FindAllPriceDto } from './dto/find-all-price.dto';
 
 import { PriceService } from '../service/price.service';
 
 @ApiTags('Products')
-@Controller('store')
+@Controller()
 export class PriceController {
   constructor(private readonly priceService: PriceService) {}
 
-  @Get(':uuid/prices')
-  findAll(@Param('uuid') uuid: string) {
-    return this.priceService.findAll(uuid);
+  @MessagePattern({ cmd: 'store.price.findAll' })
+  findAll(@Payload() dto: FindAllPriceDto) {
+    return this.priceService.findAll(dto.uuid);
   }
 
-  @Post(':uuid/prices')
-  create(@Param('uuid') uuid: string, @Body() dto: CreatePriceDto) {
-    return this.priceService.create(uuid, dto);
+  @MessagePattern({ cmd: 'store.price.create' })
+  create(@Payload() dto: CreatePriceDto) {
+    return this.priceService.create(dto.uuid, dto);
   }
 }

@@ -3,16 +3,29 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { HttpModule } from '@nestjs/axios';
+import { JwtModule } from '@nestjs/jwt';
 
-import { ApiIdentityV1Module } from './api/identity_srv/v1/api.module';
-import { ApiProductV2Module } from './api/product_srv/v2/api.module';
-import { ApiFileV1Module } from './api/file_srv/v1/api.module';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { CookiesService } from '@/common/services/cookies.service';
+import { AgentService } from '@/common/services/agent/agent.service';
+import { FingerprintService } from '@/common/services/fingerprint/fingerprint.service';
 
-import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
-import { TokenService } from './common/services/token.service';
+import { TokenModule } from '@/api/identity_srv/token/token.module';
+import { SessionModule } from '@/api/identity_srv/session/session.module';
+import { ApiProductV2Module } from '@/api/product_srv/v2/api.module';
+
+import { IdentitySrvModule } from '@/api/identity_srv/identity-srv.module';
 
 @Module({
   imports: [
+    TokenModule,
+    SessionModule,
+    IdentitySrvModule,
+    ApiProductV2Module,
+
+    JwtModule.register({
+      global: true,
+    }),
     HttpModule.register({
       global: true,
     }),
@@ -25,20 +38,16 @@ import { TokenService } from './common/services/token.service';
       cache: true,
       isGlobal: true,
     }),
-
-    ApiIdentityV1Module,
-    ApiFileV1Module,
-    ApiProductV2Module,
   ],
   controllers: [],
   providers: [
-    TokenService,
+    CookiesService,
+    AgentService,
+    FingerprintService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
   ],
 })
-class AppModule {}
-
-export { AppModule };
+export class AppModule {}

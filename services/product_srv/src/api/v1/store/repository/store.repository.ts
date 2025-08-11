@@ -126,10 +126,11 @@ export class StoreRepository {
     const result = await this.prismaService.store.findMany({
       select: this.storeSelect,
     });
+    const resultInstance = result.map((entity) => plainToInstance(StoreEntity, entity));
 
-    return plainToInstance(StoreEntity, result, {
-      strategy: 'excludeAll',
-    });
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {
@@ -139,7 +140,6 @@ export class StoreRepository {
       },
       select: this.storeSelect,
     });
-
     const resultInstance = plainToInstance(StoreEntity, result, {
       strategy: 'excludeAll',
     });
@@ -149,8 +149,8 @@ export class StoreRepository {
     return resultInstance;
   }
 
-  create(dto: CreateProductDto) {
-    return this.prismaService.store.create({
+  async create(dto: CreateProductDto) {
+    const result = await this.prismaService.store.create({
       data: {
         variantUuid: dto.variantUuid,
         count: dto.count,
@@ -164,10 +164,17 @@ export class StoreRepository {
       },
       select: this.storeSelect,
     });
+    const resultInstance = plainToInstance(StoreEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateProductDto) {
-    return this.prismaService.store.update({
+  async update(uuid: string, dto: UpdateProductDto) {
+    const result = await this.prismaService.store.update({
       where: {
         uuid,
       },
@@ -189,9 +196,12 @@ export class StoreRepository {
       },
       select: this.storeSelect,
     });
-  }
+    const resultInstance = plainToInstance(StoreEntity, result, {
+      strategy: 'excludeAll',
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

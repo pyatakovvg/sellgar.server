@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreatePriceDto } from '../repository/dto/create-price.dto';
+import { CreatePriceDto } from './dto/create-price.dto';
 
-import { PriceEntity, PriceResultEntity } from '../price.entity';
+import { PriceResultEntity } from '../price.entity';
 
 import { PriceRepository } from '../repository/price.repository';
 

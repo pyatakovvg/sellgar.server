@@ -16,8 +16,4 @@ export class ImageService {
   update(dto: UpdateImageDto) {
     return this.imageRepository.update(dto);
   }
-
-  remove(uuid: string) {
-    //   return `This action removes a #${id} category`;
-  }
 }

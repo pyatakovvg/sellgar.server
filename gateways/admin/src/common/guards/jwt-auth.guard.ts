@@ -1,24 +1,36 @@
 import { Reflector } from '@nestjs/core';
-import { HttpService } from '@nestjs/axios';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
-import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Request, Response } from 'express';
 
-import { map, firstValueFrom } from 'rxjs';
-import { Request as ExpressRequest } from 'express';
+import { CookiesService } from '../services/cookies.service';
 
-import { TokenService } from '@/common/services/token.service';
+import { AgentService } from '@/common/services/agent/agent.service';
+import { FingerprintService } from '@/common/services/fingerprint/fingerprint.service';
+
+import { TokenService } from '@/api/identity_srv/token/service/token.service';
+import { SessionService } from '@/api/identity_srv/session/service/session.service';
+
 import { IS_PUBLIC_KEY } from '@/common/decorators/public.decorator';
+
+interface ICookie {
+  sessionUuid: string;
+  accessToken: string;
+  refreshToken: string;
+  fingerprint: string;
+}
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
-    private readonly tokenService: TokenService,
-    private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-    private readonly httpService: HttpService,
     private readonly config: ConfigService,
+    private readonly tokenService: TokenService,
+    private readonly cookieService: CookiesService,
+    private readonly sessionService: SessionService,
+    private readonly agentService: AgentService,
+    private readonly fingerprintService: FingerprintService,
   ) {
     super();
   }
@@ -32,63 +44,95 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (isPublic) {
       return true;
     }
+    const request: Request = context.switchToHttp().getRequest();
+    const response: Response = context.switchToHttp().getResponse();
 
-    const request = context.switchToHttp().getRequest();
-    const response = context.switchToHttp().getResponse();
-    const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
+    const cookie = await this.getCookie(request);
 
-    const accessToken = this.tokenService.extractAccessTokenFromCookie(cookie);
-    const refreshToken = this.tokenService.extractRefreshTokenFromCookie(cookie);
+    const refreshToken = await this.tokenService.verifyRefreshToken({
+      sessionUuid: cookie.sessionUuid,
+      token: cookie.refreshToken,
+    });
 
-    try {
-      const payload = await this.encodeAccessToken(accessToken);
-      request.user = payload.sub;
-    } catch (e) {
-      if (e instanceof TokenExpiredError) {
-        const result = await this.getAccessRefresh(refreshToken);
-
-        if (result) {
-          response.cookie(
-            this.config.get('AUTH_COOKIE'),
-            JSON.stringify({
-              accessToken: result.accessToken,
-              refreshToken,
-            }),
-            {
-              maxAge: this.config.get('AUTH_COOKIE_EXTEND'),
-              httpOnly: true,
-              secure: true,
-            },
-          );
-
-          const payload = await this.encodeAccessToken(result.accessToken);
-          request.user = payload.sub;
-
-          return true;
-        }
-      }
+    if (refreshToken.data.status === 'EXPIRED') {
+      await this.restoreSession(request, response, cookie);
+      return true;
+    } else if (refreshToken.data.status === 'ERROR') {
       throw new UnauthorizedException();
     }
+
+    const payload = await this.tokenService.verifyAccessToken({ token: cookie.accessToken });
+
+    if (payload.data.status === 'VERIFY') {
+      request.user = payload.data.user;
+
+      return true;
+    } else if (payload.data.status === 'EXPIRED') {
+      await this.refreshSession(request, response, cookie);
+
+      return true;
+    } else if (payload.data.status === 'ERROR') {
+      throw new UnauthorizedException();
+    }
+
     return true;
   }
 
-  private async getAccessRefresh(refreshToken: string) {
-    try {
-      const result = this.httpService
-        .post(this.config.get('API_IDENTITY_SRV') + '/auth/access-refresh', {
-          refreshToken: refreshToken,
-        })
-        .pipe(map((res) => res.data));
+  private async getCookie(request: Request): Promise<ICookie> {
+    const cookie = request.cookies[this.config.get('AUTH_COOKIE')];
 
-      return await firstValueFrom(result);
-    } catch (error) {
-      return null;
-    }
+    const agent = await this.agentService.get(request);
+    const fingerprint = await this.fingerprintService.generate({
+      userAgent: agent.userAgent,
+      deviceId: agent.deviceId,
+      deviceName: agent.deviceName,
+    });
+
+    const sessionUuid = this.cookieService.extractSessionUuidFromCookie(cookie);
+    const accessToken = this.cookieService.extractAccessTokenFromCookie(cookie);
+    const refreshToken = this.cookieService.extractRefreshTokenFromCookie(cookie);
+
+    return {
+      sessionUuid,
+      accessToken,
+      refreshToken,
+      fingerprint,
+    };
   }
 
-  private async encodeAccessToken(accessToken: string) {
-    return await this.jwtService.verifyAsync(accessToken, {
-      secret: this.config.get('ACCESS_TOKEN_SECRET'),
+  private async restoreSession(request: Request, response: Response, cookie: ICookie) {
+    const newSession = await this.sessionService.restore({
+      sessionUuid: cookie.sessionUuid,
+      refreshToken: cookie.refreshToken,
+      fingerprint: cookie.fingerprint,
+    });
+
+    const payload = await this.tokenService.verifyAccessToken({ token: newSession.accessToken });
+
+    request.user = payload.data.user;
+
+    response.cookie(this.config.get('AUTH_COOKIE'), JSON.stringify(newSession), {
+      maxAge: this.config.get('AUTH_COOKIE_EXTEND'),
+      httpOnly: true,
+      secure: true,
+    });
+  }
+
+  private async refreshSession(request: Request, response: Response, cookie: ICookie) {
+    const newSession = await this.sessionService.refresh({
+      sessionUuid: cookie.sessionUuid,
+      refreshToken: cookie.refreshToken,
+      fingerprint: cookie.fingerprint,
+    });
+
+    const payload = await this.tokenService.verifyAccessToken({ token: newSession.accessToken });
+
+    request.user = payload.data.user;
+
+    response.cookie(this.config.get('AUTH_COOKIE'), JSON.stringify(newSession), {
+      maxAge: this.config.get('AUTH_COOKIE_EXTEND'),
+      httpOnly: true,
+      secure: true,
     });
   }
 }

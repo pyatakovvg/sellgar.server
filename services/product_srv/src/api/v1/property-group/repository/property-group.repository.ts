@@ -51,9 +51,11 @@ export class PropertyGroupRepository {
         updatedAt: true,
       },
     });
-    return plainToInstance(PropertyGroupEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const resultInstance = result.map((entity) => plainToInstance(PropertyGroupEntity, entity));
+
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {
@@ -78,8 +80,8 @@ export class PropertyGroupRepository {
     return resultInstance;
   }
 
-  create(dto: CreatePropertyGroupDto) {
-    return this.prismaService.propertyGroup.create({
+  async create(dto: CreatePropertyGroupDto) {
+    const result = await this.prismaService.propertyGroup.create({
       data: {
         name: dto.name,
         description: dto.description,
@@ -92,10 +94,17 @@ export class PropertyGroupRepository {
         updatedAt: true,
       },
     });
+    const resultInstance = plainToInstance(PropertyGroupEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(dto: UpdatePropertyGroupDto) {
-    return this.prismaService.propertyGroup.update({
+  async update(dto: UpdatePropertyGroupDto) {
+    const result = await this.prismaService.propertyGroup.update({
       where: {
         uuid: dto.uuid,
       },
@@ -111,9 +120,12 @@ export class PropertyGroupRepository {
         updatedAt: true,
       },
     });
-  }
+    const resultInstance = plainToInstance(PropertyGroupEntity, result, {
+      strategy: 'excludeAll',
+    });
 
-  remove(uuid: string) {
-    return `This action removes a #${uuid} category`;
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

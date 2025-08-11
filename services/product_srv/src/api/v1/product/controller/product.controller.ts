@@ -12,12 +12,12 @@ import { ProductService } from '../service/product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @MessagePattern({ cmd: 'product.findAll' })
+  @MessagePattern({ cmd: 'product.getAll' })
   findAll() {
     return this.productService.findAll();
   }
 
-  @MessagePattern({ cmd: 'product.findByUuid' })
+  @MessagePattern({ cmd: 'product.getByUuid' })
   findByUuid(@Payload('uuid') uuid: string) {
     return this.productService.findByUuid(uuid);
   }
@@ -28,12 +28,7 @@ export class ProductController {
   }
 
   @MessagePattern({ cmd: 'product.update' })
-  update(@Payload('uuid') uuid: string, @Payload() dto: UpdateProductDto) {
-    return this.productService.update(uuid, dto);
-  }
-
-  @MessagePattern({ cmd: 'product.delete' })
-  remove(@Payload('uuid') uuid: string) {
-    return this.productService.remove(uuid);
+  update(@Payload() dto: UpdateProductDto) {
+    return this.productService.update(dto);
   }
 }

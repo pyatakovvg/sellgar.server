@@ -29,9 +29,4 @@ export class PropertyController {
   update(@Payload() dto: UpdatePropertyDto) {
     return this.propertyService.update(dto);
   }
-
-  @MessagePattern({ cmd: 'property.delete' })
-  remove(@Payload('uuid') uuid: string) {
-    return this.propertyService.remove(uuid);
-  }
 }

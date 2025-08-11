@@ -19,9 +19,4 @@ export class ImageController {
   async update(@Payload() dto: UpdateImageDto) {
     await this.imageService.update(dto);
   }
-
-  @EventPattern('file.delete')
-  remove(@Payload('uuid') uuid: string) {
-    this.imageService.remove(uuid);
-  }
 }

@@ -4,44 +4,27 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { PrismaModule } from './prisma/prisma.module';
 
-import { AuthModule } from './api/auth/auth.module';
-import { UserModule } from './api/user/user.module';
-import { RoleModule } from './api/role/role.module';
-import { PermissionModule } from './api/permission/permission.module';
+import { ApiV1Module } from './api/v1/api-v1.module';
 
 @Module({
   imports: [
+    PrismaModule,
+    ApiV1Module,
+
     ConfigModule.forRoot({ envFilePath: './.env', isGlobal: true }),
 
     RabbitMQModule.forRootAsync({
       connection: {
         imports: [ConfigModule],
         useFactory: (config: ConfigService) => ({
+          port: config.get('AMQP_PORT'),
           hostname: config.get('AMQP_HOSTNAME'),
           username: config.get('AMQP_USERNAME'),
           password: config.get('AMQP_PASSWORD'),
         }),
         inject: [ConfigService],
       },
-      adapters: [
-        //     {
-        //       name: 'user.adapter.mq',
-        //       queue: 'admin_gw.user.update',
-        //       type: QueueAdapterType.Worker
-        //     }
-      ],
     }),
-
-    PrismaModule,
-
-    AuthModule,
-    UserModule,
-    RoleModule,
-    PermissionModule,
   ],
-  controllers: [],
-  providers: [],
 })
-class AppModule {}
-
-export { AppModule };
+export class AppModule {}

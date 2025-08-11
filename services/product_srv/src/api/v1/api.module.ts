@@ -10,6 +10,7 @@ import { ProductVariantModule } from './product-variant/product-variant.module';
 import { StoreModule } from './store/store.module';
 import { PriceModule } from './price/price.module';
 import { ImageModule } from './image/image.module';
+import { CurrencyModule } from './currency/currency.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ImageModule } from './image/image.module';
     CategoryModule,
     ImageModule,
     StoreModule,
+    CurrencyModule,
   ],
 })
 export class ApiV1Module {}

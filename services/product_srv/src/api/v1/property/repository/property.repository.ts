@@ -51,10 +51,11 @@ export class PropertyRepository {
         updatedAt: true,
       },
     });
+    const resultInstance = result.map((entity) => plainToInstance(PropertyEntity, entity));
 
-    return plainToInstance(PropertyEntity, result, {
-      strategy: 'excludeAll',
-    });
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {
@@ -93,13 +94,17 @@ export class PropertyRepository {
         updatedAt: true,
       },
     });
-    return plainToInstance(PropertyEntity, result, {
+    const resultInstance = plainToInstance(PropertyEntity, result, {
       strategy: 'excludeAll',
     });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(dto: CreatePropertyDto) {
-    return this.prismaService.property.create({
+  async create(dto: CreatePropertyDto) {
+    const result = await this.prismaService.property.create({
       data: {
         code: dto.code,
         name: dto.name,
@@ -139,10 +144,17 @@ export class PropertyRepository {
         updatedAt: true,
       },
     });
+    const resultInstance = plainToInstance(PropertyEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(dto: UpdatePropertyDto) {
-    return this.prismaService.property.update({
+  async update(dto: UpdatePropertyDto) {
+    const result = await this.prismaService.property.update({
       where: {
         uuid: dto.uuid,
       },
@@ -186,9 +198,12 @@ export class PropertyRepository {
         updatedAt: true,
       },
     });
-  }
+    const resultInstance = plainToInstance(PropertyEntity, result, {
+      strategy: 'excludeAll',
+    });
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} category`;
-  // }
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
+  }
 }

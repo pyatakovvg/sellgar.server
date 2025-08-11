@@ -31,9 +31,4 @@ export class StoreController {
   update(@Payload('uuid') uuid: string, @Payload() dto: UpdateProductDto) {
     return this.storeService.update(uuid, dto);
   }
-
-  @MessagePattern({ cmd: 'store.delete' })
-  remove(@Payload('uuid') uuid: string) {
-    return this.storeService.remove(uuid);
-  }
 }

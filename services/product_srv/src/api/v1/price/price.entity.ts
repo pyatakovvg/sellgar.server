@@ -30,7 +30,7 @@ class MetaEntity {
 
 export class PriceResultEntity {
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => PriceEntity)
   data: PriceEntity[];
 

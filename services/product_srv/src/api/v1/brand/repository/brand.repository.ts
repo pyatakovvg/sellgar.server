@@ -50,6 +50,10 @@ export class BrandRepository {
         createdAt: 'desc',
       },
     });
+    const resultInstance = result.map((entity) => plainToInstance(BrandEntity, entity));
+
+    await Promise.all(resultInstance.map(entity => validateOrReject(entity)));
+
     return plainToInstance(BrandEntity, result);
   }
 

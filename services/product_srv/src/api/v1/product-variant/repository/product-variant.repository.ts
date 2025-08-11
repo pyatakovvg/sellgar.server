@@ -53,9 +53,9 @@ export class ProductVariantRepository {
     const result = await this.prismaService.productVariant.findMany({
       select: this.productVariantSelect,
     });
-    const resultInstance = plainToInstance(ProductVariantEntity, result);
+    const resultInstance = result.map((entity) => plainToInstance(ProductVariantEntity, entity));
 
-    // await validateOrReject(resultInstance);
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
 
     return resultInstance;
   }
@@ -67,7 +67,6 @@ export class ProductVariantRepository {
       },
       select: this.productVariantSelect,
     });
-
     const resultInstance = plainToInstance(ProductVariantEntity, result, {
       strategy: 'excludeAll',
     });
@@ -77,8 +76,8 @@ export class ProductVariantRepository {
     return resultInstance;
   }
 
-  create(dto: CreateProductDto) {
-    return this.prismaService.product.create({
+  async create(dto: CreateProductDto) {
+    const result = await this.prismaService.product.create({
       data: {
         name: dto.name,
         description: dto.description,
@@ -100,10 +99,17 @@ export class ProductVariantRepository {
       },
       select: this.productVariantSelect,
     });
+    const resultInstance = plainToInstance(ProductVariantEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(uuid: string, dto: UpdateProductDto) {
-    return this.prismaService.product.update({
+  async update(uuid: string, dto: UpdateProductDto) {
+    const result = await this.prismaService.product.update({
       where: {
         uuid,
       },
@@ -152,9 +158,12 @@ export class ProductVariantRepository {
       },
       select: this.productVariantSelect,
     });
-  }
+    const resultInstance = plainToInstance(ProductVariantEntity, result, {
+      strategy: 'excludeAll',
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

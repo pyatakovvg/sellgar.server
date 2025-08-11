@@ -29,10 +29,11 @@ export class UnitRepository {
         updatedAt: true,
       },
     });
+    const resultInstance = result.map((entity) => plainToInstance(UnitEntity, entity));
 
-    return plainToInstance(UnitEntity, result, {
-      strategy: 'excludeAll',
-    });
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
   async findByUuid(uuid: string) {
@@ -58,8 +59,8 @@ export class UnitRepository {
     return resultInstance;
   }
 
-  create(dto: CreateUnitDto) {
-    return this.prismaService.unit.create({
+  async create(dto: CreateUnitDto) {
+    const result = await this.prismaService.unit.create({
       data: {
         code: dto.code,
         name: dto.name,
@@ -74,10 +75,17 @@ export class UnitRepository {
         updatedAt: true,
       },
     });
+    const resultInstance = plainToInstance(UnitEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  update(dto: UpdateUnitDto) {
-    return this.prismaService.unit.update({
+  async update(dto: UpdateUnitDto) {
+    const result = await this.prismaService.unit.update({
       where: {
         uuid: dto.uuid,
       },
@@ -95,9 +103,12 @@ export class UnitRepository {
         updatedAt: true,
       },
     });
-  }
+    const resultInstance = plainToInstance(UnitEntity, result, {
+      strategy: 'excludeAll',
+    });
 
-  remove(uuid: string) {
-    return `This action removes a #${uuid} category`;
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }
