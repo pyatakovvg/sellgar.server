@@ -45,6 +45,3 @@ lerna-debug.log*
 /.idea
 
 storybook-static/
-
-/services/**/prisma/client/
-migration*.*

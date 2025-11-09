@@ -10,13 +10,13 @@ import { ProductModule } from './product/product.module';
 import { PriceModule } from './price/price.module';
 import { PropertyModule } from './property/property.module';
 import { CurrencyModule } from './currency/currency.module';
-import { ProductVariantModule } from './product-variant/product-variant.module';
+import { VariantModule } from './variant/variant.module';
 import { PropertyGroupModule } from './property-group/property-group.module';
 
 @Module({
   imports: [
     ProductModule,
-    ProductVariantModule,
+    VariantModule,
     PriceModule,
     StoreModule,
     PropertyGroupModule,

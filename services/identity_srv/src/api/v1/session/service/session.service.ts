@@ -53,6 +53,8 @@ export class SessionService {
       fingerprint: dto.fingerprint,
     });
 
+    console.log('Current session', session);
+
     if (!session) {
       return null;
     }

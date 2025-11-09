@@ -1,5 +1,17 @@
 import { Type } from 'class-transformer';
-import { ValidateNested, IsUUID, IsString, IsNumber, IsOptional } from 'class-validator';
+import { ValidateNested, IsUUID, IsNumber, IsString, IsOptional } from 'class-validator';
+
+class Property {
+  @IsUUID()
+  @IsOptional()
+  uuid?: string;
+
+  @IsUUID()
+  propertyUuid: string;
+
+  @IsString()
+  value: string;
+}
 
 class ProductVariant {
   @IsUUID()
@@ -14,18 +26,10 @@ class ProductVariant {
 
   @IsString()
   description: string;
-}
 
-class ProductProperty {
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @IsUUID()
-  propertyUuid: string;
-
-  @IsString()
-  value: string;
+  @ValidateNested()
+  @Type(() => Property)
+  properties: Property[];
 }
 
 export class CreateProductDto {
@@ -44,12 +48,4 @@ export class CreateProductDto {
   @ValidateNested()
   @Type(() => ProductVariant)
   variants: ProductVariant[];
-
-  @ValidateNested()
-  @Type(() => ProductProperty)
-  properties: ProductProperty[];
-
-  @IsNumber()
-  @IsOptional()
-  price?: string;
 }

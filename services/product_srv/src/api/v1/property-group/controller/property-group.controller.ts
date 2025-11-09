@@ -12,6 +12,7 @@ export class PropertyGroupController {
 
   @MessagePattern({ cmd: 'property-group.findAll' })
   findAll() {
+    console.log('findAll');
     return this.propertyService.findAll();
   }
 

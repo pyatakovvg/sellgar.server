@@ -1,8 +1,8 @@
 import { IsUUID, IsString, IsDate } from 'class-validator';
 
-import { Person, Sex } from '@/prisma/client';
+import { SexEnum } from './person.model';
 
-export class PersonEntity implements Omit<Person, 'userUuid'> {
+export class PersonEntity {
   @IsUUID()
   uuid: string;
 
@@ -19,7 +19,7 @@ export class PersonEntity implements Omit<Person, 'userUuid'> {
   birthday: Date;
 
   @IsString()
-  sex: Sex;
+  sex: SexEnum;
 
   @IsDate()
   createdAt: Date;

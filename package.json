@@ -3,13 +3,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "update": "yarn upgrade-interactive",
-    "format": "prettier --write \"**/src/**/*.{ts,tsx}\" \"**/test/**/*.ts\" \"**/prisma/**/*.ts\"",
-    "lint": "eslint \"**/{src,test}/**/*.{ts,tsx}\" --fix",
+    "format": "prettier --write \"**/src/**/*.{ts}\" \"**/test/**/*.ts\"",
+    "lint": "eslint \"**/{src,test}/**/*.{ts}\" --fix",
     "dev:admin_gw": "yarn workspace @gateway/admin start:dev",
     "dev:mailer_srv": "yarn workspace @service/mailer start:dev",
     "dev:product_srv": "yarn workspace @service/product start:dev",
     "dev:identity_srv": "yarn workspace @service/identity start:dev",
-    "dev:user_srv": "yarn workspace @service/user start:dev",
     "dev:file_srv": "yarn workspace @service/file start:dev",
     "start:admin_gw": "yarn workspace @gateway/admin start",
     "start:mailer_srv": "yarn workspace @service/mailer start",
@@ -25,14 +24,15 @@
     "ts-node": "10.9.2"
   },
   "devDependencies": {
-    "@types/node": "22.17.0",
-    "@typescript-eslint/eslint-plugin": "8.39.0",
-    "@typescript-eslint/parser": "8.39.0",
-    "eslint": "9.32.0",
+    "@types/node": "22.18.13",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
+    "eslint": "9.38.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
+    "jiti": "2.6.1",
     "prettier": "3.6.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "workspaces": [
     "helpers/**/*",

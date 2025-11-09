@@ -1,8 +1,6 @@
 import { IsUUID, IsBoolean, IsString, IsDate } from 'class-validator';
 
-import { RefreshToken } from '@/prisma/client';
-
-export class RefreshTokenEntity implements RefreshToken {
+export class RefreshTokenEntity {
   @IsUUID()
   uuid: string;
 

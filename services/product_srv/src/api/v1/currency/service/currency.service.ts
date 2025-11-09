@@ -21,7 +21,7 @@ export class CurrencyService {
   }
 
   findByUuid(code: string) {
-    return this.currencyRepository.findByUuid(code);
+    return this.currencyRepository.findById(code);
   }
 
   create(dto: CreateCurrencyDto) {

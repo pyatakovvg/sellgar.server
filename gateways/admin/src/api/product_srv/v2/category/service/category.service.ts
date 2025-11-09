@@ -18,6 +18,8 @@ export class CategoryService {
     const message = this.productService.send({ cmd: 'category.findAll' }, {});
 
     const result = await firstValueFrom(message);
+
+    console.log(result);
     const resultInstance = plainToInstance(CategoryResultEntity, result, {
       strategy: 'excludeAll',
     });

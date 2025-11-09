@@ -1,103 +1,47 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
+import * as uuid from 'uuid';
+import { DataSource } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-
-import { Prisma } from '@/prisma/client';
-import { PrismaService } from '@/prisma/prisma.service';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+import { ProductModel } from '../product.model';
+
 import { ProductEntity } from '../product.entity';
+import { VariantModel } from '../../variant/variant.model';
+import { VariantPropertyModel } from '../../variant/variant-property.model';
 
 @Injectable()
 export class ProductRepository {
-  constructor(private readonly prismaService: PrismaService) {}
-
-  private readonly productSelect: Prisma.ProductSelect = {
-    uuid: true,
-    name: true,
-    description: true,
-    brand: {
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    },
-    category: {
-      select: {
-        uuid: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    },
-    variants: {
-      select: {
-        uuid: true,
-        article: true,
-        name: true,
-        description: true,
-        productImage: {
-          select: {
-            image: {
-              select: {
-                uuid: true,
-                fileName: true,
-              },
-            },
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    },
-    properties: {
-      select: {
-        uuid: true,
-        property: {
-          select: {
-            uuid: true,
-            code: true,
-            type: true,
-            name: true,
-            description: true,
-            unit: {
-              select: {
-                uuid: true,
-                code: true,
-                name: true,
-                description: true,
-                createdAt: true,
-                updatedAt: true,
-              },
-            },
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        value: true,
-      },
-    },
-    createdAt: true,
-    updatedAt: true,
-  };
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   count() {
-    return this.prismaService.product.count();
+    return this.dataSource.createQueryBuilder(ProductModel, 'product').getCount();
   }
 
   async findAll() {
-    const result = await this.prismaService.product.findMany({
-      select: this.productSelect,
-    });
-    const resultInstance = result.map((entity) => plainToInstance(ProductEntity, entity));
+    const result = await this.dataSource
+      .createQueryBuilder(ProductModel, 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.variants', 'variants')
+      .leftJoinAndSelect('variants.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .orderBy('product.createdAt', 'DESC')
+      .addOrderBy('variants.createdAt', 'ASC')
+      .addOrderBy('properties.order', 'ASC')
+      .getMany();
+
+    const resultInstance = result.map((entity) =>
+      plainToInstance(ProductEntity, entity, {
+        strategy: 'excludeAll',
+      }),
+    );
 
     await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
 
@@ -105,12 +49,19 @@ export class ProductRepository {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.prismaService.product.findUnique({
-      where: {
-        uuid,
-      },
-      select: this.productSelect,
-    });
+    const result = await this.dataSource
+      .createQueryBuilder(ProductModel, 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.variants', 'variants')
+      .leftJoinAndSelect('variants.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .where('product.uuid = :uuid', { uuid })
+      .orderBy('variants.createdAt', 'ASC')
+      .addOrderBy('properties.order', 'ASC')
+      .getOneOrFail();
+
     const resultInstance = plainToInstance(ProductEntity, result, {
       strategy: 'excludeAll',
     });
@@ -121,81 +72,201 @@ export class ProductRepository {
   }
 
   async create(dto: CreateProductDto) {
-    const result = await this.prismaService.product.create({
-      data: {
-        name: dto.name,
-        description: dto.description,
-        categoryUuid: dto.categoryUuid,
-        brandUuid: dto.brandUuid,
-        variants: {
-          create: dto.variants.map((v) => ({
-            article: v.article,
-            name: v.name,
-            description: v.description,
-          })),
-        },
-        properties: {
-          create: dto.properties.map((p) => ({
-            propertyUuid: p.propertyUuid,
-            value: p.value,
-          })),
-        },
-      },
-      select: this.productSelect,
-    });
-    const resultInstance = plainToInstance(ProductEntity, result);
+    const runner = this.dataSource.createQueryRunner();
 
-    await validateOrReject(resultInstance);
+    await runner.connect();
+    await runner.startTransaction();
 
-    return resultInstance;
+    try {
+      const newUuid = uuid.v4();
+
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(ProductModel)
+        .values({
+          uuid: newUuid,
+          name: dto.name,
+          description: dto.description,
+          brandUuid: dto.brandUuid,
+          categoryUuid: dto.categoryUuid,
+        })
+        .execute();
+
+      for (let index in dto.variants) {
+        const variant = dto.variants[index];
+
+        const newVariant = await runner.manager.insert(VariantModel, [
+          {
+            article: variant.article,
+            name: variant.name,
+            description: variant.description,
+            productUuid: newUuid,
+          },
+        ]);
+
+        await runner.manager.insert(
+          VariantPropertyModel,
+          variant.properties.map((property, order) => {
+            return {
+              variantUuid: newVariant.raw[0].uuid,
+              propertyUuid: property.propertyUuid,
+              value: property.value,
+              order,
+            };
+          }),
+        );
+      }
+
+      const result = await runner.manager
+        .createQueryBuilder(ProductModel, 'product')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.variants', 'variants')
+        .leftJoinAndSelect('variants.properties', 'properties')
+        .leftJoinAndSelect('properties.property', 'property')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .where('product.uuid = :uuid', { uuid: newUuid })
+        .orderBy('variants.createdAt', 'ASC')
+        .addOrderBy('properties.order', 'ASC')
+        .getOneOrFail();
+
+      const resultInstance = plainToInstance(ProductEntity, result, {
+        strategy: 'excludeAll',
+      });
+
+      await validateOrReject(resultInstance);
+      await runner.commitTransaction();
+
+      return resultInstance;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 
   async update(dto: UpdateProductDto) {
-    const result = await this.prismaService.product.update({
-      where: {
-        uuid: dto.uuid,
-      },
-      data: {
-        name: dto.name,
-        description: dto.description,
-        categoryUuid: dto.categoryUuid,
-        brandUuid: dto.brandUuid,
-        variants: {
-          deleteMany: {
-            NOT: dto.variants.map((v) => ({ uuid: v.uuid })),
-          },
-          create: dto.variants
-            .filter((v) => !v.uuid)
-            .map((v) => ({
-              article: v.article,
-              name: v.name,
-              description: v.description,
-            })),
-          update: dto.variants.map((v) => ({
-            where: {
-              uuid: v.uuid,
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .update(ProductModel)
+        .set({
+          name: dto.name,
+          description: dto.description,
+          brandUuid: dto.brandUuid,
+          categoryUuid: dto.categoryUuid,
+        })
+        .where('product.uuid = :uuid', { uuid: dto.uuid })
+        .execute();
+
+      const existingUuids = dto.variants.map((p) => p.uuid).filter(Boolean);
+
+      await runner.manager
+        .createQueryBuilder()
+        .delete()
+        .from(VariantModel)
+        .where('productUuid = :productUuid', { productUuid: dto.uuid })
+        .andWhere(existingUuids.length > 0 ? 'uuid NOT IN (:...existingUuids)' : '1=1', { existingUuids })
+        .execute();
+
+      for (let index in dto.variants) {
+        const variant = dto.variants[index];
+
+        if (variant.uuid) {
+          await runner.manager.upsert(
+            VariantModel,
+            [
+              {
+                uuid: variant.uuid,
+                article: variant.article,
+                name: variant.name,
+                description: variant.description,
+                productUuid: dto.uuid,
+              },
+            ],
+            ['uuid'],
+          );
+
+          const existingUuids = variant.properties.map((p) => p.uuid).filter(Boolean);
+
+          await runner.manager
+            .createQueryBuilder()
+            .delete()
+            .from(VariantPropertyModel)
+            .where('variantUuid = :variantUuid', { variantUuid: variant.uuid })
+            .andWhere(existingUuids.length > 0 ? 'uuid NOT IN (:...existingUuids)' : '1=1', { existingUuids })
+            .execute();
+
+          await runner.manager.upsert(
+            VariantPropertyModel,
+            variant.properties.map((property, order) => {
+              return {
+                uuid: property?.uuid,
+                variantUuid: variant.uuid,
+                propertyUuid: property.propertyUuid,
+                value: property.value,
+                order,
+              };
+            }),
+            ['uuid'],
+          );
+        } else {
+          const newVariant = await runner.manager.insert(VariantModel, [
+            {
+              article: variant.article,
+              name: variant.name,
+              description: variant.description,
+              productUuid: dto.uuid,
             },
-            data: v,
-          })),
-        },
-        properties: {
-          deleteMany: {
-            NOT: dto.properties.map((p) => ({ uuid: p.uuid })),
-          },
-          create: dto.properties
-            .filter((p) => !p.uuid)
-            .map((p) => ({
-              propertyUuid: p.propertyUuid,
-              value: p.value,
-            })),
-        },
-      },
-      select: this.productSelect,
-    });
-    const resultInstance = plainToInstance(ProductEntity, result);
+          ]);
 
-    await validateOrReject(resultInstance);
+          await runner.manager.insert(
+            VariantPropertyModel,
+            variant.properties.map((property, order) => {
+              return {
+                variantUuid: newVariant.raw[0].uuid,
+                propertyUuid: property.propertyUuid,
+                value: property.value,
+                order,
+              };
+            }),
+          );
+        }
+      }
 
-    return resultInstance;
+      const result = await runner.manager
+        .createQueryBuilder(ProductModel, 'product')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.variants', 'variants')
+        .leftJoinAndSelect('variants.properties', 'properties')
+        .leftJoinAndSelect('properties.property', 'property')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .where('product.uuid = :uuid', { uuid: dto.uuid })
+        .orderBy('variants.createdAt', 'ASC')
+        .addOrderBy('properties.order', 'ASC')
+        .getOneOrFail();
+
+      const resultInstance = plainToInstance(ProductEntity, result, {
+        strategy: 'excludeAll',
+      });
+
+      await validateOrReject(resultInstance);
+      await runner.commitTransaction();
+
+      return resultInstance;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

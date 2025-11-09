@@ -1,34 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
+import * as uuid from 'uuid';
+import { DataSource } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-
-import { PrismaService } from '@/prisma/prisma.service';
 
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 
+import { UnitModel } from '../unit.model';
 import { UnitEntity } from '../unit.entity';
 
 @Injectable()
 export class UnitRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   count() {
-    return this.prismaService.unit.count();
+    return this.dataSource.createQueryBuilder().select().from(UnitModel, 'unit').getCount();
   }
 
   async findAll() {
-    const result = await this.prismaService.unit.findMany({
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const result = await this.dataSource
+      .createQueryBuilder()
+      .select(['unit.uuid', 'unit.code', 'unit.name', 'unit.description', 'unit.createdAt', 'unit.updatedAt'])
+      .from(UnitModel, 'unit')
+      .orderBy('unit.createdAt', 'DESC')
+      .getMany();
+
     const resultInstance = result.map((entity) => plainToInstance(UnitEntity, entity));
 
     await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
@@ -37,22 +36,14 @@ export class UnitRepository {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.prismaService.unit.findUnique({
-      where: {
-        uuid,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(UnitEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const result = await this.dataSource
+      .createQueryBuilder()
+      .select(['unit.uuid', 'unit.code', 'unit.name', 'unit.description', 'unit.createdAt', 'unit.updatedAt'])
+      .from(UnitModel, 'unit')
+      .where('unit.uuid = :uuid', { uuid })
+      .getOneOrFail();
+
+    const resultInstance = plainToInstance(UnitEntity, result);
 
     await validateOrReject(resultInstance);
 
@@ -60,55 +51,89 @@ export class UnitRepository {
   }
 
   async create(dto: CreateUnitDto) {
-    const result = await this.prismaService.unit.create({
-      data: {
-        code: dto.code,
-        name: dto.name,
-        description: dto.description,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(UnitEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const runner = this.dataSource.createQueryRunner();
 
-    await validateOrReject(resultInstance);
+    await runner.connect();
+    await runner.startTransaction();
 
-    return resultInstance;
+    try {
+      const newUuid = uuid.v4();
+
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(UnitModel)
+        .values({
+          uuid: newUuid,
+          code: dto.code,
+          name: dto.name,
+          description: dto.description,
+        })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select(['unit.uuid', 'unit.code', 'unit.name', 'unit.description', 'unit.createdAt', 'unit.updatedAt'])
+        .from(UnitModel, 'unit')
+        .where('unit.uuid = :uuid', { uuid: newUuid })
+        .getOneOrFail();
+
+      await runner.commitTransaction();
+
+      const instanceResult = plainToInstance(UnitEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 
   async update(dto: UpdateUnitDto) {
-    const result = await this.prismaService.unit.update({
-      where: {
-        uuid: dto.uuid,
-      },
-      data: {
-        code: dto.code,
-        name: dto.name,
-        description: dto.description,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(UnitEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const runner = this.dataSource.createQueryRunner();
 
-    await validateOrReject(resultInstance);
+    await runner.connect();
+    await runner.startTransaction();
 
-    return resultInstance;
+    console.log('Unit update dto:', dto);
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .update(UnitModel)
+        .set({
+          code: dto.code,
+          name: dto.name,
+          description: dto.description,
+        })
+        .where('unit.uuid = :uuid', { uuid: dto.uuid })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select(['unit.uuid', 'unit.code', 'unit.name', 'unit.description', 'unit.createdAt', 'unit.updatedAt'])
+        .from(UnitModel, 'unit')
+        .where('unit.uuid = :uuid', { uuid: dto.uuid })
+        .getOneOrFail();
+
+      await runner.commitTransaction();
+
+      console.log('Brand updated:', result);
+
+      const instanceResult = plainToInstance(UnitEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

@@ -1,11 +1,9 @@
 import { Type } from 'class-transformer';
 import { ValidateNested, IsUUID, IsString, IsBoolean, IsDate, IsOptional } from 'class-validator';
 
-import { Session } from '@/prisma/client';
-
 import { RefreshTokenEntity } from '../refresh-token/refresh-token.entity';
 
-export class SessionEntity implements Omit<Session, 'refreshTokenUuid'> {
+export class SessionEntity {
   @IsUUID()
   uuid: string;
 

@@ -57,6 +57,11 @@ export class AuthController {
 
     const session = await this.sessionService.find({ userUuid: uuid, fingerprint });
 
+    if (!session) {
+    }
+
+    console.log('Sign out session:', session);
+
     await this.sessionService.remove({
       uuid: session.sessionUuid,
       userUuid: uuid,

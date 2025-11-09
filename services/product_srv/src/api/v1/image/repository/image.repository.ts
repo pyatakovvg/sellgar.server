@@ -1,40 +1,94 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
-import { PrismaService } from '@/prisma/prisma.service';
+import { DataSource } from 'typeorm';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 
+import { ImageModel } from '../image.model';
+import { ImageEntity } from '../image.entity';
+
 @Injectable()
 export class ImageRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  create(dto: CreateImageDto) {
-    return this.prismaService.image.create({
-      data: {
-        uuid: dto.uuid,
-        fileName: dto.name,
-      },
-      select: {
-        uuid: true,
-        fileName: true,
-      },
-    });
+  async create(dto: CreateImageDto) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(ImageModel)
+        .values({
+          uuid: dto.uuid,
+          fileName: dto.name,
+        })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select(['image.uuid', 'image.fileName'])
+        .from(ImageModel, 'image')
+        .where('image.uuid = :uuid', { uuid: dto.uuid })
+        .getOneOrFail();
+
+      await runner.commitTransaction();
+
+      const instanceResult = plainToInstance(ImageEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 
-  update(dto: UpdateImageDto) {
-    return this.prismaService.image.update({
-      where: {
-        uuid: dto.uuid,
-      },
-      data: {
-        uuid: dto.uuid,
-        fileName: dto.name,
-      },
-      select: {
-        uuid: true,
-        fileName: true,
-      },
-    });
+  async update(dto: UpdateImageDto) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .update(ImageEntity)
+        .set({
+          uuid: dto.uuid,
+          fileName: dto.name,
+        })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select(['image.uuid', 'image.fileName'])
+        .from(ImageModel, 'image')
+        .where('image.uuid = :uuid', { uuid: dto.uuid })
+        .getOneOrFail();
+
+      await runner.commitTransaction();
+
+      const instanceResult = plainToInstance(ImageEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

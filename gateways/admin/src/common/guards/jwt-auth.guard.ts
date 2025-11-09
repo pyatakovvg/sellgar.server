@@ -48,11 +48,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const response: Response = context.switchToHttp().getResponse();
 
     const cookie = await this.getCookie(request);
+    console.info('Cookie:', cookie);
 
+    console.info('Refresh token start:', {
+      sessionUuid: cookie.sessionUuid,
+      token: cookie.refreshToken,
+    });
     const refreshToken = await this.tokenService.verifyRefreshToken({
       sessionUuid: cookie.sessionUuid,
       token: cookie.refreshToken,
     });
+
+    console.info('Refresh token result:', refreshToken);
 
     if (refreshToken.data.status === 'EXPIRED') {
       await this.restoreSession(request, response, cookie);
@@ -61,17 +68,19 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new UnauthorizedException();
     }
 
-    const payload = await this.tokenService.verifyAccessToken({ token: cookie.accessToken });
+    const accessToken = await this.tokenService.verifyAccessToken({ token: cookie.accessToken });
 
-    if (payload.data.status === 'VERIFY') {
-      request.user = payload.data.user;
+    console.info('Access token result:', accessToken);
+
+    if (accessToken.data.status === 'VERIFY') {
+      request.user = accessToken.data.user;
 
       return true;
-    } else if (payload.data.status === 'EXPIRED') {
+    } else if (accessToken.data.status === 'EXPIRED') {
       await this.refreshSession(request, response, cookie);
 
       return true;
-    } else if (payload.data.status === 'ERROR') {
+    } else if (accessToken.data.status === 'ERROR') {
       throw new UnauthorizedException();
     }
 
@@ -101,13 +110,23 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   private async restoreSession(request: Request, response: Response, cookie: ICookie) {
+    console.info('Restore session start', {
+      sessionUuid: cookie.sessionUuid,
+      refreshToken: cookie.refreshToken,
+      fingerprint: cookie.fingerprint,
+    });
+
     const newSession = await this.sessionService.restore({
       sessionUuid: cookie.sessionUuid,
       refreshToken: cookie.refreshToken,
       fingerprint: cookie.fingerprint,
     });
 
+    console.info('New session:', newSession);
+
     const payload = await this.tokenService.verifyAccessToken({ token: newSession.accessToken });
+
+    console.info('Verify session:', payload);
 
     request.user = payload.data.user;
 

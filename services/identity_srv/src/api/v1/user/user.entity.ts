@@ -1,8 +1,6 @@
 import { IsUUID, IsString, IsDate, IsBoolean } from 'class-validator';
 
-import { User } from '@/prisma/client';
-
-export class UserEntity implements Omit<User, 'password'> {
+export class UserEntity {
   @IsUUID()
   uuid: string;
 

@@ -2,7 +2,7 @@ import { Type, Expose } from 'class-transformer';
 import { IsUUID, IsBoolean, ValidateNested, IsNumber, IsDateString } from 'class-validator';
 
 import { PriceEntity } from '../price/price.entity';
-import { ProductVariantEntity } from '../product-variant/product-variant.entity';
+import { VariantEntity } from '../variant/variant.entity';
 
 export class StoreEntity {
   @Expose()
@@ -15,8 +15,8 @@ export class StoreEntity {
 
   @Expose()
   @ValidateNested()
-  @Type(() => ProductVariantEntity)
-  variant: ProductVariantEntity;
+  @Type(() => VariantEntity)
+  variant: VariantEntity;
 
   @Expose()
   @IsNumber()

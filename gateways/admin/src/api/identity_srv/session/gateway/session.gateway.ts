@@ -54,6 +54,8 @@ export class SessionGateway {
     const message = this.identityProxy.send({ cmd: 'identity.session.refresh' }, dto);
     const result = await firstValueFrom(message);
 
+    console.log('Session refresh:', result);
+
     const resultInstance = plainToInstance(SessionEntity, {
       sessionUuid: result.uuid,
       accessToken: result.accessToken,

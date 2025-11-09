@@ -1,56 +1,48 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
+import * as uuid from 'uuid';
+import { DataSource } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-
-import { PrismaService } from '@/prisma/prisma.service';
 
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 
+import { PropertyModel } from '../property.model';
 import { PropertyEntity } from '../property.entity';
 
 @Injectable()
 export class PropertyRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   count() {
-    return this.prismaService.propertyGroup.count();
+    return this.dataSource.createQueryBuilder().select().from(PropertyModel, 'property').getCount();
   }
 
   async findAll() {
-    const result = await this.prismaService.property.findMany({
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        type: true,
-        unitUuid: true,
-        groupUuid: true,
-        group: {
-          select: {
-            uuid: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        unit: {
-          select: {
-            uuid: true,
-            code: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const builder = this.dataSource
+      .createQueryBuilder()
+      .select([
+        'property.uuid',
+        'property.code',
+        'property.name',
+        'property.description',
+        'property.type',
+        'property.groupUuid',
+        'property.unitUuid',
+        'property.createdAt',
+        'property.updatedAt',
+      ])
+      .from(PropertyModel, 'property')
+      .leftJoinAndSelect('property.group', 'group')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .orderBy('property.createdAt', 'DESC');
+
+    const result = await builder.getMany();
+
+    console.log('Property result:', result);
+
     const resultInstance = result.map((entity) => plainToInstance(PropertyEntity, entity));
 
     await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
@@ -59,44 +51,29 @@ export class PropertyRepository {
   }
 
   async findByUuid(uuid: string) {
-    const result = await this.prismaService.property.findUnique({
-      where: {
-        uuid,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        type: true,
-        unitUuid: true,
-        groupUuid: true,
-        group: {
-          select: {
-            uuid: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        unit: {
-          select: {
-            uuid: true,
-            code: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(PropertyEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const builder = this.dataSource
+      .createQueryBuilder()
+      .select([
+        'property.uuid',
+        'property.code',
+        'property.name',
+        'property.description',
+        'property.type',
+        'property.groupUuid',
+        'property.unitUuid',
+        'property.createdAt',
+        'property.updatedAt',
+      ])
+      .from(PropertyModel, 'property')
+      .leftJoinAndSelect('property.group', 'group')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .where('property.uuid = :uuid', { uuid });
+
+    const result = await builder.getOneOrFail();
+
+    console.log('Property result:', result);
+
+    const resultInstance = plainToInstance(PropertyEntity, result);
 
     await validateOrReject(resultInstance);
 
@@ -104,106 +81,123 @@ export class PropertyRepository {
   }
 
   async create(dto: CreatePropertyDto) {
-    const result = await this.prismaService.property.create({
-      data: {
-        code: dto.code,
-        name: dto.name,
-        description: dto.description,
-        type: dto.type,
-        unitUuid: dto.unitUuid,
-        groupUuid: dto.groupUuid,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        type: true,
-        unitUuid: true,
-        groupUuid: true,
-        group: {
-          select: {
-            uuid: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        unit: {
-          select: {
-            uuid: true,
-            code: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(PropertyEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const runner = this.dataSource.createQueryRunner();
 
-    await validateOrReject(resultInstance);
+    console.log('Property created dto:', dto);
 
-    return resultInstance;
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const newUuid = uuid.v4();
+
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(PropertyModel)
+        .values({
+          uuid: newUuid,
+          code: dto.code,
+          name: dto.name,
+          description: dto.description,
+          type: dto.type,
+          groupUuid: dto.groupUuid,
+          unitUuid: dto.unitUuid,
+        })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select([
+          'property.uuid',
+          'property.code',
+          'property.name',
+          'property.description',
+          'property.type',
+          'property.groupUuid',
+          'property.unitUuid',
+          'property.createdAt',
+          'property.updatedAt',
+        ])
+        .from(PropertyModel, 'property')
+        .leftJoinAndSelect('property.group', 'group')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .where('property.uuid = :uuid', { uuid: newUuid })
+        .getOneOrFail();
+
+      console.log('Property created:', result);
+
+      const instanceResult = plainToInstance(PropertyEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      await runner.commitTransaction();
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 
   async update(dto: UpdatePropertyDto) {
-    const result = await this.prismaService.property.update({
-      where: {
-        uuid: dto.uuid,
-      },
-      data: {
-        uuid: dto.uuid,
-        code: dto.code,
-        name: dto.name,
-        description: dto.description,
-        type: dto.type,
-        unitUuid: dto.unitUuid,
-        groupUuid: dto.groupUuid,
-      },
-      select: {
-        uuid: true,
-        code: true,
-        name: true,
-        description: true,
-        type: true,
-        unitUuid: true,
-        groupUuid: true,
-        group: {
-          select: {
-            uuid: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        unit: {
-          select: {
-            uuid: true,
-            code: true,
-            name: true,
-            description: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    const resultInstance = plainToInstance(PropertyEntity, result, {
-      strategy: 'excludeAll',
-    });
+    const runner = this.dataSource.createQueryRunner();
 
-    await validateOrReject(resultInstance);
+    console.log('Property update dto:', dto);
 
-    return resultInstance;
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .update(PropertyModel)
+        .set({
+          code: dto.code,
+          name: dto.name,
+          description: dto.description,
+          type: dto.type,
+          groupUuid: dto.groupUuid,
+          unitUuid: dto.unitUuid,
+        })
+        .where('uuid = :uuid', { uuid: dto.uuid })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select([
+          'property.uuid',
+          'property.code',
+          'property.name',
+          'property.description',
+          'property.type',
+          'property.groupUuid',
+          'property.unitUuid',
+          'property.createdAt',
+          'property.updatedAt',
+        ])
+        .from(PropertyModel, 'property')
+        .leftJoinAndSelect('property.group', 'group')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .where('property.uuid = :uuid', { uuid: dto.uuid })
+        .getOneOrFail();
+
+      console.log('Property update:', result);
+
+      const instanceResult = plainToInstance(PropertyEntity, result);
+
+      await validateOrReject(instanceResult);
+
+      await runner.commitTransaction();
+
+      return instanceResult;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

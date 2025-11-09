@@ -30,6 +30,8 @@ export class AccessTokenService {
       const data = this.jwtService.verify(dto.token, { secret: this.config.get('ACCESS_TOKEN_SECRET') });
       const user = await this.userService.getByUuid(data.pub);
 
+      console.info('User:', user);
+
       return { data: { status: 'VERIFY', user }, meta: {} };
     } catch (e) {
       if (e instanceof TokenExpiredError) {

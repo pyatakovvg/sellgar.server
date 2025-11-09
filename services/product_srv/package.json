@@ -6,11 +6,6 @@
   "author": "Viktor Pyatakov",
   "license": "UNLICENSED",
   "scripts": {
-    "prisma:generate": "prisma generate",
-    "prisma:seed": "npx prisma db seed",
-    "prisma:migrate:dev": "npx prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
-    "prisma:migrate:reset": "prisma migrate reset",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "start": "nest start",
@@ -25,40 +20,40 @@
   },
   "dependencies": {
     "@mkfyi/nestjs-rmq": "1.5.0",
-    "@nestjs/common": "11.1.5",
+    "@nestjs/cli": "11.0.10",
+    "@nestjs/common": "11.1.8",
     "@nestjs/config": "4.0.2",
-    "@nestjs/core": "11.1.5",
+    "@nestjs/core": "11.1.8",
     "@nestjs/mapped-types": "^2.1.0",
-    "@nestjs/microservices": "11.1.5",
-    "@nestjs/platform-express": "11.1.5",
-    "@nestjs/swagger": "11.2.0",
-    "amqp-connection-manager": "4.1.14",
+    "@nestjs/microservices": "11.1.8",
+    "@nestjs/platform-express": "11.1.8",
+    "@nestjs/schematics": "11.0.9",
+    "@nestjs/swagger": "11.2.1",
+    "@nestjs/testing": "11.1.8",
+    "@nestjs/typeorm": "11.0.0",
+    "amqp-connection-manager": "5.0.0",
+    "amqplib": "0.10.9",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "pg": "8.16.3",
-    "prisma": "6.13.0",
-    "prisma-class-generator": "0.2.11",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.2"
+    "rxjs": "7.8.2",
+    "typeorm": "0.3.27"
   },
   "devDependencies": {
-    "@nestjs/cli": "11.0.10",
-    "@nestjs/schematics": "11.0.7",
-    "@nestjs/testing": "11.1.5",
-    "@prisma/client": "6.13.0",
-    "@types/amqplib": "0.10.7",
-    "@types/express": "5.0.3",
+    "@types/amqplib": "0.10.8",
+    "@types/express": "5.0.5",
     "@types/jest": "30.0.0",
-    "@types/node": "22.17.0",
+    "@types/node": "22.18.13",
     "@types/supertest": "6.0.3",
-    "jest": "30.0.5",
+    "jest": "30.2.0",
     "source-map-support": "0.5.21",
     "supertest": "7.1.4",
-    "ts-jest": "29.4.1",
-    "ts-loader": "9.5.2",
+    "ts-jest": "29.4.5",
+    "ts-loader": "9.5.4",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -76,9 +71,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "prisma": {
-    "seed": "ts-node ./prisma/seed.ts",
-    "schema": "./prisma/product_srv.schema.prisma"
   }
 }

@@ -6,7 +6,6 @@
 
     "paths": {
       "@/api/*": ["./src/api/*"],
-      "@/prisma/*": ["./src/prisma/*", "./prisma/*"],
     }
   },
   "include": ["**/src/**/*.ts", "**/src/**/*.tsx"],

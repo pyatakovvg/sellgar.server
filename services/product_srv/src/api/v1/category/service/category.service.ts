@@ -14,12 +14,10 @@ export class CategoryService {
   }
 
   async findAll() {
-    return Promise.all([this.categoryRepository.findAll(), this.categoryRepository.count()]).then(([data, count]) => {
+    return Promise.all([this.categoryRepository.findAll()]).then(([data]) => {
       return {
         data: data,
-        meta: {
-          totalRows: count,
-        },
+        meta: {},
       };
     });
   }

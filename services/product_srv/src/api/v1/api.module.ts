@@ -6,24 +6,24 @@ import { UnitModule } from './unit/unit.module';
 import { BrandModule } from './brand/brand.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
-import { ProductVariantModule } from './product-variant/product-variant.module';
-import { StoreModule } from './store/store.module';
-import { PriceModule } from './price/price.module';
-import { ImageModule } from './image/image.module';
+import { VariantModule } from './variant/variant.module';
+// import { StoreModule } from './store/store.module';
+// import { PriceModule } from './price/price.module';
+// import { ImageModule } from './image/image.module';
 import { CurrencyModule } from './currency/currency.module';
 
 @Module({
   imports: [
     ProductModule,
-    ProductVariantModule,
-    PriceModule,
+    VariantModule,
+    // PriceModule,
     PropertyGroupModule,
     PropertyModule,
     UnitModule,
     BrandModule,
     CategoryModule,
-    ImageModule,
-    StoreModule,
+    // ImageModule,
+    // StoreModule,
     CurrencyModule,
   ],
 })

@@ -1,5 +1,7 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 
+import { PropertyTypeEnum } from '../../property.model';
+
 export class CreatePropertyDto {
   @IsUUID()
   groupUuid: string;
@@ -18,5 +20,5 @@ export class CreatePropertyDto {
   description: string;
 
   @IsString()
-  type: 'TEXT' | 'CHECKBOX' | 'RADIO' | 'DATE' | 'RANGE';
+  type: PropertyTypeEnum;
 }

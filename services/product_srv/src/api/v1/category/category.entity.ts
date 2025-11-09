@@ -1,15 +1,19 @@
-import { IsOptional, IsDate, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsOptional, IsDate, IsString, IsNumber, IsUUID, ValidateNested } from 'class-validator';
 import { Type, Expose } from 'class-transformer';
 
 export class CategoryEntity {
-  @IsUUID()
   @Expose()
+  @IsUUID()
   uuid: string;
 
-  @IsUUID()
   @Expose()
+  @IsUUID()
   @IsOptional()
   parentUuid?: string;
+
+  @Expose()
+  @IsString()
+  code: string;
 
   @Expose()
   @IsString()
@@ -18,6 +22,10 @@ export class CategoryEntity {
   @Expose()
   @IsString()
   description: string;
+
+  @Expose()
+  @IsNumber()
+  order: number;
 
   @Expose()
   @IsOptional()

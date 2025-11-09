@@ -6,7 +6,6 @@
 
     "paths": {
       "@/api/*": ["./src/api/*"],
-      "@/prisma/*": ["./src/prisma/*"],
       "@/common/*": ["./src/common/*"],
     }
   },

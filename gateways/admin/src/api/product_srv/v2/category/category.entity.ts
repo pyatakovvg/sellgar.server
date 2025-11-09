@@ -13,6 +13,10 @@ export class CategoryEntity {
 
   @Expose()
   @IsString()
+  code: string;
+
+  @Expose()
+  @IsString()
   name: string;
 
   @Expose()
@@ -39,11 +43,7 @@ export class CategoryEntity {
   updatedAt: string;
 }
 
-class MetaEntity {
-  @Expose()
-  @IsNumber()
-  totalRows: number;
-}
+class MetaEntity {}
 
 export class CategoryResultEntity {
   @Expose()
@@ -51,8 +51,5 @@ export class CategoryResultEntity {
   @Type(() => CategoryEntity)
   data: CategoryEntity[];
 
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
   meta: MetaEntity;
 }
