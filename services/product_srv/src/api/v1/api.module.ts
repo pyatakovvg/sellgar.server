@@ -9,7 +9,7 @@ import { ProductModule } from './product/product.module';
 import { VariantModule } from './variant/variant.module';
 // import { StoreModule } from './store/store.module';
 // import { PriceModule } from './price/price.module';
-// import { ImageModule } from './image/image.module';
+import { ImageModule } from './image/image.module';
 import { CurrencyModule } from './currency/currency.module';
 
 @Module({
@@ -22,7 +22,7 @@ import { CurrencyModule } from './currency/currency.module';
     UnitModule,
     BrandModule,
     CategoryModule,
-    // ImageModule,
+    ImageModule,
     // StoreModule,
     CurrencyModule,
   ],

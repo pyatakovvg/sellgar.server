@@ -1,12 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { ProfileGateway } from '../gateway/profile.gateway';
+import { UserGateway } from '../../user/gateway/user.gateway';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly profileGateway: ProfileGateway) {}
+  constructor(
+    private readonly userGateway: UserGateway,
+    private readonly profileGateway: ProfileGateway,
+  ) {}
 
-  getByUserUuid(userUuid: string) {
-    return this.profileGateway.getByUserUuid(userUuid);
+  async getByUserUuid(userUuid: string) {
+    const result = await Promise.all([
+      this.userGateway.getByUserUuid(userUuid),
+      this.profileGateway.getByUserUuid(userUuid),
+    ]);
+
+    return {
+      user: result[0],
+      person: result[1],
+    };
   }
 }
