@@ -1,26 +1,73 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, Logger } from '@nestjs/common';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 import * as cookieParser from 'cookie-parser';
+
+import { AllExceptionsFilter } from './common/exceptions/all-exception.filter';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const logger = new Logger();
-  const app: NestExpressApplication = await NestFactory.create(AppModule);
+  const config = new ConfigService();
 
-  const config = app.get<ConfigService>(ConfigService);
-  const origins: string[] = config.get<string>('ORIGINS').split(';');
+  const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   app.enableCors({
     credentials: true,
-    origin: origins,
+    origin: config.get<string>('ORIGINS').split(';') as string[],
   });
 
-  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalFilters(new AllExceptionsFilter());
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      wildcards: true,
+      persistent: true,
+      prefetchCount: 1,
+      queue: config.get('AMQP_ADMIN_GATEWAY_PRODUCT_SRV_EVENT_QUEUE'),
+      queueOptions: {
+        durable: true,
+        autoDelete: true,
+      },
+      exchange: config.get('AMQP_PRODUCT_SRV_EXCHANGE'),
+      exchangeType: 'topic',
+      bindings: [
+        {
+          exchange: config.get('AMQP_PRODUCT_SRV_EXCHANGE'),
+          routingKey: 'product.*',
+        },
+      ],
+    },
+  });
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      wildcards: true,
+      persistent: true,
+      prefetchCount: 1,
+      queue: config.get('AMQP_ADMIN_GATEWAY_IDENTITY_SRV_EVENT_QUEUE'),
+      queueOptions: {
+        durable: true,
+        autoDelete: true,
+      },
+      exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
+      exchangeType: 'topic',
+      bindings: [
+        {
+          exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
+          routingKey: 'identity.*',
+        },
+      ],
+    },
+  });
 
   const port: number = config.get<number>('PORT');
 
@@ -30,4 +77,6 @@ async function bootstrap() {
   });
 }
 
-bootstrap();
+(async () => {
+  await bootstrap();
+})();

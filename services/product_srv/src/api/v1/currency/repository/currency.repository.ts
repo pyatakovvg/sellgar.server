@@ -22,9 +22,9 @@ export class CurrencyRepository {
   async findAll() {
     const result = await this.dataSource
       .createQueryBuilder()
-      .select(['currency.code', 'currency.name', 'currency.createdAt', 'currency.updatedAt'])
+      .select(['currency.code', 'currency.name', 'currency.order', 'currency.createdAt', 'currency.updatedAt'])
       .from(CurrencyModel, 'currency')
-      .orderBy('currency.createdAt', 'DESC')
+      .orderBy('currency.order', 'ASC')
       .getMany();
 
     const resultInstance = result.map((entity) => plainToInstance(CurrencyEntity, entity));
@@ -37,7 +37,7 @@ export class CurrencyRepository {
   async findById(code: string) {
     const result = await this.dataSource
       .createQueryBuilder()
-      .select(['currency.code', 'currency.name', 'currency.createdAt', 'currency.updatedAt'])
+      .select(['currency.code', 'currency.name', 'currency.order', 'currency.createdAt', 'currency.updatedAt'])
       .from(CurrencyModel, 'currency')
       .where('currency.code = :code', { code })
       .getOneOrFail();
@@ -68,7 +68,7 @@ export class CurrencyRepository {
 
       const result = await runner.manager
         .createQueryBuilder()
-        .select(['currency.code', 'currency.name', 'currency.createdAt', 'currency.updatedAt'])
+        .select(['currency.code', 'currency.name', 'currency.order', 'currency.createdAt', 'currency.updatedAt'])
         .from(CurrencyModel, 'currency')
         .where('currency.code = :code', { code: dto.code })
         .getOneOrFail();
@@ -109,7 +109,7 @@ export class CurrencyRepository {
 
       const result = await runner.manager
         .createQueryBuilder()
-        .select(['currency.code', 'currency.name', 'currency.createdAt', 'currency.updatedAt'])
+        .select(['currency.code', 'currency.name', 'currency.order', 'currency.createdAt', 'currency.updatedAt'])
         .from(CurrencyModel, 'currency')
         .where('currency.code = :code', { code: dto.code })
         .getOneOrFail();
@@ -131,7 +131,7 @@ export class CurrencyRepository {
     }
   }
 
-  async remove(code: string) {
+  async remove() {
     // const result = this.prismaService.currency.delete({
     //   where: { code },
     // });

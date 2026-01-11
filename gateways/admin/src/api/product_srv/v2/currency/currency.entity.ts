@@ -1,5 +1,5 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsNumber, IsDateString } from 'class-validator';
+import { IsString, ValidateNested, IsNumber, IsDateString } from 'class-validator';
 
 export class CurrencyEntity {
   @Expose()
@@ -9,6 +9,10 @@ export class CurrencyEntity {
   @Expose()
   @IsString()
   name: string;
+
+  @Expose()
+  @IsNumber()
+  order: number;
 
   @Expose()
   @IsDateString()

@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryColumn,
   Column,
+  Index,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -18,6 +19,7 @@ export class ProductModel {
   @PrimaryColumn('uuid', { name: 'uuid', default: () => 'gen_random_uuid()' })
   uuid: string;
 
+  @Index({ fulltext: true })
   @Column({ name: 'name', type: 'varchar', length: 256 })
   name: string;
 

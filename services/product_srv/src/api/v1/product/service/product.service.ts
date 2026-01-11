@@ -39,7 +39,7 @@ export class ProductService {
     return this.productRepository.create(dto);
   }
 
-  update(dto: UpdateProductDto) {
+  async update(dto: UpdateProductDto) {
     return this.productRepository.update(dto);
   }
 }

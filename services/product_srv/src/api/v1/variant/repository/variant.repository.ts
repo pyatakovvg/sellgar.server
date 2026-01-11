@@ -1,64 +1,49 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
+// import * as uuid from 'uuid';
+import { DataSource } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-
+import { VariantModel } from '../variant.model';
 import { VariantEntity } from '../variant.entity';
 
 @Injectable()
 export class VariantRepository {
-  constructor() {}
-
-  // private readonly productVariantSelect = {
-  //   uuid: true,
-  //   article: true,
-  //   name: true,
-  //   description: true,
-  //   productImage: {
-  //     select: {
-  //       image: {
-  //         select: {
-  //           uuid: true,
-  //           fileName: true,
-  //         },
-  //       },
-  //     },
-  //   },
-  //   product: {
-  //     select: {
-  //       uuid: true,
-  //       name: true,
-  //       description: true,
-  //       category: true,
-  //       brand: true,
-  //       properties: true,
-  //       createdAt: true,
-  //       updatedAt: true,
-  //     },
-  //   },
-  //   createdAt: true,
-  //   updatedAt: true,
-  // };
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   count() {
-    // return this.prismaService.productVariant.count();
+    return this.dataSource.createQueryBuilder(VariantModel, 'variant').getCount();
   }
 
   async findAll() {
-    // const result = await this.prismaService.productVariant.findMany({
-    //   select: this.productVariantSelect,
-    // });
-    // const resultInstance = result.map((entity) => plainToInstance(ProductVariantEntity, entity));
-    //
-    // await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
-    //
-    // return resultInstance;
+    const result = await this.dataSource
+      .createQueryBuilder(VariantModel, 'variant')
+      .leftJoinAndSelect('variant.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variant.product', 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.variants', 'variants')
+      .orderBy('product.createdAt', 'DESC')
+      .addOrderBy('variant.createdAt', 'ASC')
+      .addOrderBy('properties.order', 'ASC')
+      .getMany();
+
+    const resultInstance = result.map((entity) =>
+      plainToInstance(VariantEntity, entity, {
+        strategy: 'excludeAll',
+      }),
+    );
+
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return resultInstance;
   }
 
-  async findByUuid(uuid: string) {
+  async findByUuid() {
     // const result = await this.prismaService.productVariant.findUnique({
     //   where: {
     //     uuid,
@@ -74,7 +59,7 @@ export class VariantRepository {
     // return resultInstance;
   }
 
-  async create(dto: CreateProductDto) {
+  async create() {
     // const result = await this.prismaService.product.create({
     //   data: {
     //     name: dto.name,
@@ -83,7 +68,6 @@ export class VariantRepository {
     //     brandUuid: dto.brandUuid,
     //     variants: {
     //       create: dto.variants.map((v) => ({
-    //         article: v.article,
     //         name: v.name,
     //         description: v.description,
     //         prices: {
@@ -106,7 +90,7 @@ export class VariantRepository {
     // return resultInstance;
   }
 
-  async update(uuid: string, dto: UpdateProductDto) {
+  async update() {
     // const result = await this.prismaService.product.update({
     //   where: {
     //     uuid,
@@ -123,7 +107,6 @@ export class VariantRepository {
     //       create: dto.variants
     //         .filter((v) => !v.uuid)
     //         .map((v) => ({
-    //           article: v.article,
     //           name: v.name,
     //           description: v.description,
     //           prices: {
@@ -141,7 +124,6 @@ export class VariantRepository {
     //           },
     //           data: {
     //             uuid: v.uuid,
-    //             article: v.article,
     //             name: v.name,
     //             description: v.description,
     //             prices: {

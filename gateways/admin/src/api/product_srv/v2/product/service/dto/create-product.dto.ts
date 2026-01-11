@@ -19,9 +19,6 @@ class ProductVariant {
   uuid?: string;
 
   @IsString()
-  article: string;
-
-  @IsString()
   name: string;
 
   @IsString()

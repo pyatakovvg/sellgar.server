@@ -1,70 +1,27 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 
-import { firstValueFrom } from 'rxjs';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
+import { UpdateStoreDto } from './dto/update-store.dto';
+import { CreateStoreDto } from './dto/create-store.dto';
 
-import { StoreResultEntity, StoreEntity } from '../store.entity';
-
-import { UpdateProductDto } from './dto/update-product.dto';
-import { CreateProductDto } from './dto/create-product.dto';
+import { StoreGateway } from '../gateway/store.gateway';
 
 @Injectable()
 export class StoreService {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly storeService: ClientProxy) {}
+  constructor(private readonly storeGateway: StoreGateway) {}
 
-  async findAll() {
-    const message = this.storeService.send({ cmd: 'store.findAll' }, {});
-
-    const result = await firstValueFrom(message);
-
-    const resultInstance = plainToInstance(StoreResultEntity, result, {
-      strategy: 'excludeAll',
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  async findAll(query: any) {
+    return this.storeGateway.findAll(query);
   }
 
   async findByUuid(uuid: string) {
-    const message = this.storeService.send({ cmd: 'store.findByUuid' }, { uuid });
-
-    const result = await firstValueFrom(message);
-    const resultInstance = plainToInstance(StoreEntity, result, {
-      strategy: 'excludeAll',
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return this.storeGateway.findByUuid(uuid);
   }
 
-  async update(dto: UpdateProductDto) {
-    console.log(dto);
-    const message = this.storeService.send({ cmd: 'store.update' }, dto);
-
-    const result = await firstValueFrom<StoreEntity>(message);
-    const resultInstance = plainToInstance(StoreEntity, result, {
-      strategy: 'excludeAll',
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  async update(dto: UpdateStoreDto) {
+    return this.storeGateway.update(dto);
   }
 
-  async create(dto: CreateProductDto) {
-    const message = this.storeService.send({ cmd: 'store.create' }, dto);
-
-    const result = await firstValueFrom<StoreEntity>(message);
-    const resultInstance = plainToInstance(StoreEntity, result, {
-      strategy: 'excludeAll',
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  async create(dto: CreateStoreDto) {
+    return this.storeGateway.create(dto);
   }
 }

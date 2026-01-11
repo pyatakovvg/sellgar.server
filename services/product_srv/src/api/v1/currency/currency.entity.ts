@@ -11,6 +11,10 @@ export class CurrencyEntity {
   name: string;
 
   @Expose()
+  @IsNumber()
+  order: number;
+
+  @Expose()
   @IsDate()
   createdAt: string;
 

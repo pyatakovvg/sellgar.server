@@ -1,5 +1,5 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, ValidateNested, IsNumber, IsDateString } from 'class-validator';
+import { IsUUID, ValidateNested, IsNumber, IsDecimal, IsDateString } from 'class-validator';
 
 import { CurrencyEntity } from '../currency/currency.entity';
 
@@ -9,7 +9,7 @@ export class PriceEntity {
   uuid: string;
 
   @Expose()
-  @IsNumber()
+  @IsDecimal()
   value: number;
 
   @Expose()

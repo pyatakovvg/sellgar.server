@@ -2,9 +2,7 @@ import { Type, Expose } from 'class-transformer';
 import { IsUUID, IsString, ValidateNested, IsNumber, IsDateString, IsOptional } from 'class-validator';
 
 import { BrandEntity } from '../brand/brand.entity';
-import { PropertyEntity } from '../property/property.entity';
 import { CategoryEntity } from '../category/category.entity';
-import { PriceEntity } from '../price/price.entity';
 import { VariantEntity } from '../variant/variant.entity';
 
 export class ProductEntity {

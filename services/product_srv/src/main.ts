@@ -23,9 +23,10 @@ async function bootstrap() {
         },
       ],
       persistent: true,
-      queue: config.get('AMQP_PRODUCT_SRV_QUEUE'),
+      queue: config.get('AMQP_PRODUCT_SRV_COMMAND_QUEUE'),
       queueOptions: {
         durable: true,
+        autoDelete: true,
       },
     },
   });
@@ -41,22 +42,29 @@ async function bootstrap() {
           password: config.get('AMQP_PASSWORD'),
         },
       ],
+      wildcards: true,
       persistent: true,
-      queue: config.get('AMQP_FILE_SRV_QUEUE'),
+      queue: config.get('AMQP_IDENTITY_SRV_EVENT_QUEUE'),
       queueOptions: {
         durable: true,
+        autoDelete: true,
       },
+      exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
+      exchangeType: 'topic',
+      bindings: [
+        {
+          exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
+          routingKey: 'identity.*',
+        },
+      ],
     },
   });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  const port = config.get<string>('PORT');
-
   await app.startAllMicroservices();
-  await app.listen(port, () => {
-    logger.log('Service has been started on port ' + port);
-  });
+
+  logger.log('Service has been started.');
 }
 
 bootstrap();

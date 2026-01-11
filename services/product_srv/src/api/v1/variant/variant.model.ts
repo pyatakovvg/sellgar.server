@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryColumn,
   Column,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -17,9 +18,7 @@ export class VariantModel {
   @PrimaryColumn('uuid', { name: 'uuid', default: () => 'gen_random_uuid()' })
   uuid: string;
 
-  @Column()
-  article: string;
-
+  @Index({ fulltext: true })
   @Column()
   name: string;
 

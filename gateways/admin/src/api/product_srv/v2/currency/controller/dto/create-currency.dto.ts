@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsString, IsNumber } from 'class-validator';
 
 export class CreateCurrencyDto {
   @IsString()
@@ -6,4 +6,10 @@ export class CreateCurrencyDto {
 
   @IsString()
   name: string;
+
+  @IsString()
+  description: string;
+
+  @IsNumber()
+  order: number;
 }

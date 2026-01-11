@@ -8,6 +8,9 @@ export class CurrencyModel {
   @Column({ name: 'name', type: 'varchar', length: 256, nullable: false })
   name: string;
 
+  @Column({ type: 'int', default: 0 })
+  order: number;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',

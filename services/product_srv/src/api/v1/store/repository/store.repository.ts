@@ -1,204 +1,302 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 
-// import { validateOrReject } from 'class-validator';
-// import { plainToInstance } from 'class-transformer';
+import * as uuid from 'uuid';
+import { DataSource } from 'typeorm';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateStoreDto } from './dto/create-store.dto';
+import { UpdateStoreDto } from './dto/update-store.dto';
 
-// import { StoreEntity } from '../store.entity';
+import { StoreModel } from '../store.model';
+import { StoreEntity } from '../store.entity';
+import { PriceModel } from '../../price/price.model';
 
 @Injectable()
 export class StoreRepository {
-  constructor() {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  // private readonly storeSelect: Prisma.StoreSelect = {
-  //   uuid: true,
-  //   count: true,
-  //   showing: true,
-  //   variantUuid: true,
-  //   prices: {
-  //     take: 1,
-  //     orderBy: {
-  //       createdAt: 'desc',
-  //     },
-  //     select: {
-  //       uuid: true,
-  //       value: true,
-  //       currency: {
-  //         select: {
-  //           code: true,
-  //           name: true,
-  //           createdAt: true,
-  //           updatedAt: true,
-  //         },
-  //       },
-  //       createdAt: true,
-  //     },
-  //   },
-  //   variant: {
-  //     select: {
-  //       uuid: true,
-  //       article: true,
-  //       name: true,
-  //       description: true,
-  //       productImage: {
-  //         select: {
-  //           image: {
-  //             select: {
-  //               uuid: true,
-  //               fileName: true,
-  //             },
-  //           },
-  //         },
-  //       },
-  //       product: {
-  //         select: {
-  //           uuid: true,
-  //           name: true,
-  //           description: true,
-  //           brand: {
-  //             select: {
-  //               uuid: true,
-  //               code: true,
-  //               name: true,
-  //               description: true,
-  //               createdAt: true,
-  //               updatedAt: true,
-  //             },
-  //           },
-  //           category: {
-  //             select: {
-  //               uuid: true,
-  //               name: true,
-  //               description: true,
-  //               createdAt: true,
-  //               updatedAt: true,
-  //             },
-  //           },
-  //           properties: {
-  //             select: {
-  //               uuid: true,
-  //               property: {
-  //                 select: {
-  //                   uuid: true,
-  //                   code: true,
-  //                   type: true,
-  //                   name: true,
-  //                   description: true,
-  //                   unit: {
-  //                     select: {
-  //                       uuid: true,
-  //                       code: true,
-  //                       name: true,
-  //                       description: true,
-  //                       createdAt: true,
-  //                       updatedAt: true,
-  //                     },
-  //                   },
-  //                   createdAt: true,
-  //                   updatedAt: true,
-  //                 },
-  //               },
-  //               value: true,
-  //             },
-  //           },
-  //           createdAt: true,
-  //           updatedAt: true,
-  //         },
-  //       },
-  //       createdAt: true,
-  //       updatedAt: true,
-  //     },
-  //   },
-  //   createdAt: true,
-  //   updatedAt: true,
-  // };
+  private buildTsQuery(query: string): string {
+    const cleanedQuery = query
+      .trim()
+      .replace(/[^\w\sа-яА-Я]/g, ' ') // Удаляем специальные символы
+      .replace(/\s+/g, ' ') // Заменяем множественные пробелы на один
+      .split(' ')
+      .map((word) => `${word}:*`) // Добавляем префиксный поиск
+      .join(' | '); // Используем or оператор
 
-  count() {
-    // return this.prismaService.store.count();
+    return cleanedQuery || '';
   }
 
-  async findAll() {
-    // const result = await this.prismaService.store.findMany({
-    //   select: this.storeSelect,
-    // });
-    // const resultInstance = result.map((entity) => plainToInstance(StoreEntity, entity));
-    //
-    // await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
-    //
-    // return resultInstance;
+  async findAllAndCount(query: any) {
+    const builder = this.dataSource
+      .createQueryBuilder(StoreModel, 'store')
+      .addSelect('current_price')
+      .leftJoinAndSelect('store.prices', 'prices')
+      .leftJoinAndSelect('prices.currency', 'currency')
+      .leftJoinAndMapOne(
+        'store.currentPrice',
+        PriceModel,
+        'current_price',
+        'current_price.storeUuid = store.uuid AND current_price.uuid = ' +
+          '(SELECT price.uuid FROM price price WHERE price.store_uuid = store.uuid ORDER BY price.created_at DESC LIMIT 1)',
+      )
+      .leftJoinAndSelect('current_price.currency', 'current_price_currency')
+      .leftJoinAndSelect('store.shop', 'shop')
+      .leftJoinAndSelect('store.variant', 'variant')
+      .leftJoinAndSelect('variant.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variant.product', 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.variants', 'variants')
+      .orderBy('store.createdAt', 'DESC')
+      .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('prices.createdAt', 'DESC');
+
+    if (query.search) {
+      builder
+        .andHaving(
+          `to_tsvector(coalesce(product.name, '')) @@ to_tsquery(:query) or ` +
+            `to_tsvector(coalesce(variant.name, '')) @@ to_tsquery(:query) or ` +
+            `to_tsvector(coalesce(current_price.value::TEXT, '')) @@ to_tsquery(:query)`,
+          {
+            query: this.buildTsQuery(decodeURI(query.search)),
+          },
+        )
+        .groupBy('store.uuid')
+        .addGroupBy('shop.uuid')
+        .addGroupBy('unit.uuid')
+        .addGroupBy('brand.uuid')
+        .addGroupBy('category.uuid')
+        .addGroupBy('variant.uuid')
+        .addGroupBy('variants.uuid')
+        .addGroupBy('property.uuid')
+        .addGroupBy('properties.uuid')
+        .addGroupBy('product.uuid')
+        .addGroupBy('currency.code')
+        .addGroupBy('current_price.uuid')
+        .addGroupBy('current_price_currency.code')
+        .addGroupBy('prices.uuid');
+    }
+
+    console.log(builder.getQueryAndParameters());
+
+    const result = await builder.getManyAndCount();
+
+    const resultInstance = result[0].map((entity) =>
+      plainToInstance(StoreEntity, entity, {
+        strategy: 'excludeAll',
+      }),
+    );
+
+    await Promise.all(resultInstance.map((entity) => validateOrReject(entity)));
+
+    return { data: resultInstance, count: result[1] };
   }
 
   async findByUuid(uuid: string) {
-    // const result = await this.prismaService.store.findUnique({
-    //   where: {
-    //     uuid,
-    //   },
-    //   select: this.storeSelect,
-    // });
-    // const resultInstance = plainToInstance(StoreEntity, result, {
-    //   strategy: 'excludeAll',
-    // });
-    //
-    // await validateOrReject(resultInstance);
-    //
-    // return resultInstance;
+    const result = await this.dataSource
+      .createQueryBuilder(StoreModel, 'store')
+      .addSelect('current_price')
+      .leftJoinAndSelect('store.prices', 'prices')
+      .leftJoinAndSelect('prices.currency', 'currency')
+      .leftJoinAndMapOne(
+        'store.currentPrice',
+        PriceModel,
+        'current_price',
+        'current_price.storeUuid = store.uuid AND current_price.uuid = ' +
+          '(SELECT price.uuid FROM price price WHERE price.store_uuid = store.uuid ORDER BY price.created_at DESC LIMIT 1)',
+      )
+      .leftJoinAndSelect('current_price.currency', 'current_price_currency')
+      .leftJoinAndSelect('store.shop', 'shop')
+      .leftJoinAndSelect('store.variant', 'variant')
+      .leftJoinAndSelect('variant.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variant.product', 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.variants', 'variants')
+      .orderBy('store.createdAt', 'DESC')
+      .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('prices.createdAt', 'DESC')
+      .where('store.uuid = :uuid', { uuid })
+      .getOneOrFail();
+
+    const resultInstance = plainToInstance(StoreEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  async create(dto: CreateProductDto) {
-    // const result = await this.prismaService.store.create({
-    //   data: {
-    //     variantUuid: dto.variantUuid,
-    //     count: dto.count,
-    //     showing: dto.showing,
-    //     prices: {
-    //       create: {
-    //         value: dto.price,
-    //         currencyCode: 'RUB',
-    //       },
-    //     },
-    //   },
-    //   select: this.storeSelect,
-    // });
-    // const resultInstance = plainToInstance(StoreEntity, result, {
-    //   strategy: 'excludeAll',
-    // });
-    //
-    // await validateOrReject(resultInstance);
-    //
-    // return resultInstance;
+  async create(dto: CreateStoreDto) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const newUuid = uuid.v4();
+
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(StoreModel)
+        .values({
+          uuid: newUuid,
+          article: dto.article,
+          shopUuid: dto.shopUuid,
+          variantUuid: dto.variantUuid,
+          count: dto.count,
+          showing: dto.showing,
+        })
+        .execute();
+
+      await runner.manager
+        .createQueryBuilder()
+        .insert()
+        .into(PriceModel)
+        .values({
+          storeUuid: newUuid,
+          value: dto.currentPrice.value,
+          currencyCode: dto.currentPrice.currencyCode,
+        })
+        .execute();
+
+      const result = await runner.manager
+        .createQueryBuilder(StoreModel, 'store')
+        .addSelect('current_price')
+        .leftJoinAndSelect('store.prices', 'prices')
+        .leftJoinAndSelect('prices.currency', 'currency')
+        .leftJoinAndMapOne(
+          'store.currentPrice',
+          PriceModel,
+          'current_price',
+          'current_price.storeUuid = store.uuid AND current_price.uuid = ' +
+            '(SELECT price.uuid FROM price price WHERE price.store_uuid = store.uuid ORDER BY price.created_at DESC LIMIT 1)',
+        )
+        .leftJoinAndSelect('current_price.currency', 'current_price_currency')
+        .leftJoinAndSelect('store.shop', 'shop')
+        .leftJoinAndSelect('store.variant', 'variant')
+        .leftJoinAndSelect('variant.properties', 'properties')
+        .leftJoinAndSelect('properties.property', 'property')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .leftJoinAndSelect('variant.product', 'product')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.variants', 'variants')
+        .orderBy('store.createdAt', 'DESC')
+        .addOrderBy('properties.order', 'ASC')
+        .addOrderBy('prices.createdAt', 'DESC')
+        .where('store.uuid = :uuid', { uuid: newUuid })
+        .getOneOrFail();
+
+      const resultInstance = plainToInstance(StoreEntity, result, {
+        strategy: 'excludeAll',
+      });
+
+      await validateOrReject(resultInstance);
+      await runner.commitTransaction();
+
+      return resultInstance;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 
-  async update(uuid: string, dto: UpdateProductDto) {
-    // const result = await this.prismaService.store.update({
-    //   where: {
-    //     uuid,
-    //   },
-    //   data: {
-    //     uuid,
-    //     variantUuid: dto.variantUuid,
-    //     count: dto.count,
-    //     showing: dto.showing,
-    //     ...(dto.price
-    //       ? {
-    //           prices: {
-    //             create: {
-    //               value: dto.price,
-    //               currencyCode: 'RUB',
-    //             },
-    //           },
-    //         }
-    //       : {}),
-    //   },
-    //   select: this.storeSelect,
-    // });
-    // const resultInstance = plainToInstance(StoreEntity, result, {
-    //   strategy: 'excludeAll',
-    // });
-    //
-    // await validateOrReject(resultInstance);
-    //
-    // return resultInstance;
+  async update(dto: UpdateStoreDto) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      await runner.manager
+        .createQueryBuilder()
+        .update(StoreModel)
+        .set({
+          article: dto.article,
+          shopUuid: dto.shopUuid,
+          variantUuid: dto.variantUuid,
+          count: dto.count,
+          showing: dto.showing,
+        })
+        .where('store.uuid = :uuid', { uuid: dto.uuid })
+        .execute();
+
+      const lastPrice = await runner.manager
+        .createQueryBuilder(PriceModel, 'price')
+        .select()
+        .where('price.storeUuid = :storeUuid')
+        .andWhere(
+          'price.uuid = (SELECT price.uuid FROM price price WHERE price.store_uuid = :storeUuid ORDER BY price.created_at DESC LIMIT 1)',
+        )
+        .setParameters({ storeUuid: dto.uuid })
+        .getOne();
+
+      if (!lastPrice || Number(lastPrice.value) !== Number(dto.currentPrice.value)) {
+        await runner.manager
+          .createQueryBuilder()
+          .insert()
+          .into(PriceModel)
+          .values({
+            storeUuid: dto.uuid,
+            value: dto.currentPrice.value,
+            currencyCode: dto.currentPrice.currencyCode,
+          })
+          .execute();
+      }
+
+      const result = await runner.manager
+        .createQueryBuilder(StoreModel, 'store')
+        .addSelect('current_price')
+        .leftJoinAndSelect('store.prices', 'prices')
+        .leftJoinAndSelect('prices.currency', 'currency')
+        .leftJoinAndMapOne(
+          'store.currentPrice',
+          PriceModel,
+          'current_price',
+          'current_price.storeUuid = store.uuid AND current_price.uuid = ' +
+            '(SELECT price.uuid FROM price price WHERE price.store_uuid = store.uuid ORDER BY price.created_at DESC LIMIT 1)',
+        )
+        .leftJoinAndSelect('current_price.currency', 'current_price_currency')
+        .leftJoinAndSelect('store.shop', 'shop')
+        .leftJoinAndSelect('store.variant', 'variant')
+        .leftJoinAndSelect('variant.properties', 'properties')
+        .leftJoinAndSelect('properties.property', 'property')
+        .leftJoinAndSelect('property.unit', 'unit')
+        .leftJoinAndSelect('variant.product', 'product')
+        .leftJoinAndSelect('product.brand', 'brand')
+        .leftJoinAndSelect('product.category', 'category')
+        .leftJoinAndSelect('product.variants', 'variants')
+        .orderBy('store.createdAt', 'DESC')
+        .addOrderBy('properties.order', 'ASC')
+        .addOrderBy('prices.createdAt', 'DESC')
+        .where('store.uuid = :uuid', { uuid: dto.uuid })
+        .getOneOrFail();
+
+      const resultInstance = plainToInstance(StoreEntity, result, {
+        strategy: 'excludeAll',
+      });
+
+      await validateOrReject(resultInstance);
+      await runner.commitTransaction();
+
+      return resultInstance;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

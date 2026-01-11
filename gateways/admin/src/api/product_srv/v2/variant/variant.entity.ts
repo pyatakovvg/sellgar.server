@@ -30,10 +30,6 @@ export class VariantEntity {
 
   @Expose()
   @IsString()
-  article: string;
-
-  @Expose()
-  @IsString()
   name: string;
 
   @Expose()

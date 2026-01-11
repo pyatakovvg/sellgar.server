@@ -1,11 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { MessagePattern } from '@nestjs/microservices';
 
 import { VariantService } from '../service/variant.service';
 
-@ApiTags('Product variant')
-@Controller('/variants')
+@Controller()
 export class VariantController {
   constructor(private readonly productVariantService: VariantService) {}
 

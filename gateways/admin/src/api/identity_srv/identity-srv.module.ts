@@ -20,20 +20,21 @@ import { ProfileModule } from './profile/profile.module';
           useFactory: (config: ConfigService) => {
             return {
               transport: Transport.RMQ,
+              urls: [
+                {
+                  port: config.get('AMQP_PORT'),
+                  hostname: config.get('AMQP_HOSTNAME'),
+                  username: config.get('AMQP_USERNAME'),
+                  password: config.get('AMQP_PASSWORD'),
+                },
+              ],
               options: {
                 persistent: true,
-                queue: config.get('AMQP_IDENTITY_SRV_QUEUE'),
+                queue: config.get('AMQP_IDENTITY_SRV_COMMAND_QUEUE'),
                 queueOptions: {
                   durable: true,
+                  autoDelete: true,
                 },
-                urls: [
-                  {
-                    port: config.get('AMQP_PORT'),
-                    hostname: config.get('AMQP_HOSTNAME'),
-                    username: config.get('AMQP_USERNAME'),
-                    password: config.get('AMQP_PASSWORD'),
-                  },
-                ],
               },
             };
           },

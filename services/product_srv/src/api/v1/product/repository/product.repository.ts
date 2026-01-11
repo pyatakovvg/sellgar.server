@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { ClientProxy } from '@nestjs/microservices';
 
 import * as uuid from 'uuid';
 import { DataSource } from 'typeorm';
@@ -17,7 +18,10 @@ import { VariantPropertyModel } from '../../variant/variant-property.model';
 
 @Injectable()
 export class ProductRepository {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(
+    @Inject('PRODUCT_EVENT_SERVICE') private readonly productProxy: ClientProxy,
+    @InjectDataSource() private readonly dataSource: DataSource,
+  ) {}
 
   count() {
     return this.dataSource.createQueryBuilder(ProductModel, 'product').getCount();
@@ -98,7 +102,6 @@ export class ProductRepository {
 
         const newVariant = await runner.manager.insert(VariantModel, [
           {
-            article: variant.article,
             name: variant.name,
             description: variant.description,
             productUuid: newUuid,
@@ -185,7 +188,6 @@ export class ProductRepository {
             [
               {
                 uuid: variant.uuid,
-                article: variant.article,
                 name: variant.name,
                 description: variant.description,
                 productUuid: dto.uuid,
@@ -220,7 +222,6 @@ export class ProductRepository {
         } else {
           const newVariant = await runner.manager.insert(VariantModel, [
             {
-              article: variant.article,
               name: variant.name,
               description: variant.description,
               productUuid: dto.uuid,
@@ -259,10 +260,14 @@ export class ProductRepository {
       });
 
       await validateOrReject(resultInstance);
+
+      await this.productProxy.emit('product.updated', resultInstance).toPromise();
+
       await runner.commitTransaction();
 
       return resultInstance;
     } catch (error) {
+      console.error(error);
       await runner.rollbackTransaction();
       throw error;
     } finally {

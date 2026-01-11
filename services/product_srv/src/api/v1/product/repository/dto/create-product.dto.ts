@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ValidateNested, IsUUID, IsString, IsOptional, IsNumber } from 'class-validator';
+import { ValidateNested, IsUUID, IsString, IsOptional } from 'class-validator';
 
 class Property {
   @IsUUID()
@@ -20,9 +20,6 @@ class ProductVariant {
   @IsUUID()
   @IsOptional()
   uuid?: string;
-
-  @IsString()
-  article: string;
 
   @IsString()
   name: string;
