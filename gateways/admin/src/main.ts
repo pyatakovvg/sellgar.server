@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-
 import * as cookieParser from 'cookie-parser';
 
 import { AllExceptionsFilter } from './common/exceptions/all-exception.filter';
@@ -31,41 +30,12 @@ async function bootstrap() {
       wildcards: true,
       persistent: true,
       prefetchCount: 1,
-      queue: config.get('AMQP_ADMIN_GATEWAY_PRODUCT_SRV_EVENT_QUEUE'),
+      queue: config.get('AMQP_ADMIN_SRV_EVENT_QUEUE'),
       queueOptions: {
         durable: true,
-        autoDelete: true,
       },
-      exchange: config.get('AMQP_PRODUCT_SRV_EXCHANGE'),
+      exchange: config.get('AMQP_EVENTS_EXCHANGE'),
       exchangeType: 'topic',
-      bindings: [
-        {
-          exchange: config.get('AMQP_PRODUCT_SRV_EXCHANGE'),
-          routingKey: 'product.*',
-        },
-      ],
-    },
-  });
-
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      wildcards: true,
-      persistent: true,
-      prefetchCount: 1,
-      queue: config.get('AMQP_ADMIN_GATEWAY_IDENTITY_SRV_EVENT_QUEUE'),
-      queueOptions: {
-        durable: true,
-        autoDelete: true,
-      },
-      exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
-      exchangeType: 'topic',
-      bindings: [
-        {
-          exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
-          routingKey: 'identity.*',
-        },
-      ],
     },
   });
 

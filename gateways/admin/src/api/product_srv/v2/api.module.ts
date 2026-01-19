@@ -34,7 +34,7 @@ import { NotificationModule } from './notification/notification.module';
       isGlobal: true,
       clients: [
         {
-          name: 'PRODUCT_SERVICE',
+          name: 'PRODUCT_COMMAND_SERVICE',
           imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: (config: ConfigService) => {
@@ -54,41 +54,6 @@ import { NotificationModule } from './notification/notification.module';
                 queue: config.get('AMQP_PRODUCT_SRV_COMMAND_QUEUE'),
                 queueOptions: {
                   durable: true,
-                  autoDelete: true,
-                },
-              },
-            };
-          },
-        },
-      ],
-    }),
-
-    ClientsModule.registerAsync({
-      isGlobal: true,
-      clients: [
-        {
-          name: 'PRODUCT_EVENT_SERVICE',
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (config: ConfigService) => {
-            return {
-              urls: [
-                {
-                  port: config.get('AMQP_PORT'),
-                  hostname: config.get('AMQP_HOSTNAME'),
-                  username: config.get('AMQP_USERNAME'),
-                  password: config.get('AMQP_PASSWORD'),
-                },
-              ],
-              transport: Transport.RMQ,
-              options: {
-                wildcards: true,
-                persistent: true,
-                prefetchCount: 1,
-                queue: config.get('AMQP_ADMIN_GATEWAY_PRODUCT_SRV_EVENT_QUEUE'),
-                queueOptions: {
-                  durable: true,
-                  autoDelete: true,
                 },
               },
             };

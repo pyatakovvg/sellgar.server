@@ -11,7 +11,7 @@ import { StoreEntity, StoreResultEntity } from '../store.entity';
 
 @Injectable()
 export class StoreGateway {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productProxy: ClientProxy) {}
+  constructor(@Inject('PRODUCT_COMMAND_SERVICE') private readonly productProxy: ClientProxy) {}
 
   async findAll(query: any) {
     const message = this.productProxy.send({ cmd: 'store.getAll' }, { query });

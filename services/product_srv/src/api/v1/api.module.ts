@@ -53,7 +53,13 @@ import { UserModule } from './user/user.module';
               options: {
                 wildcards: true,
                 persistent: true,
-                exchange: config.get('AMQP_PRODUCT_SRV_EXCHANGE'),
+                queue: '',
+                queueOptions: {
+                  durable: false,
+                  exclusive: false,
+                  autoDelete: true,
+                },
+                exchange: config.get('AMQP_EVENTS_EXCHANGE'),
                 exchangeType: 'topic',
               },
             };

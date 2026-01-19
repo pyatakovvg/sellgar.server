@@ -1,31 +1,30 @@
 import { Module } from '@nestjs/common';
-import { MinioModule } from 'nestjs-minio-client';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { ApiV1Module } from '@/api/v1/api.module';
-
-import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: './.env', isGlobal: true }),
 
-    MinioModule.registerAsync({
-      isGlobal: true,
+    TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return {
-          useSSL: false,
-          endPoint: config.get('MINIO_ENDPOINT'),
-          port: Number(config.get('MINIO_PORT')),
-          accessKey: config.get('MINIO_ACCESS_KEY'),
-          secretKey: config.get('MINIO_SECRET_KEY'),
+          type: 'postgres',
+          host: configService.get('DATABASE_HOST'),
+          port: +configService.get('DATABASE_PORT'),
+          username: configService.get('DATABASE_USERNAME'),
+          password: configService.get('DATABASE_PASSWORD'),
+          database: configService.get('DATABASE_DATABASE_NAME'),
+          autoLoadEntities: true,
+          synchronize: true,
         };
       },
+      inject: [ConfigService],
     }),
 
-    PrismaModule,
     ApiV1Module,
   ],
 })

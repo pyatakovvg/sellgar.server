@@ -610,7 +610,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emnapi/runtime@npm:^1.4.3, @emnapi/runtime@npm:^1.5.0":
+"@emnapi/runtime@npm:^1.4.3":
   version: 1.5.0
   resolution: "@emnapi/runtime@npm:1.5.0"
   dependencies:
@@ -748,21 +748,21 @@ __metadata:
   resolution: "@gateway/admin@workspace:gateways/admin"
   dependencies:
     "@nestjs/axios": 4.0.1
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/jwt": 11.0.2
-    "@nestjs/microservices": 11.1.11
+    "@nestjs/microservices": 11.1.12
     "@nestjs/passport": 11.0.5
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/cookie-parser": 1.4.10
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/passport-jwt": 4.0.1
     "@types/sharp": 0.32.0
     "@types/supertest": 6.0.3
@@ -776,7 +776,7 @@ __metadata:
     passport: 0.7.0
     passport-jwt: 4.0.1
     passport-local: 1.0.0
-    pg: 8.16.3
+    pg: 8.17.1
     rand-token: 1.0.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
@@ -797,21 +797,21 @@ __metadata:
   dependencies:
     "@mkfyi/nestjs-rmq": 1.5.0
     "@nestjs/axios": 4.0.1
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/jwt": 11.0.2
-    "@nestjs/microservices": 11.1.11
+    "@nestjs/microservices": 11.1.12
     "@nestjs/passport": 11.0.5
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/cookie-parser": 1.4.10
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/passport-jwt": 4.0.1
     "@types/sharp": 0.32.0
     "@types/supertest": 6.0.3
@@ -823,7 +823,7 @@ __metadata:
     passport: 0.7.0
     passport-jwt: 4.0.1
     passport-local: 1.0.0
-    pg: 8.16.3
+    pg: 8.17.1
     rand-token: 1.0.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
@@ -844,21 +844,21 @@ __metadata:
   dependencies:
     "@mkfyi/nestjs-rmq": 1.5.0
     "@nestjs/axios": 4.0.1
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/jwt": 11.0.2
-    "@nestjs/microservices": 11.1.11
+    "@nestjs/microservices": 11.1.12
     "@nestjs/passport": 11.0.5
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/cookie-parser": 1.4.10
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/passport-jwt": 4.0.1
     "@types/sharp": 0.32.0
     "@types/supertest": 6.0.3
@@ -870,7 +870,7 @@ __metadata:
     passport: 0.7.0
     passport-jwt: 4.0.1
     passport-local: 1.0.0
-    pg: 8.16.3
+    pg: 8.17.1
     rand-token: 1.0.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
@@ -923,18 +923,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-darwin-arm64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-darwin-arm64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-darwin-arm64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-darwin-arm64":
-      optional: true
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
 "@img/sharp-darwin-arm64@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-darwin-arm64@npm:0.34.5"
@@ -944,18 +932,6 @@ __metadata:
     "@img/sharp-libvips-darwin-arm64":
       optional: true
   conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@img/sharp-darwin-x64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-darwin-x64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-darwin-x64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-darwin-x64":
-      optional: true
-  conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
@@ -971,24 +947,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-darwin-arm64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-darwin-arm64@npm:1.2.3"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-darwin-arm64@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-darwin-arm64@npm:1.2.4"
   conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@img/sharp-libvips-darwin-x64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-darwin-x64@npm:1.2.3"
-  conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
@@ -999,13 +961,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-linux-arm64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linux-arm64@npm:1.2.3"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-linux-arm64@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-linux-arm64@npm:1.2.4"
@@ -1013,24 +968,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-linux-arm@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linux-arm@npm:1.2.3"
-  conditions: os=linux & cpu=arm & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-linux-arm@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-linux-arm@npm:1.2.4"
   conditions: os=linux & cpu=arm & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@img/sharp-libvips-linux-ppc64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linux-ppc64@npm:1.2.3"
-  conditions: os=linux & cpu=ppc64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -1048,24 +989,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-linux-s390x@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linux-s390x@npm:1.2.3"
-  conditions: os=linux & cpu=s390x & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-linux-s390x@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-linux-s390x@npm:1.2.4"
   conditions: os=linux & cpu=s390x & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@img/sharp-libvips-linux-x64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linux-x64@npm:1.2.3"
-  conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -1076,13 +1003,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-linuxmusl-arm64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linuxmusl-arm64@npm:1.2.3"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-linuxmusl-arm64@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-linuxmusl-arm64@npm:1.2.4"
@@ -1090,29 +1010,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-libvips-linuxmusl-x64@npm:1.2.3":
-  version: 1.2.3
-  resolution: "@img/sharp-libvips-linuxmusl-x64@npm:1.2.3"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
 "@img/sharp-libvips-linuxmusl-x64@npm:1.2.4":
   version: 1.2.4
   resolution: "@img/sharp-libvips-linuxmusl-x64@npm:1.2.4"
   conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@img/sharp-linux-arm64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linux-arm64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linux-arm64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linux-arm64":
-      optional: true
-  conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -1128,18 +1029,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-linux-arm@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linux-arm@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linux-arm": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linux-arm":
-      optional: true
-  conditions: os=linux & cpu=arm & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@img/sharp-linux-arm@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-linux-arm@npm:0.34.5"
@@ -1149,18 +1038,6 @@ __metadata:
     "@img/sharp-libvips-linux-arm":
       optional: true
   conditions: os=linux & cpu=arm & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@img/sharp-linux-ppc64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linux-ppc64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linux-ppc64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linux-ppc64":
-      optional: true
-  conditions: os=linux & cpu=ppc64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -1188,18 +1065,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-linux-s390x@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linux-s390x@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linux-s390x": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linux-s390x":
-      optional: true
-  conditions: os=linux & cpu=s390x & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@img/sharp-linux-s390x@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-linux-s390x@npm:0.34.5"
@@ -1209,18 +1074,6 @@ __metadata:
     "@img/sharp-libvips-linux-s390x":
       optional: true
   conditions: os=linux & cpu=s390x & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@img/sharp-linux-x64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linux-x64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linux-x64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linux-x64":
-      optional: true
-  conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
@@ -1236,18 +1089,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-linuxmusl-arm64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linuxmusl-arm64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linuxmusl-arm64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linuxmusl-arm64":
-      optional: true
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
 "@img/sharp-linuxmusl-arm64@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-linuxmusl-arm64@npm:0.34.5"
@@ -1257,18 +1098,6 @@ __metadata:
     "@img/sharp-libvips-linuxmusl-arm64":
       optional: true
   conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@img/sharp-linuxmusl-x64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-linuxmusl-x64@npm:0.34.4"
-  dependencies:
-    "@img/sharp-libvips-linuxmusl-x64": 1.2.3
-  dependenciesMeta:
-    "@img/sharp-libvips-linuxmusl-x64":
-      optional: true
-  conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
@@ -1284,28 +1113,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-wasm32@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-wasm32@npm:0.34.4"
-  dependencies:
-    "@emnapi/runtime": ^1.5.0
-  conditions: cpu=wasm32
-  languageName: node
-  linkType: hard
-
 "@img/sharp-wasm32@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-wasm32@npm:0.34.5"
   dependencies:
     "@emnapi/runtime": ^1.7.0
   conditions: cpu=wasm32
-  languageName: node
-  linkType: hard
-
-"@img/sharp-win32-arm64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-win32-arm64@npm:0.34.4"
-  conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
@@ -1316,24 +1129,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-win32-ia32@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-win32-ia32@npm:0.34.4"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
 "@img/sharp-win32-ia32@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-win32-ia32@npm:0.34.5"
   conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@img/sharp-win32-x64@npm:0.34.4":
-  version: 0.34.4
-  resolution: "@img/sharp-win32-x64@npm:0.34.4"
-  conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
@@ -2234,13 +2033,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc@npm:0.16.0":
-  version: 0.16.0
-  resolution: "@microsoft/tsdoc@npm:0.16.0"
-  checksum: 8aece3371a45a18af4233a5d6f8ac94612c8baef65f782f925b0c1f5a98802f031e6bf8b487a849ceb35f4cc6c2ea15ba82a4497c72b50e5b33771ecd62729cd
-  languageName: node
-  linkType: hard
-
 "@mkfyi/nestjs-rmq@npm:1.5.0":
   version: 1.5.0
   resolution: "@mkfyi/nestjs-rmq@npm:1.5.0"
@@ -2339,9 +2131,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/cli@npm:11.0.14":
-  version: 11.0.14
-  resolution: "@nestjs/cli@npm:11.0.14"
+"@nestjs/cli@npm:11.0.16":
+  version: 11.0.16
+  resolution: "@nestjs/cli@npm:11.0.16"
   dependencies:
     "@angular-devkit/core": 19.2.19
     "@angular-devkit/schematics": 19.2.19
@@ -2359,7 +2151,7 @@ __metadata:
     tsconfig-paths: 4.2.0
     tsconfig-paths-webpack-plugin: 4.2.0
     typescript: 5.9.3
-    webpack: 5.103.0
+    webpack: 5.104.1
     webpack-node-externals: 3.0.0
   peerDependencies:
     "@swc/cli": ^0.1.62 || ^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0
@@ -2371,15 +2163,15 @@ __metadata:
       optional: true
   bin:
     nest: bin/nest.js
-  checksum: 5c8ce119b61ceda087c52978e6788300f10934e6d00f9d46cd9302aa1eb07d0c4c37ed298d6387be99abb30db630729b9c225494ef3b3fa2e550e9cb3a579f35
+  checksum: a27c4de00fa017490b2c155dc259c09470ff12f74de4a467c69caa49636152d53bb9c1d36141088aea0929f8a0efa385690a269944d463b8b7303482d5964623
   languageName: node
   linkType: hard
 
-"@nestjs/common@npm:11.1.11":
-  version: 11.1.11
-  resolution: "@nestjs/common@npm:11.1.11"
+"@nestjs/common@npm:11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/common@npm:11.1.12"
   dependencies:
-    file-type: 21.2.0
+    file-type: 21.3.0
     iterare: 1.2.1
     load-esm: 1.0.3
     tslib: 2.8.1
@@ -2394,7 +2186,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 2801c374943894e01422d925c4b678bbfd79ea1daa134a9717be075345d22dd0e4396681e1bb1c1215a1c6075cf502d3ac4dbbea8e4b076f5f9a91789630ccb2
+  checksum: 1fdfb10d148fa8277519b2ef7b9919ebc262acb09ba8bd71cf96162c71cb78eb9e628a4ad307af79f95bb79041c433b2ac25cc5b6db97a364bae31a7584dbb05
   languageName: node
   linkType: hard
 
@@ -2412,9 +2204,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:11.1.11":
-  version: 11.1.11
-  resolution: "@nestjs/core@npm:11.1.11"
+"@nestjs/core@npm:11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/core@npm:11.1.12"
   dependencies:
     "@nuxt/opencollective": 0.4.1
     fast-safe-stringify: 2.1.1
@@ -2436,7 +2228,7 @@ __metadata:
       optional: true
     "@nestjs/websockets":
       optional: true
-  checksum: 600d39d0a979c6a115a46d06ef81548b1f05228e06679c605f5b523c7aae7b8829e5cf7f8bea6c3d3119fcddcc021e9c3056c83a5b41cc323521719483ac45db
+  checksum: 214a2cd2eab71e7fee81a7711b4c913ebf539d19ed330b744e6579108d321a5af7093071e5debf6120c0c43fbf24d0b1c7f12dbc07a57adecaf56326efda46f9
   languageName: node
   linkType: hard
 
@@ -2452,7 +2244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/mapped-types@npm:2.1.0, @nestjs/mapped-types@npm:^2.1.0":
+"@nestjs/mapped-types@npm:^2.1.0":
   version: 2.1.0
   resolution: "@nestjs/mapped-types@npm:2.1.0"
   peerDependencies:
@@ -2469,9 +2261,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/microservices@npm:11.1.11":
-  version: 11.1.11
-  resolution: "@nestjs/microservices@npm:11.1.11"
+"@nestjs/microservices@npm:11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/microservices@npm:11.1.12"
   dependencies:
     iterare: 1.2.1
     tslib: 2.8.1
@@ -2508,7 +2300,7 @@ __metadata:
       optional: true
     nats:
       optional: true
-  checksum: 426619277da720eb1533f4ef4fae02188410dc7101281d7d729dab03aa74eb783737a63405ccb874bafde60cf69c7b4400ef3bf7ba84754a914eb2fb815e45ba
+  checksum: 3c7c8d1e476f2eeba794d10fe22c778eea44114f40301807e5fe7c48104fd35718dc49c3ace47cbbe37b026c7889015a63c3f3c398f6677ebcdc2a3e4be87e1f
   languageName: node
   linkType: hard
 
@@ -2522,9 +2314,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:11.1.11":
-  version: 11.1.11
-  resolution: "@nestjs/platform-express@npm:11.1.11"
+"@nestjs/platform-express@npm:11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/platform-express@npm:11.1.12"
   dependencies:
     cors: 2.8.5
     express: 5.2.1
@@ -2534,7 +2326,7 @@ __metadata:
   peerDependencies:
     "@nestjs/common": ^11.0.0
     "@nestjs/core": ^11.0.0
-  checksum: cef13f990967954a918f1334ff394498769774d5b6095715704dfad6da0343dd6925e451b9871358df0d1bfd062042a287260c8b0fc05979bfba2dff970bb532
+  checksum: 8ca84d079b8055b5eeb63fa84465dc77abd5afb72a605f53ff73b4c02a730a08af445170d9e041b21aef20bb879a1c25b7d64ae88f904f51cf1a732fd48a452d
   languageName: node
   linkType: hard
 
@@ -2553,37 +2345,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/swagger@npm:11.2.3":
-  version: 11.2.3
-  resolution: "@nestjs/swagger@npm:11.2.3"
-  dependencies:
-    "@microsoft/tsdoc": 0.16.0
-    "@nestjs/mapped-types": 2.1.0
-    js-yaml: 4.1.1
-    lodash: 4.17.21
-    path-to-regexp: 8.3.0
-    swagger-ui-dist: 5.30.2
-  peerDependencies:
-    "@fastify/static": ^8.0.0
-    "@nestjs/common": ^11.0.1
-    "@nestjs/core": ^11.0.1
-    class-transformer: "*"
-    class-validator: "*"
-    reflect-metadata: ^0.1.12 || ^0.2.0
-  peerDependenciesMeta:
-    "@fastify/static":
-      optional: true
-    class-transformer:
-      optional: true
-    class-validator:
-      optional: true
-  checksum: 1b0208a454ca5b3b2afedf1045db2d889c664005a87a9cbf227aa1cde15c046e4838f5b57c2a9cb8173dab800b6cbe8bc34d5c9c04867e5be4f7039cedc45233
-  languageName: node
-  linkType: hard
-
-"@nestjs/testing@npm:11.1.11":
-  version: 11.1.11
-  resolution: "@nestjs/testing@npm:11.1.11"
+"@nestjs/testing@npm:11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/testing@npm:11.1.12"
   dependencies:
     tslib: 2.8.1
   peerDependencies:
@@ -2596,7 +2360,7 @@ __metadata:
       optional: true
     "@nestjs/platform-express":
       optional: true
-  checksum: 5f15603826d52b85f8c0fa80d3db101abbef41ce5b1f0da9208f692a22d47adb2afaab9f5c044f05ae6d5c81fe19b9efec39af81767c9379537759c3b73a0bd3
+  checksum: c4285cf6696ab716803ec1aa3805f3165fda4538ddf0d6e42e5f34db7fb669c24aa0bca6e07cab3d596f22f17bc92ce4eb59b1a86a9ba232c88aa07ea126df6c
   languageName: node
   linkType: hard
 
@@ -2683,13 +2447,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scarf/scarf@npm:=1.4.0":
-  version: 1.4.0
-  resolution: "@scarf/scarf@npm:1.4.0"
-  checksum: def62aa403f7e63165ccb219efd2c420fc0b7357b0ba43397f635e4aa813ace1cdf3855a93fc559b4619bcc0469ae4767b8cb72af30ea5c0522bf4a2ecb18198
-  languageName: node
-  linkType: hard
-
 "@selderee/plugin-htmlparser2@npm:^0.11.0":
   version: 0.11.0
   resolution: "@selderee/plugin-htmlparser2@npm:0.11.0"
@@ -2704,19 +2461,19 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@service/file@workspace:services/file_srv"
   dependencies:
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
-    "@nestjs/microservices": 11.1.11
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/core": 11.1.12
+    "@nestjs/microservices": 11.1.12
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
     "@types/multer": 2.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/supertest": 6.0.3
     amqplib: 0.10.9
     class-transformer: 0.5.1
@@ -2724,7 +2481,7 @@ __metadata:
     jest: 30.2.0
     multer: 2.0.2
     nestjs-minio-client: 2.2.0
-    pg: 8.16.3
+    pg: 8.17.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
     source-map-support: 0.5.21
@@ -2741,22 +2498,21 @@ __metadata:
   resolution: "@service/identity@workspace:services/identity_srv"
   dependencies:
     "@mkfyi/nestjs-rmq": 1.5.0
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/jwt": 11.0.2
-    "@nestjs/microservices": 11.1.11
+    "@nestjs/microservices": 11.1.12
     "@nestjs/passport": 11.0.5
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/swagger": 11.2.3
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@nestjs/typeorm": 11.0.0
     "@types/amqplib": 0.10.8
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/passport-jwt": 4.0.1
     "@types/passport-local": 1.0.38
     "@types/supertest": 6.0.3
@@ -2767,7 +2523,7 @@ __metadata:
     passport: 0.7.0
     passport-jwt: 4.0.1
     passport-local: 1.0.0
-    pg: 8.16.3
+    pg: 8.17.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
     source-map-support: 0.5.21
@@ -2787,27 +2543,26 @@ __metadata:
   dependencies:
     "@mkfyi/nestjs-rmq": 1.5.0
     "@nestjs-modules/mailer": 2.0.2
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/mapped-types": ^2.1.0
-    "@nestjs/microservices": 11.1.11
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/microservices": 11.1.12
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/swagger": 11.2.3
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/supertest": 6.0.3
     amqp-connection-manager: 5.0.0
     class-transformer: 0.5.1
     class-validator: 0.14.3
     jest: 30.2.0
     nodemailer: 7.0.12
-    pg: 8.16.3
+    pg: 8.17.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
     source-map-support: 0.5.21
@@ -2823,25 +2578,25 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@service/order@workspace:services/order_srv"
   dependencies:
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
-    "@nestjs/microservices": 11.1.11
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/core": 11.1.12
+    "@nestjs/microservices": 11.1.12
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@types/amqplib": 0.10.8
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
     "@types/multer": 2.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/supertest": 6.0.3
     amqplib: 0.10.9
     class-transformer: 0.5.1
     class-validator: 0.14.3
     jest: 30.2.0
-    pg: 8.16.3
+    pg: 8.17.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
     source-map-support: 0.5.21
@@ -2858,28 +2613,27 @@ __metadata:
   resolution: "@service/product@workspace:services/product_srv"
   dependencies:
     "@mkfyi/nestjs-rmq": 1.5.0
-    "@nestjs/cli": 11.0.14
-    "@nestjs/common": 11.1.11
+    "@nestjs/cli": 11.0.16
+    "@nestjs/common": 11.1.12
     "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.11
+    "@nestjs/core": 11.1.12
     "@nestjs/mapped-types": ^2.1.0
-    "@nestjs/microservices": 11.1.11
-    "@nestjs/platform-express": 11.1.11
+    "@nestjs/microservices": 11.1.12
+    "@nestjs/platform-express": 11.1.12
     "@nestjs/schematics": 11.0.9
-    "@nestjs/swagger": 11.2.3
-    "@nestjs/testing": 11.1.11
+    "@nestjs/testing": 11.1.12
     "@nestjs/typeorm": 11.0.0
     "@types/amqplib": 0.10.8
     "@types/express": 5.0.6
     "@types/jest": 30.0.0
-    "@types/node": 22.19.3
+    "@types/node": 22.19.7
     "@types/supertest": 6.0.3
     amqp-connection-manager: 5.0.0
     amqplib: 0.10.9
     class-transformer: 0.5.1
     class-validator: 0.14.3
     jest: 30.2.0
-    pg: 8.16.3
+    pg: 8.17.1
     reflect-metadata: 0.2.2
     rxjs: 7.8.2
     source-map-support: 0.5.21
@@ -3246,12 +3000,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:22.19.3":
-  version: 22.19.3
-  resolution: "@types/node@npm:22.19.3"
+"@types/node@npm:22.19.7":
+  version: 22.19.7
+  resolution: "@types/node@npm:22.19.7"
   dependencies:
     undici-types: ~6.21.0
-  checksum: 2fffd870ac2a5a531a160034075c858e7c95c521b0612e9b7ae35e7a6bae1880c7a190a77a5c335fbb2e5f4a315c1e2f2b529f9be4bdbb2166664a7206e28951
+  checksum: 3feba083e0e29d58dfceec726de19cb246616c1af5bed8d779ac2b6ee92662016ad2ead44f04279143b459741300c52883e759d68f42d75e372da247b38eebe9
   languageName: node
   linkType: hard
 
@@ -3433,105 +3187,105 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/eslint-plugin@npm:8.52.0"
+"@typescript-eslint/eslint-plugin@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/eslint-plugin@npm:8.53.0"
   dependencies:
     "@eslint-community/regexpp": ^4.12.2
-    "@typescript-eslint/scope-manager": 8.52.0
-    "@typescript-eslint/type-utils": 8.52.0
-    "@typescript-eslint/utils": 8.52.0
-    "@typescript-eslint/visitor-keys": 8.52.0
+    "@typescript-eslint/scope-manager": 8.53.0
+    "@typescript-eslint/type-utils": 8.53.0
+    "@typescript-eslint/utils": 8.53.0
+    "@typescript-eslint/visitor-keys": 8.53.0
     ignore: ^7.0.5
     natural-compare: ^1.4.0
     ts-api-utils: ^2.4.0
   peerDependencies:
-    "@typescript-eslint/parser": ^8.52.0
+    "@typescript-eslint/parser": ^8.53.0
     eslint: ^8.57.0 || ^9.0.0
     typescript: ">=4.8.4 <6.0.0"
-  checksum: 5ddeb82d9ef17b19a108e14c16ebd82fcc3517ee48adc76bab621188a335b750d7f7286d135c3ff7dcf3cad7c357e2769d0fb11134fb06a1ce999d214e32b3d8
+  checksum: d140e7ddf29861f33481d163fdcf808ee987a33318e09c7d2b0d1e3f7f7b282bc27c8dc723c2aa4ce133cc3ae5c4c91b3635ba99bb68fa3343afe1e48ed0971f
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/parser@npm:8.52.0"
+"@typescript-eslint/parser@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/parser@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/scope-manager": 8.52.0
-    "@typescript-eslint/types": 8.52.0
-    "@typescript-eslint/typescript-estree": 8.52.0
-    "@typescript-eslint/visitor-keys": 8.52.0
+    "@typescript-eslint/scope-manager": 8.53.0
+    "@typescript-eslint/types": 8.53.0
+    "@typescript-eslint/typescript-estree": 8.53.0
+    "@typescript-eslint/visitor-keys": 8.53.0
     debug: ^4.4.3
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
     typescript: ">=4.8.4 <6.0.0"
-  checksum: ec421ea73847fdc6da54346cc01db9f460bcb6329e36d7f5fda7567e1f3dc510a64233e614350cdfec876ab2cee1bc38f00caa3157c5f047eea2395d45c07d87
+  checksum: 8d122877354a395f9c0db5fea3021451f629838492c1cb90f51be2bd2cb9ecbec84cad91e2f1bb68d3df650cbd8e86614aa339bfc77f35804dd9e3158a249e65
   languageName: node
   linkType: hard
 
-"@typescript-eslint/project-service@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/project-service@npm:8.52.0"
+"@typescript-eslint/project-service@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/project-service@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/tsconfig-utils": ^8.52.0
-    "@typescript-eslint/types": ^8.52.0
+    "@typescript-eslint/tsconfig-utils": ^8.53.0
+    "@typescript-eslint/types": ^8.53.0
     debug: ^4.4.3
   peerDependencies:
     typescript: ">=4.8.4 <6.0.0"
-  checksum: f27900d176aeb9a9c6c0f241011b9f55971015f62bc123d271f1046071834702e0caa7bd82ade4e24e5e48af1696fced0c53444d8f763e66fae7ead78dfd0a5d
+  checksum: 80a0a80818201f804b43f33af76e4f8ddd78e40261e0a3a6076ebbee7bd9f4ddbeda59e128fdd910a18f137ea19f549a0f1a445f74a07233e3326a20e7b5fc73
   languageName: node
   linkType: hard
 
-"@typescript-eslint/scope-manager@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/scope-manager@npm:8.52.0"
+"@typescript-eslint/scope-manager@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/scope-manager@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/types": 8.52.0
-    "@typescript-eslint/visitor-keys": 8.52.0
-  checksum: e28a58da6a4ff32436f823e48674a16f26dfbd81126f4c5c785d66958c2a65409dce3998a7f3e4ca366c1cda6fed7e9cace6a37ab0e7848e30ff0d550fad1c64
+    "@typescript-eslint/types": 8.53.0
+    "@typescript-eslint/visitor-keys": 8.53.0
+  checksum: 81cfad672ac6fa5bd9379ee235e6bee986d6f8214691d3bc2a2e431910e5206711a952d6382237c32a6f2075f51c394427a0a646bd66e846500ebb7434e9208c
   languageName: node
   linkType: hard
 
-"@typescript-eslint/tsconfig-utils@npm:8.52.0, @typescript-eslint/tsconfig-utils@npm:^8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/tsconfig-utils@npm:8.52.0"
+"@typescript-eslint/tsconfig-utils@npm:8.53.0, @typescript-eslint/tsconfig-utils@npm:^8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/tsconfig-utils@npm:8.53.0"
   peerDependencies:
     typescript: ">=4.8.4 <6.0.0"
-  checksum: 0538a4092ece026a1567100f5cb019bb947268a246eb5a222abfcc73e91c3c1ee734d21c411f200a52fed5aa050067cee76bd469d04954664374b1f752ab6aea
+  checksum: cdbca1184ed1098675c5b5ce3423bc346fb800a011710752f86dd4848ac0d0477b1694a8f3ff95085a32ac40ef0b5a1df9934388730d2585a417c60609bcf385
   languageName: node
   linkType: hard
 
-"@typescript-eslint/type-utils@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/type-utils@npm:8.52.0"
+"@typescript-eslint/type-utils@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/type-utils@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/types": 8.52.0
-    "@typescript-eslint/typescript-estree": 8.52.0
-    "@typescript-eslint/utils": 8.52.0
+    "@typescript-eslint/types": 8.53.0
+    "@typescript-eslint/typescript-estree": 8.53.0
+    "@typescript-eslint/utils": 8.53.0
     debug: ^4.4.3
     ts-api-utils: ^2.4.0
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
     typescript: ">=4.8.4 <6.0.0"
-  checksum: 172d22b4b740a9b367b0b079c8f1e61cb6610db6b31e84f37e021430941f1104fcea68391bc65a84e469386aa46d80e17a14f67bc082d15358b928d9c9161144
+  checksum: 5ed0b7e5cca9bb0bed3a5f64b7e8a099635769d76f3823109916fe6e36a47aae4d92a0c4998aa1847f27828af349f3ca9b6b3d4439c32cce0b5192542473bd7d
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.52.0, @typescript-eslint/types@npm:^8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/types@npm:8.52.0"
-  checksum: 3bf4058a46ea2bb31dc8a828916cac63719f0dab33d5351e43012e6ad9c47c815856a3b4858d9fb0403d1baac6409cead73f64b7391521f11f20e52444af2961
+"@typescript-eslint/types@npm:8.53.0, @typescript-eslint/types@npm:^8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/types@npm:8.53.0"
+  checksum: 8e446338c3606e9c602ca2cde4e2f6e46d36a9ad1441a14af1d0b14975183f8873a8bf21846ef34873f9efc1cfce1ad43e2acedf6d768d30236de9cb04744eb2
   languageName: node
   linkType: hard
 
-"@typescript-eslint/typescript-estree@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/typescript-estree@npm:8.52.0"
+"@typescript-eslint/typescript-estree@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/typescript-estree@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/project-service": 8.52.0
-    "@typescript-eslint/tsconfig-utils": 8.52.0
-    "@typescript-eslint/types": 8.52.0
-    "@typescript-eslint/visitor-keys": 8.52.0
+    "@typescript-eslint/project-service": 8.53.0
+    "@typescript-eslint/tsconfig-utils": 8.53.0
+    "@typescript-eslint/types": 8.53.0
+    "@typescript-eslint/visitor-keys": 8.53.0
     debug: ^4.4.3
     minimatch: ^9.0.5
     semver: ^7.7.3
@@ -3539,32 +3293,32 @@ __metadata:
     ts-api-utils: ^2.4.0
   peerDependencies:
     typescript: ">=4.8.4 <6.0.0"
-  checksum: 16fbe17f4ff8cfcf5f58ce09c44ef1c487244a3303b9b3dfd25cba9664a630b482cd6d2f276560f96a481f55932c8d3f9dcda38fded9d387c05cfc60a6288b83
+  checksum: 61d11aa805f4567d3a48453650c6930f4ef579d4230ecb41ab1305f56b4e4ede62c90f0a9f7af478bf593625cbf699a4b3e21ad61d19cc8aabf56fc1c2de5dcf
   languageName: node
   linkType: hard
 
-"@typescript-eslint/utils@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/utils@npm:8.52.0"
+"@typescript-eslint/utils@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/utils@npm:8.53.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.9.1
-    "@typescript-eslint/scope-manager": 8.52.0
-    "@typescript-eslint/types": 8.52.0
-    "@typescript-eslint/typescript-estree": 8.52.0
+    "@typescript-eslint/scope-manager": 8.53.0
+    "@typescript-eslint/types": 8.53.0
+    "@typescript-eslint/typescript-estree": 8.53.0
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
     typescript: ">=4.8.4 <6.0.0"
-  checksum: 08392eb917b5ab32eb812f96135e674af233e943cd150e3073d67b3df3abd958ec9959e3efb230978a5b150f9ea8fb05706323c675ff182976d9a307eb2503bf
+  checksum: c978bf8c2cec3906587a78e19cf48291f5417c6d4858720c3b15e4ccb38d9fdc2552bfe66f96620980342a70da9c38e12cd745ecfd39e344db385225a157b4ed
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:8.52.0":
-  version: 8.52.0
-  resolution: "@typescript-eslint/visitor-keys@npm:8.52.0"
+"@typescript-eslint/visitor-keys@npm:8.53.0":
+  version: 8.53.0
+  resolution: "@typescript-eslint/visitor-keys@npm:8.53.0"
   dependencies:
-    "@typescript-eslint/types": 8.52.0
+    "@typescript-eslint/types": 8.53.0
     eslint-visitor-keys: ^4.2.1
-  checksum: 8b071589a5480f8408aa1564648747e3aa31f4c39ddea1f0a43b06faf40b2aba04696b5c64b4f432f58b55af1241cdba23718af1a0f0b81f70609ca0b9716ae2
+  checksum: 1c509d6c783bdd914869a74f8c2979a48dc9c3baad658850fa897f90bc3c5475c53df6ff15f5a2e46571af84171bd2e81c6311b8b7e80ee57d89df247ed2b4b2
   languageName: node
   linkType: hard
 
@@ -4455,7 +4209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.26.3":
+"browserslist@npm:^4.28.1":
   version: 4.28.1
   resolution: "browserslist@npm:4.28.1"
   dependencies:
@@ -5272,7 +5026,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detect-libc@npm:^2.1.0, detect-libc@npm:^2.1.2":
+"detect-libc@npm:^2.1.2":
   version: 2.1.2
   resolution: "detect-libc@npm:2.1.2"
   checksum: 471740d52365084c4b2ae359e507b863f2b1d79b08a92835ebdf701918e08fc9cfba175b3db28483ca33b155e1311a91d69dc42c6d192b476f41a9e1f094ce6a
@@ -5562,7 +5316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.17.3":
+"enhanced-resolve@npm:^5.17.4":
   version: 5.18.4
   resolution: "enhanced-resolve@npm:5.18.4"
   dependencies:
@@ -5630,10 +5384,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-module-lexer@npm:^1.2.1":
-  version: 1.7.0
-  resolution: "es-module-lexer@npm:1.7.0"
-  checksum: 7858bb76ae387fdbf8a6fccc951bf18919768309850587553eca34698b9193fbc65fab03d3d9f69163d860321fbf66adf89d5821e7f4148c7cb7d7b997259211
+"es-module-lexer@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "es-module-lexer@npm:2.0.0"
+  checksum: 6290c43cc9bf6c9f9167b4be8c0105137401fbbd9d503d89880f7e811286cd33ab628407e7dea3c14d41cf9e634e580e5d9952907003a88c7fb2461de6f1b2c1
   languageName: node
   linkType: hard
 
@@ -5711,12 +5465,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:5.5.4":
-  version: 5.5.4
-  resolution: "eslint-plugin-prettier@npm:5.5.4"
+"eslint-plugin-prettier@npm:5.5.5":
+  version: 5.5.5
+  resolution: "eslint-plugin-prettier@npm:5.5.5"
   dependencies:
-    prettier-linter-helpers: ^1.0.0
-    synckit: ^0.11.7
+    prettier-linter-helpers: ^1.0.1
+    synckit: ^0.11.12
   peerDependencies:
     "@types/eslint": ">=8.0.0"
     eslint: ">=8.0.0"
@@ -5727,7 +5481,7 @@ __metadata:
       optional: true
     eslint-config-prettier:
       optional: true
-  checksum: 0dd05ed85018ab0e98da80325b7bd4c4ab6dd684398f1270a7c8cf4261df714dd4502ba4c7f85f651aade9989da0a7d2adda03af8873b73b52014141abf385de
+  checksum: 49b1c25d75ded255a8707d5f06288ae86e8ab4f8e273d4aabdabf73cd0903848916d5a3598ba8be82f2c8dd06769c5e6c172503b3b9cfb2636b6fc23b9c024fb
   languageName: node
   linkType: hard
 
@@ -6091,15 +5845,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-type@npm:21.2.0":
-  version: 21.2.0
-  resolution: "file-type@npm:21.2.0"
+"file-type@npm:21.3.0":
+  version: 21.3.0
+  resolution: "file-type@npm:21.3.0"
   dependencies:
     "@tokenizer/inflate": ^0.4.1
     strtok3: ^10.3.4
     token-types: ^6.1.1
     uint8array-extras: ^1.4.0
-  checksum: ed93d72007210b8df0af207ec80b0f6ec3b054fdfbdbf92feae0aa9f602f85d7b17f9e6e18bc9ec527343677d1dddc11ee47cecd7a5ad908bf2d7a264a8bc8bc
+  checksum: 52c480c327ff4800095988d1b3a0cf92eac5cae84c8ee6f15feb08b866b56404726e83ef74d4c51fffd749d4b7c64a4e2bb40bcfd8d9e44e6a0664cd694baf18
   languageName: node
   linkType: hard
 
@@ -6247,7 +6001,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^4.0.0, form-data@npm:^4.0.4":
+"form-data@npm:^4.0.0":
   version: 4.0.4
   resolution: "form-data@npm:4.0.4"
   dependencies:
@@ -6260,7 +6014,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^4.0.5":
+"form-data@npm:^4.0.4, form-data@npm:^4.0.5":
   version: 4.0.5
   resolution: "form-data@npm:4.0.5"
   dependencies:
@@ -7674,17 +7428,6 @@ __metadata:
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
   checksum: 8a95213a5a77deb6cbe94d86340e8d9ace2b93bc367790b260101d2f36a2eaf4e4e22d9fa9cf459b38af3a32fb4190e638024cf82ec95ef708680e405ea7cc78
-  languageName: node
-  linkType: hard
-
-"js-yaml@npm:4.1.1":
-  version: 4.1.1
-  resolution: "js-yaml@npm:4.1.1"
-  dependencies:
-    argparse: ^2.0.1
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: ea2339c6930fe048ec31b007b3c90be2714ab3e7defcc2c27ebf30c74fd940358f29070b4345af0019ef151875bf3bc3f8644bea1bab0372652b5044813ac02d
   languageName: node
   linkType: hard
 
@@ -9495,17 +9238,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-cloudflare@npm:^1.2.7":
-  version: 1.2.7
-  resolution: "pg-cloudflare@npm:1.2.7"
-  checksum: 8e66fa9aaf3be9da7570d294c6170ead48ae9187e670dcc4219eb381fb598a12823d90c20f301d76d70e49840dbec8c7eb5aa2af0d2698c0325b634c86bbcd18
+"pg-cloudflare@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "pg-cloudflare@npm:1.3.0"
+  checksum: 8f43db569f44d2a1673e33d73fc37919507b5c9cb4976968543aa13da4c919c391bb81f4435ab98890e48dda6cff265aa7618557da460a4e2b3a6dac83155510
   languageName: node
   linkType: hard
 
-"pg-connection-string@npm:^2.9.1":
-  version: 2.9.1
-  resolution: "pg-connection-string@npm:2.9.1"
-  checksum: 23e63951f866ea400b227976be596963c5e68b84dc161df0aa3e36fe2dc281f405e5121d71ba9d2f27973e25a46dbb219056fd91080505bcadc9ae98c9663cf3
+"pg-connection-string@npm:^2.10.0":
+  version: 2.10.0
+  resolution: "pg-connection-string@npm:2.10.0"
+  checksum: 5ddd2fca41a9324c6a72c7b42860541380b5b4c05b3adab8d155364ae8651e6fc6f6ecab5be095f4ef513e567146e26d7a6c44b98f8d26a9ce1e3e96740ef6a9
   languageName: node
   linkType: hard
 
@@ -9516,19 +9259,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.10.1":
-  version: 3.10.1
-  resolution: "pg-pool@npm:3.10.1"
+"pg-pool@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "pg-pool@npm:3.11.0"
   peerDependencies:
     pg: ">=8.0"
-  checksum: 98135a7384be40886bba7100b9ce1a74671ff3877390f68e6db6d50ea56a7f524f7e44e01c02d61efeda97d9dc22d6115d0c66aa7f3cf5b8e892424862d0111a
+  checksum: 72c32b3d7c67eb1d61f5e390fcf5b7b0fdec6132696c9044fd5895c7c82b986e13ba70c49afe72fc115adfa8569a9ddd526f65ccc2ebda8630654ab7a1e03332
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:^1.10.3":
-  version: 1.10.3
-  resolution: "pg-protocol@npm:1.10.3"
-  checksum: 2d8c3b2747526706d37fdf35fc6e87c4a170cf8deb89fac65c562df26b4e0f42b76d62c6d1dbd096725e9a081a8725796f27af874c9e72753499c794472faad7
+"pg-protocol@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "pg-protocol@npm:1.11.0"
+  checksum: 1475714a4b845e9656cab65337b0de55dc62f90b60b5fc612fa275d73b421c006f0c2f52e290aca6fbbf6c80e1e2819765d7306b0e064d7f1f099ddf207e9eed
   languageName: node
   linkType: hard
 
@@ -9545,14 +9288,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:8.16.3":
-  version: 8.16.3
-  resolution: "pg@npm:8.16.3"
+"pg@npm:8.17.1":
+  version: 8.17.1
+  resolution: "pg@npm:8.17.1"
   dependencies:
-    pg-cloudflare: ^1.2.7
-    pg-connection-string: ^2.9.1
-    pg-pool: ^3.10.1
-    pg-protocol: ^1.10.3
+    pg-cloudflare: ^1.3.0
+    pg-connection-string: ^2.10.0
+    pg-pool: ^3.11.0
+    pg-protocol: ^1.11.0
     pg-types: 2.2.0
     pgpass: 1.0.5
   peerDependencies:
@@ -9563,7 +9306,7 @@ __metadata:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: ebc98c9480a11f8de74fffd205c2c161f14fc7cd8e19b152b38c7464d7202f59ad52fb1facb3a25319c343118c2fff44f7f46302415e730485878ceccf24241a
+  checksum: 109914a850f06d39abad59ceb041611bf1397b3485aa7f8c475feac8502d23630a78867acf1df7ca2b236f7058d492815bba107652cc4ad3d0ff7ca9f83be607
   languageName: node
   linkType: hard
 
@@ -9671,21 +9414,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-linter-helpers@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "prettier-linter-helpers@npm:1.0.0"
+"prettier-linter-helpers@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "prettier-linter-helpers@npm:1.0.1"
   dependencies:
     fast-diff: ^1.1.2
-  checksum: 00ce8011cf6430158d27f9c92cfea0a7699405633f7f1d4a45f07e21bf78e99895911cbcdc3853db3a824201a7c745bd49bfea8abd5fb9883e765a90f74f8392
+  checksum: 2dc35f5036a35f4c4f5e645887edda1436acb63687a7f12b2383e0a6f3c1f76b8a0a4709fe4d82e19157210feb5984b159bb714d43290022911ab53d606474ec
   languageName: node
   linkType: hard
 
-"prettier@npm:3.7.4":
-  version: 3.7.4
-  resolution: "prettier@npm:3.7.4"
+"prettier@npm:3.8.0":
+  version: 3.8.0
+  resolution: "prettier@npm:3.8.0"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 955e37e87b1151ca3b3282463f5295f4c415821884791df152ff66e6eb1c5257115153cccba61b13962546100dd00ae45670ff27077dcab04c977d84036eaf80
+  checksum: 50770d842539d5fa208bd84ecfb28ae367258b14a5e7e4b9472ba087ed9f8888a5bfd387bfd5596473529f04347670f9b1aa6f0bd8631bec1644e6a8e47c7d35
   languageName: node
   linkType: hard
 
@@ -10168,14 +9911,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@types/node": 22.19.3
-    "@typescript-eslint/eslint-plugin": 8.52.0
-    "@typescript-eslint/parser": 8.52.0
+    "@types/node": 22.19.7
+    "@typescript-eslint/eslint-plugin": 8.53.0
+    "@typescript-eslint/parser": 8.53.0
     eslint: 9.39.2
     eslint-config-prettier: 10.1.8
-    eslint-plugin-prettier: 5.5.4
+    eslint-plugin-prettier: 5.5.5
     jiti: 2.6.1
-    prettier: 3.7.4
+    prettier: 3.8.0
     rimraf: 6.1.2
     ts-node: 10.9.2
     typescript: 5.9.3
@@ -10387,85 +10130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:*":
-  version: 0.34.4
-  resolution: "sharp@npm:0.34.4"
-  dependencies:
-    "@img/colour": ^1.0.0
-    "@img/sharp-darwin-arm64": 0.34.4
-    "@img/sharp-darwin-x64": 0.34.4
-    "@img/sharp-libvips-darwin-arm64": 1.2.3
-    "@img/sharp-libvips-darwin-x64": 1.2.3
-    "@img/sharp-libvips-linux-arm": 1.2.3
-    "@img/sharp-libvips-linux-arm64": 1.2.3
-    "@img/sharp-libvips-linux-ppc64": 1.2.3
-    "@img/sharp-libvips-linux-s390x": 1.2.3
-    "@img/sharp-libvips-linux-x64": 1.2.3
-    "@img/sharp-libvips-linuxmusl-arm64": 1.2.3
-    "@img/sharp-libvips-linuxmusl-x64": 1.2.3
-    "@img/sharp-linux-arm": 0.34.4
-    "@img/sharp-linux-arm64": 0.34.4
-    "@img/sharp-linux-ppc64": 0.34.4
-    "@img/sharp-linux-s390x": 0.34.4
-    "@img/sharp-linux-x64": 0.34.4
-    "@img/sharp-linuxmusl-arm64": 0.34.4
-    "@img/sharp-linuxmusl-x64": 0.34.4
-    "@img/sharp-wasm32": 0.34.4
-    "@img/sharp-win32-arm64": 0.34.4
-    "@img/sharp-win32-ia32": 0.34.4
-    "@img/sharp-win32-x64": 0.34.4
-    detect-libc: ^2.1.0
-    semver: ^7.7.2
-  dependenciesMeta:
-    "@img/sharp-darwin-arm64":
-      optional: true
-    "@img/sharp-darwin-x64":
-      optional: true
-    "@img/sharp-libvips-darwin-arm64":
-      optional: true
-    "@img/sharp-libvips-darwin-x64":
-      optional: true
-    "@img/sharp-libvips-linux-arm":
-      optional: true
-    "@img/sharp-libvips-linux-arm64":
-      optional: true
-    "@img/sharp-libvips-linux-ppc64":
-      optional: true
-    "@img/sharp-libvips-linux-s390x":
-      optional: true
-    "@img/sharp-libvips-linux-x64":
-      optional: true
-    "@img/sharp-libvips-linuxmusl-arm64":
-      optional: true
-    "@img/sharp-libvips-linuxmusl-x64":
-      optional: true
-    "@img/sharp-linux-arm":
-      optional: true
-    "@img/sharp-linux-arm64":
-      optional: true
-    "@img/sharp-linux-ppc64":
-      optional: true
-    "@img/sharp-linux-s390x":
-      optional: true
-    "@img/sharp-linux-x64":
-      optional: true
-    "@img/sharp-linuxmusl-arm64":
-      optional: true
-    "@img/sharp-linuxmusl-x64":
-      optional: true
-    "@img/sharp-wasm32":
-      optional: true
-    "@img/sharp-win32-arm64":
-      optional: true
-    "@img/sharp-win32-ia32":
-      optional: true
-    "@img/sharp-win32-x64":
-      optional: true
-  checksum: 4640bd81ce2d49fc8df254e173f9da397bce2ffede201e72f34e4f6cba14f92a83ff34aff8ab669f08efed3d2c7a83c13cd8ec37180c65dd4ad3fbbd1691cd4e
-  languageName: node
-  linkType: hard
-
-"sharp@npm:0.34.5":
+"sharp@npm:*, sharp@npm:0.34.5":
   version: 0.34.5
   resolution: "sharp@npm:0.34.5"
   dependencies:
@@ -10970,15 +10635,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:5.30.2":
-  version: 5.30.2
-  resolution: "swagger-ui-dist@npm:5.30.2"
-  dependencies:
-    "@scarf/scarf": =1.4.0
-  checksum: 927dc5bd35fe6a58acc72f96a5fefb53efcbf19b33dce07d73b0ff1b51b9444b577d1f79bf4ca16ba35a48a81bbed38319f680933e2de8aa33a0feb825510031
-  languageName: node
-  linkType: hard
-
 "symbol-observable@npm:4.0.0":
   version: 4.0.0
   resolution: "symbol-observable@npm:4.0.0"
@@ -10986,7 +10642,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:^0.11.7, synckit@npm:^0.11.8":
+"synckit@npm:^0.11.12":
+  version: 0.11.12
+  resolution: "synckit@npm:0.11.12"
+  dependencies:
+    "@pkgr/core": ^0.2.9
+  checksum: a53fb563d01ba8912a111b883fc3c701e267896ff8273e7aba9001f5f74711e125888f4039e93060795cd416122cf492ae419eb10a6a3e3b00e830917669d2cf
+  languageName: node
+  linkType: hard
+
+"synckit@npm:^0.11.8":
   version: 0.11.11
   resolution: "synckit@npm:0.11.11"
   dependencies:
@@ -11015,9 +10680,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser-webpack-plugin@npm:^5.3.11":
-  version: 5.3.14
-  resolution: "terser-webpack-plugin@npm:5.3.14"
+"terser-webpack-plugin@npm:^5.3.16":
+  version: 5.3.16
+  resolution: "terser-webpack-plugin@npm:5.3.16"
   dependencies:
     "@jridgewell/trace-mapping": ^0.3.25
     jest-worker: ^27.4.5
@@ -11033,7 +10698,7 @@ __metadata:
       optional: true
     uglify-js:
       optional: true
-  checksum: 13a1e67f1675a473b18d25cb0ce65c3f0a19b5e9a93213a99ea61dc4ca996ea93aa17a221965b526f5788d242836a8249ad00538fbb322e25cb69076eb55feab
+  checksum: 4a9ba15a0917fa0de565f6d722cac1c5291fbb517a9afe3a2cce7edf851f0e02ee44ea45e2547aeb4fb7d599df3f1ccb04ba405879839d5425481c7180655679
   languageName: node
   linkType: hard
 
@@ -11830,9 +11495,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.103.0":
-  version: 5.103.0
-  resolution: "webpack@npm:5.103.0"
+"webpack@npm:5.104.1":
+  version: 5.104.1
+  resolution: "webpack@npm:5.104.1"
   dependencies:
     "@types/eslint-scope": ^3.7.7
     "@types/estree": ^1.0.8
@@ -11842,10 +11507,10 @@ __metadata:
     "@webassemblyjs/wasm-parser": ^1.14.1
     acorn: ^8.15.0
     acorn-import-phases: ^1.0.3
-    browserslist: ^4.26.3
+    browserslist: ^4.28.1
     chrome-trace-event: ^1.0.2
-    enhanced-resolve: ^5.17.3
-    es-module-lexer: ^1.2.1
+    enhanced-resolve: ^5.17.4
+    es-module-lexer: ^2.0.0
     eslint-scope: 5.1.1
     events: ^3.2.0
     glob-to-regexp: ^0.4.1
@@ -11856,7 +11521,7 @@ __metadata:
     neo-async: ^2.6.2
     schema-utils: ^4.3.3
     tapable: ^2.3.0
-    terser-webpack-plugin: ^5.3.11
+    terser-webpack-plugin: ^5.3.16
     watchpack: ^2.4.4
     webpack-sources: ^3.3.3
   peerDependenciesMeta:
@@ -11864,7 +11529,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: dd73cb519423b4a59088e76f446f6a9c51344c53867609790e46a0bd68325033440e3dff24c1f9acd2fa985b703dc01e208b41b889e58dc5642566a9234f9260
+  checksum: 4d187c246da5c03215a9a583682d1b8972fa0c5a446ba479d63507fe2d844dacf88a46ff7f3133dba22f07f1482f866b14e84c509c0f371ae7ad9316cad83fcb
   languageName: node
   linkType: hard
 

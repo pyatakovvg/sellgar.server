@@ -17,7 +17,7 @@ export class VariantGateway {
   constructor(
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
-    @Inject('PRODUCT_SERVICE') private readonly productProxy: ClientProxy,
+    @Inject('PRODUCT_COMMAND_SERVICE') private readonly productProxy: ClientProxy,
   ) {}
 
   async findAll() {

@@ -32,7 +32,7 @@ export class CurrencyService {
     return this.currencyRepository.update(dto);
   }
 
-  remove(code: string) {
-    return this.currencyRepository.remove(code);
+  remove() {
+    return this.currencyRepository.remove();
   }
 }

@@ -3,8 +3,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "update": "yarn upgrade-interactive",
-    "format": "prettier --write \"**/src/**/*.{ts}\" \"**/test/**/*.ts\"",
-    "lint": "eslint \"**/{src,test}/**/*.{ts}\" --fix",
     "dev:admin_gw": "yarn workspace @gateway/admin start:dev",
     "dev:mailer_srv": "yarn workspace @service/mailer start:dev",
     "dev:product_srv": "yarn workspace @service/product start:dev",
@@ -24,18 +22,17 @@
     "ts-node": "10.9.2"
   },
   "devDependencies": {
-    "@types/node": "22.19.3",
-    "@typescript-eslint/eslint-plugin": "8.52.0",
-    "@typescript-eslint/parser": "8.52.0",
+    "@types/node": "22.19.7",
+    "@typescript-eslint/eslint-plugin": "8.53.0",
+    "@typescript-eslint/parser": "8.53.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-prettier": "5.5.5",
     "jiti": "2.6.1",
-    "prettier": "3.7.4",
+    "prettier": "3.8.0",
     "typescript": "5.9.3"
   },
   "workspaces": [
-    "helpers/**/*",
     "gateways/**/*",
     "services/**/*"
   ],

@@ -12,7 +12,7 @@ import { CreatePropertyGroupDto } from './dto/create-property-group.dto';
 
 @Injectable()
 export class PropertyGroupService {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
+  constructor(@Inject('PRODUCT_COMMAND_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
     const message = this.productService.send({ cmd: 'property-group.findAll' }, {});

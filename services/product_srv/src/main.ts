@@ -26,7 +26,6 @@ async function bootstrap() {
       queue: config.get('AMQP_PRODUCT_SRV_COMMAND_QUEUE'),
       queueOptions: {
         durable: true,
-        autoDelete: true,
       },
     },
   });
@@ -42,21 +41,13 @@ async function bootstrap() {
           password: config.get('AMQP_PASSWORD'),
         },
       ],
-      wildcards: true,
       persistent: true,
-      queue: config.get('AMQP_IDENTITY_SRV_EVENT_QUEUE'),
+      queue: config.get('AMQP_PRODUCT_SRV_EVENT_QUEUE'),
       queueOptions: {
         durable: true,
-        autoDelete: true,
       },
-      exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
+      exchange: config.get('AMQP_EVENTS_EXCHANGE'),
       exchangeType: 'topic',
-      bindings: [
-        {
-          exchange: config.get('AMQP_IDENTITY_SRV_EXCHANGE'),
-          routingKey: 'identity.*',
-        },
-      ],
     },
   });
 

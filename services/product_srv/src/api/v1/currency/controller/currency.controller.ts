@@ -31,7 +31,7 @@ export class CurrencyController {
   }
 
   @MessagePattern({ cmd: 'currency.delete' })
-  remove(@Payload('code') code: string) {
-    return this.brandService.remove(code);
+  remove() {
+    return this.brandService.remove();
   }
 }

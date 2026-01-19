@@ -1,21 +1,55 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const logger = new Logger();
   const config = new ConfigService();
+
   const app = await NestFactory.create(AppModule);
 
-  const port = config.get<number>('PORT');
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        {
+          port: config.get('AMQP_PORT'),
+          hostname: config.get('AMQP_HOSTNAME'),
+          username: config.get('AMQP_USERNAME'),
+          password: config.get('AMQP_PASSWORD'),
+        },
+      ],
+      persistent: true,
+      queue: config.get('AMQP_ORDER_SRV_COMMAND_QUEUE'),
+      queueOptions: {
+        durable: true,
+      },
+    },
+  });
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      wildcards: true,
+      persistent: true,
+      prefetchCount: 1,
+      queue: config.get('AMQP_ORDER_SRV_EVENT_QUEUE'),
+      queueOptions: {
+        durable: true,
+      },
+      exchange: config.get('AMQP_EVENTS_EXCHANGE'),
+      exchangeType: 'topic',
+    },
+  });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  await app.listen(port, () => {
-    logger.log('Service has been started on port ' + port);
-  });
+  await app.startAllMicroservices();
+
+  logger.log('Service has been started.');
 }
 
 bootstrap();

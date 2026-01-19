@@ -1,10 +1,8 @@
 import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiProperty } from '@nestjs/swagger';
 
 import { MailService } from './mail.service';
 
 @Controller('mail')
-@ApiTags('Mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
 
@@ -24,7 +22,6 @@ export class MailController {
   }
 
   @Post()
-  @ApiProperty()
   send() {
     return this.mailService.send();
   }

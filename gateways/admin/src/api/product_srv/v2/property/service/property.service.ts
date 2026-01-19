@@ -12,7 +12,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 
 @Injectable()
 export class PropertyService {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
+  constructor(@Inject('PRODUCT_COMMAND_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
     const message = this.productService.send({ cmd: 'property.findAll' }, {});

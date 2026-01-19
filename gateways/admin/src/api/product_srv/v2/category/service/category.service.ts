@@ -12,7 +12,7 @@ import { CategoryResultEntity, CategoryEntity } from '../category.entity';
 
 @Injectable()
 export class CategoryService {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
+  constructor(@Inject('PRODUCT_COMMAND_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
     const message = this.productService.send({ cmd: 'category.findAll' }, {});

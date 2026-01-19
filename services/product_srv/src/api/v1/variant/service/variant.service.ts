@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { CreateProductDto } from '../repository/dto/create-product.dto';
-import { UpdateProductDto } from '../repository/dto/update-product.dto';
+// import { CreateProductDto } from '../repository/dto/create-product.dto';
+// import { UpdateProductDto } from '../repository/dto/update-product.dto';
 
 import { ProductVariantResultEntity } from '../variant.entity';
 
@@ -35,15 +35,15 @@ export class VariantService {
     return resultInstance;
   }
 
-  findByUuid(uuid: string) {
-    return this.productVariantRepository.findByUuid(uuid);
+  findByUuid() {
+    return this.productVariantRepository.findByUuid();
   }
 
-  create(createCategoryDto: CreateProductDto) {
-    return this.productVariantRepository.create(createCategoryDto);
+  create() {
+    return this.productVariantRepository.create();
   }
 
-  update(uuid: string, updateCategoryDto: UpdateProductDto) {
-    return this.productVariantRepository.update(uuid, updateCategoryDto);
+  update() {
+    return this.productVariantRepository.update();
   }
 }

@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
+import { ClientProxy } from '@nestjs/microservices';
 
 import * as uuid from 'uuid';
 import { DataSource } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+
+import { UseValidation, Validate } from '../../../../utils/validator.utils';
 
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -15,7 +18,10 @@ import { PriceModel } from '../../price/price.model';
 
 @Injectable()
 export class StoreRepository {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+    @Inject('PRODUCT_EVENT_SERVICE') private readonly productProxy: ClientProxy,
+  ) {}
 
   private buildTsQuery(query: string): string {
     const cleanedQuery = query
@@ -61,6 +67,7 @@ export class StoreRepository {
         .andHaving(
           `to_tsvector(coalesce(product.name, '')) @@ to_tsquery(:query) or ` +
             `to_tsvector(coalesce(variant.name, '')) @@ to_tsquery(:query) or ` +
+            `to_tsvector(coalesce(article::TEXT, '')) @@ to_tsquery(:query) or ` +
             `to_tsvector(coalesce(current_price.value::TEXT, '')) @@ to_tsquery(:query)`,
           {
             query: this.buildTsQuery(decodeURI(query.search)),
@@ -81,8 +88,6 @@ export class StoreRepository {
         .addGroupBy('current_price_currency.code')
         .addGroupBy('prices.uuid');
     }
-
-    console.log(builder.getQueryAndParameters());
 
     const result = await builder.getManyAndCount();
 
@@ -135,7 +140,8 @@ export class StoreRepository {
     return resultInstance;
   }
 
-  async create(dto: CreateStoreDto) {
+  @UseValidation()
+  async create(@Validate(CreateStoreDto) dto: CreateStoreDto) {
     const runner = this.dataSource.createQueryRunner();
 
     await runner.connect();
@@ -202,6 +208,14 @@ export class StoreRepository {
       });
 
       await validateOrReject(resultInstance);
+
+      new Promise((resolve, reject) => {
+        this.productProxy.emit('store.create', resultInstance).subscribe({
+          next: (data) => resolve(data),
+          error: (err) => reject(err),
+        });
+      });
+
       await runner.commitTransaction();
 
       return resultInstance;
@@ -213,7 +227,8 @@ export class StoreRepository {
     }
   }
 
-  async update(dto: UpdateStoreDto) {
+  @UseValidation()
+  async update(@Validate(UpdateStoreDto) dto: UpdateStoreDto) {
     const runner = this.dataSource.createQueryRunner();
 
     await runner.connect();
@@ -243,7 +258,11 @@ export class StoreRepository {
         .setParameters({ storeUuid: dto.uuid })
         .getOne();
 
-      if (!lastPrice || Number(lastPrice.value) !== Number(dto.currentPrice.value)) {
+      if (
+        !lastPrice ||
+        Number(lastPrice.value) !== Number(dto.currentPrice.value) ||
+        lastPrice.currencyCode !== dto.currentPrice.currencyCode
+      ) {
         await runner.manager
           .createQueryBuilder()
           .insert()
@@ -289,6 +308,14 @@ export class StoreRepository {
       });
 
       await validateOrReject(resultInstance);
+
+      new Promise((resolve, reject) => {
+        this.productProxy.emit('store.update', resultInstance).subscribe({
+          next: (data) => resolve(data),
+          error: (err) => reject(err),
+        });
+      });
+
       await runner.commitTransaction();
 
       return resultInstance;

@@ -10,7 +10,7 @@ import { PriceEntity, PriceResultEntity } from '../price.entity';
 
 @Injectable()
 export class PriceGateway {
-  constructor(@Inject('PRODUCT_SERVICE') private readonly productProxy: ClientProxy) {}
+  constructor(@Inject('PRODUCT_COMMAND_SERVICE') private readonly productProxy: ClientProxy) {}
 
   async findAll(uuid: string) {
     const message = this.productProxy.send({ cmd: 'store.price.findAll' }, { uuid });

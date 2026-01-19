@@ -261,13 +261,17 @@ export class ProductRepository {
 
       await validateOrReject(resultInstance);
 
-      await this.productProxy.emit('product.updated', resultInstance).toPromise();
+      new Promise((resolve, reject) => {
+        this.productProxy.emit('product.updated', resultInstance).subscribe({
+          next: (data) => resolve(data),
+          error: (err) => reject(err),
+        });
+      });
 
       await runner.commitTransaction();
 
       return resultInstance;
     } catch (error) {
-      console.error(error);
       await runner.rollbackTransaction();
       throw error;
     } finally {

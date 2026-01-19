@@ -33,7 +33,6 @@ import { ProfileModule } from './profile/profile.module';
                 queue: config.get('AMQP_IDENTITY_SRV_COMMAND_QUEUE'),
                 queueOptions: {
                   durable: true,
-                  autoDelete: true,
                 },
               },
             };

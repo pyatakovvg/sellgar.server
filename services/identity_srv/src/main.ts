@@ -27,7 +27,6 @@ async function bootstrap() {
       queue: config.get('AMQP_IDENTITY_SRV_COMMAND_QUEUE'),
       queueOptions: {
         durable: true,
-        autoDelete: true,
       },
     },
   });

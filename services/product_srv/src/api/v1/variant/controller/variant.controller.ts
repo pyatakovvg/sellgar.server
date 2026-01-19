@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
 import { VariantService } from '../service/variant.service';
@@ -13,7 +13,7 @@ export class VariantController {
   }
 
   @Get(':uuid')
-  findByUuid(@Param('uuid') uuid: string) {
-    return this.productVariantService.findByUuid(uuid);
+  findByUuid() {
+    return this.productVariantService.findByUuid();
   }
 }
