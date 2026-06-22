@@ -1,6 +1,17 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 import { OrderStatus } from './order-status.enum';
+import { PriceModel } from '../price/price.model';
+import { VariantModel } from '../variant/variant.model';
 
 @Entity('order')
 export class OrderModel {
@@ -9,6 +20,22 @@ export class OrderModel {
 
   @Column({ name: 'article', type: 'varchar', length: 256 })
   article: string;
+
+  @Column({ name: 'variant_uuid', type: 'uuid' })
+  variantUuid: string;
+
+  @JoinColumn({ name: 'variant_uuid' })
+  @ManyToOne(() => VariantModel, (variant) => variant.uuid)
+  variant: VariantModel;
+
+  @Column({ name: 'count', type: 'int', default: 0 })
+  count: number;
+
+  @Column({ name: 'showing', type: 'boolean', default: true })
+  showing: boolean;
+
+  @OneToMany(() => PriceModel, (price) => price.store)
+  prices: PriceModel[];
 
   @Column({
     type: 'enum',

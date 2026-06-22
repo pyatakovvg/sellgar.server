@@ -1,12 +1,13 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class SessionEntity {
   @IsString()
-  sessionUuid: string;
+  sessionId: string;
 
   @IsString()
-  accessToken: string;
+  sessionSecret: string;
 
   @IsString()
-  refreshToken: string;
+  @IsOptional()
+  userId?: string;
 }

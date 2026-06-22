@@ -1,14 +1,13 @@
 import { firstValueFrom } from 'rxjs';
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { FindSessionDto } from './dto/find-session.dto';
-import { CreateSessionDto } from './dto/create-session.dto';
-import { RefreshSessionDto } from './dto/refresh-session.dto';
-import { RestoreSessionDto } from './dto/restore-session.dto';
 import { RemoveSessionDto } from './dto/remove-session.dto';
+import { VerifySessionDto } from './dto/verify-session.dto';
+import { RenewSessionDto } from './dto/renew-session.dto';
 
 import { SessionEntity } from '../session.entity';
 
@@ -25,9 +24,8 @@ export class SessionGateway {
     }
 
     const resultInstance = plainToInstance(SessionEntity, {
-      sessionUuid: result.uuid,
-      accessToken: '',
-      refreshToken: '',
+      sessionId: result.uuid,
+      sessionSecret: '',
     });
 
     await validateOrReject(resultInstance);
@@ -35,50 +33,24 @@ export class SessionGateway {
     return resultInstance;
   }
 
-  async create(dto: CreateSessionDto): Promise<SessionEntity> {
-    const message = this.identityProxy.send({ cmd: 'identity.session.create' }, dto);
-    const result = await firstValueFrom(message);
+  async verify(dto: VerifySessionDto) {
+    const message = this.identityProxy.send({ cmd: 'identity.session.verify' }, dto);
 
-    const resultInstance = plainToInstance(SessionEntity, {
-      sessionUuid: result.uuid,
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken.token,
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await firstValueFrom(message);
   }
 
-  async refresh(dto: RefreshSessionDto): Promise<SessionEntity> {
-    const message = this.identityProxy.send({ cmd: 'identity.session.refresh' }, dto);
-    const result = await firstValueFrom(message);
-
-    console.log('Session refresh:', result);
-
-    const resultInstance = plainToInstance(SessionEntity, {
-      sessionUuid: result.uuid,
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken.token,
-    });
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
-  }
-
-  async restore(dto: RestoreSessionDto) {
-    const message = this.identityProxy.send({ cmd: 'identity.session.restore' }, dto);
+  async renew(dto: RenewSessionDto): Promise<SessionEntity | null> {
+    const message = this.identityProxy.send({ cmd: 'identity.session.renew' }, dto);
     const result = await firstValueFrom(message);
 
     if (!result) {
-      throw new UnauthorizedException();
+      return null;
     }
 
     const resultInstance = plainToInstance(SessionEntity, {
-      sessionUuid: result.uuid,
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken.token,
+      sessionId: result.uuid,
+      sessionSecret: result.sessionSecret,
+      userId: result.userId,
     });
 
     await validateOrReject(resultInstance);
@@ -87,12 +59,9 @@ export class SessionGateway {
   }
 
   async remove(dto: RemoveSessionDto) {
-    const message = this.identityProxy.send({ cmd: 'identity.session.remove' }, dto);
+    const message = this.identityProxy.send({ cmd: 'identity.session.revoke' }, dto);
     const result = await firstValueFrom(message);
 
-    if (!result) {
-      throw new UnauthorizedException();
-    }
-    return true;
+    return Boolean(result);
   }
 }

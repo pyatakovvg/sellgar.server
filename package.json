@@ -12,19 +12,19 @@
     "start:mailer_srv": "yarn workspace @service/mailer start",
     "start:product_srv": "yarn workspace @service/product start",
     "start:identity_srv": "yarn workspace @service/identity start",
-    "build:admin_gw": "yarn workspaces foreach -tR --from '@gateway/admin' run build",
-    "build:mailer_srv": "yarn workspaces foreach -tR --from '@service/user' run build",
-    "build:product_srv": "yarn workspaces foreach -tR --from '@service/product' run build",
-    "build:identity_srv": "yarn workspaces foreach -tR --from '@service/identity' run build"
+    "build:admin_gw": "yarn workspace @gateway/admin workspaces foreach -tR run build",
+    "build:mailer_srv": "yarn workspace @service/mailer workspaces foreach -tR run build",
+    "build:product_srv": "yarn workspace @service/product workspaces foreach -tR run build",
+    "build:identity_srv": "yarn workspace @service/identity workspaces foreach -tR run build"
   },
   "dependencies": {
     "rimraf": "6.1.3",
     "ts-node": "10.9.2"
   },
   "devDependencies": {
-    "@types/node": "25.9.3",
-    "@typescript-eslint/eslint-plugin": "8.61.0",
-    "@typescript-eslint/parser": "8.61.0",
+    "@types/node": "26.0.0",
+    "@typescript-eslint/eslint-plugin": "8.62.0",
+    "@typescript-eslint/parser": "8.62.0",
     "eslint": "10.5.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.6",
@@ -36,7 +36,7 @@
     "gateways/**/*",
     "services/**/*"
   ],
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@4.10.3",
   "engines": {
     "node": ">=22"
   }

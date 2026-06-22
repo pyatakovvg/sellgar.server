@@ -1,4 +1,16 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+
+import { PriceModel } from '../price/price.model';
+import { VariantModel } from '../variant/variant.model';
 
 @Entity('order')
 export class CartModel {
@@ -7,6 +19,25 @@ export class CartModel {
 
   @Column({ name: 'user_uuid', type: 'uuid' })
   userUuid: string;
+
+  @Column()
+  article: string;
+
+  @Column({ name: 'variant_uuid', type: 'uuid' })
+  variantUuid: string;
+
+  @JoinColumn({ name: 'variant_uuid' })
+  @ManyToOne(() => VariantModel, (variant) => variant.uuid)
+  variant: VariantModel;
+
+  @Column({ name: 'count', type: 'int', default: 0 })
+  count: number;
+
+  @Column({ name: 'showing', type: 'boolean', default: true })
+  showing: boolean;
+
+  @OneToMany(() => PriceModel, (price) => price.store)
+  prices: PriceModel[];
 
   @CreateDateColumn({
     name: 'created_at',
