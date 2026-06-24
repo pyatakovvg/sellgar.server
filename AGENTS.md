@@ -26,6 +26,15 @@
 
 Перед доверием корневому скрипту сборки сверяйте имя workspace в `package.json`: в текущем состоянии часть скриптов может отставать от фактических имен пакетов.
 
+## Документация
+
+- `docs/architecture.md` - карта gateway/service границ.
+- `docs/development` - структура файлов, импорты, NestJS runtime contract и checklist.
+- `docs/design` - проектные границы и decision protocol.
+- `docs/agent` - маршруты чтения и closeout для агентских задач.
+
+При изменении документации проверяйте `docs/AGENTS.md`.
+
 ## Архитектурные границы
 
 - Gateway-слои отвечают за внешний HTTP-контракт, cookies/CORS, guards, DTO входа и адаптацию к внутренним сервисам.
