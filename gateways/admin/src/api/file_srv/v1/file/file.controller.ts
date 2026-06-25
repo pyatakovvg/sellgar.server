@@ -27,9 +27,9 @@ export class FileController {
     return this.fileService.upload(tunnel, req.headers);
   }
 
-  @Get(':file')
-  async getByName(@Param('file') fileName: string, @Query() query: GetFileQueryDto, @Res() res: Response) {
-    const stream = await this.fileService.getByName(fileName, query);
+  @Get(':uuid')
+  async getByUuid(@Param('uuid') uuid: string, @Query() query: GetFileQueryDto, @Res() res: Response) {
+    const stream = await this.fileService.getByUuid(uuid, query);
 
     res.header('Accept', 'image/webp');
     res.header('Content-Type', 'binary/octet-stream');

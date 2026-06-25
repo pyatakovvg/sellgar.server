@@ -42,4 +42,5 @@ export class ProductService {
   async update(dto: UpdateProductDto) {
     return this.productRepository.update(dto);
   }
+
 }

@@ -21,6 +21,12 @@ cookie/session auth, CORS, guards и общий exception filter.
   переносите сюда владение сущностями identity/product.
 - При изменении auth/session/token сверяйте одноименные сервисы в `services/identity_srv`.
 - При изменении product/file endpoint сверяйте сервис-владелец и DTO на стороне `services/product_srv` или `services/file_srv`.
+- Для preview/download файлов в admin UI используйте защищенный `GET /v1/files/:uuid`.
+  Не делайте этот endpoint публичным ради картинок и не добавляйте `deviceId`
+  или другие auth-данные в query string.
+- Изображения товара в admin API относятся к варианту товара:
+  `POST /v2/variants/:uuid/images` и
+  `DELETE /v2/variants/:uuid/images/:imageUuid`.
 - Не превращайте `src/common` или `helpers` в свалку feature-specific файлов:
   helper должен иметь понятного владельца и короткую структуру.
 - Не меняйте RMQ queues/exchange без проверки `.env` контракта и потребителей событий.

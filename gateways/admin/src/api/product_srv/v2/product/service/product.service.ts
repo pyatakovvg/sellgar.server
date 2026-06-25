@@ -24,4 +24,5 @@ export class ProductService {
   async create(dto: CreateProductDto) {
     return await this.productGateway.create(dto);
   }
+
 }

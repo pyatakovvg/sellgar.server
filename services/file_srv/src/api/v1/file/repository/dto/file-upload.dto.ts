@@ -6,5 +6,5 @@ export interface FileUploadDto {
   size: number;
   width: number;
   height: number;
-  buffer: string;
+  buffer: Buffer;
 }

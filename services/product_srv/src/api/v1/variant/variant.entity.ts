@@ -1,8 +1,9 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsNumber, IsDate, IsOptional } from 'class-validator';
+import { IsUUID, IsString, ValidateNested, IsNumber, IsDate, IsOptional, IsBoolean } from 'class-validator';
 
 import { ProductEntity } from '../product/product.entity';
 import { PropertyEntity } from '@/api/v1/property/property.entity';
+import { ImageEntity } from '../image/image.entity';
 
 export class VariantPropertyEntity {
   @Expose()
@@ -27,6 +28,34 @@ export class VariantPropertyEntity {
   order: number;
 }
 
+export class VariantImageEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsUUID()
+  imageUuid: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => ImageEntity)
+  image: ImageEntity;
+
+  @Expose()
+  @IsNumber()
+  sortOrder: number;
+
+  @Expose()
+  @IsBoolean()
+  isPrimary: boolean;
+
+  @Expose()
+  @IsString()
+  @IsOptional()
+  alt?: string | null;
+}
+
 export class VariantEntity {
   @Expose()
   @IsUUID()
@@ -44,6 +73,12 @@ export class VariantEntity {
   @ValidateNested()
   @Type(() => VariantPropertyEntity)
   properties: VariantPropertyEntity[];
+
+  @Expose()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => VariantImageEntity)
+  images: VariantImageEntity[];
 
   @Expose()
   @IsOptional()

@@ -1,6 +1,7 @@
 export interface FileDto {
   name: string;
+  storageKey: string;
   mime: string;
   size: number;
-  folder?: any;
+  folderUuid?: string;
 }

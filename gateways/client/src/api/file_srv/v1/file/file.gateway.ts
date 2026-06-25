@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { AxiosResponse } from 'axios';
 
 import { PassThrough } from 'stream';
 import { firstValueFrom, map, catchError } from 'rxjs';
@@ -37,8 +38,8 @@ export class FileGateway {
       );
   }
 
-  getByName(fileName: string, query: GetFileQueryDto) {
-    return this.httpService.axiosRef.get(this.config.get('API_FILE_SRV') + '/v1/files/' + fileName, {
+  getByUuid(uuid: string, query: GetFileQueryDto): Promise<AxiosResponse> {
+    return this.httpService.axiosRef.get(this.config.get('API_FILE_SRV') + '/v1/files/' + uuid, {
       responseType: 'stream',
       params: query,
     });

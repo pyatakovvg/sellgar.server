@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 
 import * as path from 'path';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 
 import { FileUploadDto } from '../../repository/dto/file-upload.dto';
 
@@ -27,11 +27,14 @@ export class SharpPipe implements PipeTransform<FileUploadDto[], Promise<FileUpl
 
       sharpImage.webp({ preset: 'photo' });
 
+      const buffer = await sharpImage.toBuffer();
+
       result.push({
         ...image,
         mimetype: 'image/webp',
         fieldname: fileName,
-        buffer: await sharpImage.toBuffer(),
+        size: buffer.length,
+        buffer,
       });
     }
 

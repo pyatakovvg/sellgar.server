@@ -1,8 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
+
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { map, catchError, firstValueFrom } from 'rxjs';
+import { map, catchError, firstValueFrom, of } from 'rxjs';
 
 import { FileUploadDto } from '../repository/dto/file-upload.dto';
 
@@ -30,11 +32,14 @@ export class FileService {
   async upload(dto: FileUploadDto[], folderUuid: string) {
     return await Promise.all(
       dto.map(async (file) => {
-        await this.minioClientRepository.upload(file.fieldname, Buffer.from(file.buffer), {});
+        const storageKey = `files/${randomUUID()}.webp`;
+
+        await this.minioClientRepository.upload(storageKey, Buffer.from(file.buffer), {});
 
         const result = await this.fileRepository.create(
           {
-            name: file.fieldname,
+            name: file.originalname,
+            storageKey,
             size: file.size,
             mime: file.mimetype,
           },
@@ -47,7 +52,7 @@ export class FileService {
               return data;
             }),
             catchError((err) => {
-              return err;
+              return of(err);
             }),
           ),
         );
@@ -57,7 +62,23 @@ export class FileService {
     );
   }
 
-  getByName(fileName: string) {
-    return this.minioClientRepository.getByName(fileName);
+  async getByUuid(uuid: string) {
+    const file = await this.fileRepository.findByUuid(uuid);
+
+    if (!file) {
+      throw new NotFoundException(`File ${uuid} not found`);
+    }
+
+    return this.minioClientRepository.getByStorageKey(file.storageKey);
+  }
+
+  async getMetadataByUuid(uuid: string) {
+    const file = await this.fileRepository.findByUuid(uuid);
+
+    if (!file) {
+      throw new NotFoundException(`File ${uuid} not found`);
+    }
+
+    return file;
   }
 }

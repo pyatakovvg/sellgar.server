@@ -56,4 +56,5 @@ export class ProductGateway {
 
     return resultInstance;
   }
+
 }

@@ -38,8 +38,8 @@ export class FileGateway {
       );
   }
 
-  getByName(fileName: string, query: GetFileQueryDto): Promise<AxiosResponse> {
-    return this.httpService.axiosRef.get(this.config.get('API_FILE_SRV') + '/v1/files/' + fileName, {
+  getByUuid(uuid: string, query: GetFileQueryDto): Promise<AxiosResponse> {
+    return this.httpService.axiosRef.get(this.config.get('API_FILE_SRV') + '/v1/files/' + uuid, {
       responseType: 'stream',
       params: query,
     });

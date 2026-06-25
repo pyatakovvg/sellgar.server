@@ -1,8 +1,9 @@
 import { Controller, Get, Param, Post, UploadedFiles, UseInterceptors, Res, Query, Body } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { Response } from 'express';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 
 import { FileService } from '../service/file.service';
 
@@ -25,10 +26,15 @@ export class FileController {
     return await this.fileService.upload(dto, folderUuid);
   }
 
-  @Get(':file')
-  async getByName(@Param('file') fileName: string, @Query() query: any, @Res() res: Response) {
+  @MessagePattern({ cmd: 'file.getByUuid' })
+  getMetadataByUuid(@Payload('uuid') uuid: string) {
+    return this.fileService.getMetadataByUuid(uuid);
+  }
+
+  @Get(':uuid')
+  async getByUuid(@Param('uuid') uuid: string, @Query() query: any, @Res() res: Response) {
     const transformer = sharp().resize({ width: query.width ? Number(query.width) : undefined });
-    const stream = await this.fileService.getByName(fileName);
+    const stream = await this.fileService.getByUuid(uuid);
 
     res.header('Accept', 'image/webp');
     res.header('Content-Type', 'binary/octet-stream');

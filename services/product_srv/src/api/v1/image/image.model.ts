@@ -1,4 +1,6 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+
+import { VariantImageModel } from '../variant/variant-image.model';
 
 @Entity('image')
 export class ImageModel {
@@ -7,4 +9,7 @@ export class ImageModel {
 
   @Column({ name: 'file_name', type: 'varchar', length: 256 })
   fileName: string;
+
+  @OneToMany(() => VariantImageModel, (variantImage) => variantImage.image)
+  variants: VariantImageModel[];
 }

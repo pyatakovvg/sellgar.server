@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { Controller, Get, Param } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { VariantService } from '../service/variant.service';
+import { AddVariantImageDto } from '../repository/dto/add-variant-image.dto';
 
 @Controller()
 export class VariantController {
@@ -13,7 +14,22 @@ export class VariantController {
   }
 
   @Get(':uuid')
-  findByUuid() {
-    return this.productVariantService.findByUuid();
+  findByUuid(@Param('uuid') uuid: string) {
+    return this.productVariantService.findByUuid(uuid);
+  }
+
+  @MessagePattern({ cmd: 'product.variant.getByUuid' })
+  findByUuidMessage(@Payload('uuid') uuid: string) {
+    return this.productVariantService.findByUuid(uuid);
+  }
+
+  @MessagePattern({ cmd: 'product.variant.addImage' })
+  addImage(@Payload() dto: AddVariantImageDto) {
+    return this.productVariantService.addImage(dto);
+  }
+
+  @MessagePattern({ cmd: 'product.variant.removeImage' })
+  removeImage(@Payload() dto: { variantUuid: string; imageUuid: string }) {
+    return this.productVariantService.removeImage(dto.variantUuid, dto.imageUuid);
   }
 }

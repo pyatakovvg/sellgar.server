@@ -6,6 +6,9 @@ lib/
 types/
 node_modules
 .env
+.codex
+.agents
+.playwright-mcp
 
 # Logs
 logs

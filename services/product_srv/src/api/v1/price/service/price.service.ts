@@ -10,21 +10,20 @@ import { PriceRepository } from '../repository/price.repository';
 export class PriceService {
   constructor(private readonly priceRepository: PriceRepository) {}
 
-  async findAll(productUuid: string): Promise<PriceResultEntity> {
-    return new PriceResultEntity();
-    // Promise.all([this.priceRepository.findAll(productUuid), this.priceRepository.count(productUuid)]).then(
-    //   ([data, count]) => {
-    //     return {
-    //       data: data,
-    //       meta: {
-    //         totalRows: count,
-    //       },
-    //     };
-    //   },
-    // );
+  async findAll(storeUuid: string): Promise<PriceResultEntity> {
+    return Promise.all([this.priceRepository.findAll(storeUuid), this.priceRepository.count(storeUuid)]).then(
+      ([data, count]) => {
+        return {
+          data,
+          meta: {
+            totalRows: count,
+          },
+        };
+      },
+    );
   }
 
-  create(productUuid: string, dto: CreatePriceDto) {
-    return this.priceRepository.create(productUuid, dto);
+  create(storeUuid: string, dto: CreatePriceDto) {
+    return this.priceRepository.create(storeUuid, dto);
   }
 }

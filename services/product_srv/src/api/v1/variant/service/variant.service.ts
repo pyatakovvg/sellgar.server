@@ -8,6 +8,7 @@ import { plainToInstance } from 'class-transformer';
 import { ProductVariantResultEntity } from '../variant.entity';
 
 import { VariantRepository } from '../repository/variant.repository';
+import { AddVariantImageDto } from '../repository/dto/add-variant-image.dto';
 
 @Injectable()
 export class VariantService {
@@ -35,8 +36,8 @@ export class VariantService {
     return resultInstance;
   }
 
-  findByUuid() {
-    return this.productVariantRepository.findByUuid();
+  findByUuid(uuid: string) {
+    return this.productVariantRepository.findByUuid(uuid);
   }
 
   create() {
@@ -45,5 +46,13 @@ export class VariantService {
 
   update() {
     return this.productVariantRepository.update();
+  }
+
+  addImage(dto: AddVariantImageDto) {
+    return this.productVariantRepository.addImage(dto);
+  }
+
+  removeImage(variantUuid: string, imageUuid: string) {
+    return this.productVariantRepository.removeImage(variantUuid, imageUuid);
   }
 }

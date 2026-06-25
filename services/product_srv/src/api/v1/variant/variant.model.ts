@@ -12,6 +12,7 @@ import {
 
 import { ProductModel } from '../product/product.model';
 import { VariantPropertyModel } from './variant-property.model';
+import { VariantImageModel } from './variant-image.model';
 
 @Entity('variant')
 export class VariantModel {
@@ -34,6 +35,9 @@ export class VariantModel {
 
   @OneToMany(() => VariantPropertyModel, (variantProperty) => variantProperty.variant)
   properties: VariantPropertyModel[];
+
+  @OneToMany(() => VariantImageModel, (variantImage) => variantImage.variant)
+  images: VariantImageModel[];
 
   @CreateDateColumn({
     name: 'created_at',

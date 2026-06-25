@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-
-import { PrismaService } from '@/prisma/prisma.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { FileService } from './service/file.service';
 import { FileRepository } from './repository/file.repository';
 import { FileController } from './controller/file.controller';
 import { MinioClientRepository } from './repository/minio-client.repository';
+import { FileModel } from './file.model';
+import { FolderModel } from '../folder/folder.model';
 
 @Module({
   imports: [
     ConfigModule,
+    TypeOrmModule.forFeature([FileModel, FolderModel]),
 
     ClientsModule.registerAsync([
       {
@@ -33,6 +35,8 @@ import { MinioClientRepository } from './repository/minio-client.repository';
             queueOptions: {
               durable: true,
             },
+            exchange: config.get('AMQP_EVENTS_EXCHANGE'),
+            exchangeType: 'topic',
           },
         }),
         inject: [ConfigService],
@@ -40,6 +44,6 @@ import { MinioClientRepository } from './repository/minio-client.repository';
     ]),
   ],
   controllers: [FileController],
-  providers: [PrismaService, FileService, FileRepository, MinioClientRepository, ConfigService],
+  providers: [FileService, FileRepository, MinioClientRepository, ConfigService],
 })
 export class FileModule {}

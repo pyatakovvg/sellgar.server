@@ -29,4 +29,5 @@ export class ProductController {
   update(@Payload() dto: UpdateProductDto) {
     return this.productService.update(dto);
   }
+
 }

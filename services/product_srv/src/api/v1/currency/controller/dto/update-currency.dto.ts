@@ -1,5 +1,3 @@
 import { CreateCurrencyDto } from './create-currency.dto';
 
-export class UpdateCurrencyDto extends CreateCurrencyDto {
-  uuid: string;
-}
+export class UpdateCurrencyDto extends CreateCurrencyDto {}

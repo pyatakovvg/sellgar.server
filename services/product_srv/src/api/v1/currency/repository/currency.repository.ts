@@ -63,6 +63,7 @@ export class CurrencyRepository {
         .values({
           code: dto.code,
           name: dto.name,
+          order: dto.order,
         })
         .execute();
 
@@ -94,17 +95,15 @@ export class CurrencyRepository {
     await runner.connect();
     await runner.startTransaction();
 
-    console.log('Currency update dto:', dto);
-
     try {
       await runner.manager
         .createQueryBuilder()
         .update(CurrencyModel)
         .set({
-          code: dto.code,
           name: dto.name,
+          order: dto.order,
         })
-        .where('currency.uuid = :uuid', { uuid: dto.uuid })
+        .where('currency.code = :code', { code: dto.code })
         .execute();
 
       const result = await runner.manager
@@ -115,8 +114,6 @@ export class CurrencyRepository {
         .getOneOrFail();
 
       await runner.commitTransaction();
-
-      console.log('Currency updated:', result);
 
       const instanceResult = plainToInstance(CurrencyEntity, result);
 
@@ -131,14 +128,38 @@ export class CurrencyRepository {
     }
   }
 
-  async remove() {
-    // const result = this.prismaService.currency.delete({
-    //   where: { code },
-    // });
-    // const resultInstance = plainToInstance(CurrencyEntity, result);
-    //
-    // await validateOrReject(resultInstance);
-    //
-    // return resultInstance;
+  async remove(code: string) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const result = await runner.manager
+        .createQueryBuilder()
+        .select(['currency.code', 'currency.name', 'currency.order', 'currency.createdAt', 'currency.updatedAt'])
+        .from(CurrencyModel, 'currency')
+        .where('currency.code = :code', { code })
+        .getOneOrFail();
+
+      await runner.manager
+        .createQueryBuilder()
+        .delete()
+        .from(CurrencyModel)
+        .where('code = :code', { code })
+        .execute();
+
+      const resultInstance = plainToInstance(CurrencyEntity, result);
+
+      await validateOrReject(resultInstance);
+      await runner.commitTransaction();
+
+      return resultInstance;
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

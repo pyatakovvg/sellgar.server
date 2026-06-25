@@ -19,7 +19,7 @@ export class FileService {
     return this.fileGateway.upload(tunnel, headers);
   }
 
-  getByName(fileName: string, query: GetFileQueryDto): Promise<AxiosResponse> {
-    return this.fileGateway.getByName(fileName, query);
+  getByUuid(uuid: string, query: GetFileQueryDto): Promise<AxiosResponse> {
+    return this.fileGateway.getByUuid(uuid, query);
   }
 }

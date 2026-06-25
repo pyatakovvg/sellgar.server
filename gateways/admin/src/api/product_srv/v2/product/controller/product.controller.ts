@@ -27,4 +27,5 @@ export class ProductController {
   create(@Body() dto: CreateProductDto) {
     return this.productService.create(dto);
   }
+
 }

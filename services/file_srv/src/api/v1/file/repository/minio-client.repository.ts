@@ -10,9 +10,9 @@ export class MinioClientRepository {
     private readonly minioService: MinioService,
   ) {}
 
-  async upload(fileName: string, buffer: Buffer, metaData: any) {
+  async upload(storageKey: string, buffer: Buffer, metaData: any) {
     return new Promise((resolve, reject) => {
-      this.minioService.client.putObject(this.config.get('MINIO_BUCKET'), fileName, buffer, (error, result) => {
+      this.minioService.client.putObject(this.config.get('MINIO_BUCKET'), storageKey, buffer, metaData, (error, result) => {
         if (error) {
           return reject(error);
         }
@@ -21,7 +21,7 @@ export class MinioClientRepository {
     });
   }
 
-  async getByName(name: string) {
-    return await this.minioService.client.getObject(this.config.get('MINIO_BUCKET'), name);
+  async getByStorageKey(storageKey: string) {
+    return await this.minioService.client.getObject(this.config.get('MINIO_BUCKET'), storageKey);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 
 import * as uuid from 'uuid';
@@ -123,30 +123,24 @@ export class CategoryRepository {
 
       const maxOrderResult = await builder.getRawOne();
 
-      console.log('maxOrderResult', maxOrderResult);
-
       await runner.manager
         .createQueryBuilder()
         .insert()
         .into(CategoryModel)
         .values({
           uuid: newUuid,
-          code: 'dto.code',
+          code: newUuid,
           name: dto.name,
           description: dto.description,
-          order: maxOrderResult ? maxOrderResult.order + 1 : 0,
+          order: Number(maxOrderResult?.order ?? -1) + 1,
         })
         .execute();
-
-      console.log('created');
 
       const createdCategory = await runner.manager
         .createQueryBuilder(CategoryModel, 'category')
         .select()
         .where('category.uuid = :uuid', { uuid: newUuid })
         .getOneOrFail();
-
-      console.log('createdCategory', createdCategory);
 
       await runner.manager
         .createQueryBuilder()
@@ -165,10 +159,11 @@ export class CategoryRepository {
         .where('closure.descendantId = :uuid', { uuid: newUuid })
         .getOneOrFail();
 
+      const isRoot = newCategory.ancestor.uuid === newCategory.descendant.uuid;
       const category = plainToInstance(CategoryEntity, {
         ...newCategory.descendant,
-        parentUuid: newCategory.ancestor.uuid,
-        parent: newCategory.ancestor,
+        parentUuid: isRoot ? null : newCategory.ancestor.uuid,
+        parent: isRoot ? null : newCategory.ancestor,
       });
 
       await validateOrReject(category);
@@ -191,22 +186,39 @@ export class CategoryRepository {
     await runner.startTransaction();
 
     try {
-      const [category, newParent] = await Promise.all([
-        runner.manager.findOne(CategoryModel, {
-          where: { uuid: dto.uuid },
-        }),
-        runner.manager.findOne(CategoryModel, {
-          where: { uuid: dto.parentUuid },
-        }),
-      ]);
+      const category = await runner.manager.findOne(CategoryModel, {
+        where: { uuid: dto.uuid },
+      });
 
-      const isCircular = await runner.manager
-        .createQueryBuilder(CategoryClosureModel, 'closure')
-        .where('closure.ancestorId = :uuid AND closure.descendantId = :newParentUuid', {
-          uuid: category.uuid,
-          newParentUuid: newParent.uuid,
-        })
-        .getExists();
+      if (!category) {
+        throw new NotFoundException(`Category ${dto.uuid} not found`);
+      }
+
+      let parentUuid = category.uuid;
+
+      if (dto.parentUuid) {
+        const newParent = await runner.manager.findOne(CategoryModel, {
+          where: { uuid: dto.parentUuid },
+        });
+
+        if (!newParent) {
+          throw new NotFoundException(`Category parent ${dto.parentUuid} not found`);
+        }
+
+        const isCircular = await runner.manager
+          .createQueryBuilder(CategoryClosureModel, 'closure')
+          .where('closure.ancestorId = :uuid AND closure.descendantId = :newParentUuid', {
+            uuid: category.uuid,
+            newParentUuid: newParent.uuid,
+          })
+          .getExists();
+
+        if (isCircular) {
+          throw new BadRequestException('Category cannot be moved under its descendant');
+        }
+
+        parentUuid = newParent.uuid;
+      }
 
       await runner.manager
         .createQueryBuilder()
@@ -218,17 +230,15 @@ export class CategoryRepository {
         .where('uuid = :uuid', { uuid: category.uuid })
         .execute();
 
-      if (!isCircular) {
-        await runner.manager
-          .createQueryBuilder()
-          .update(CategoryClosureModel)
-          .set({
-            ancestorId: newParent.uuid,
-            descendantId: category.uuid,
-          })
-          .where('descendantId = :uuid', { uuid: category.uuid })
-          .execute();
-      }
+      await runner.manager
+        .createQueryBuilder()
+        .update(CategoryClosureModel)
+        .set({
+          ancestorId: parentUuid,
+          descendantId: category.uuid,
+        })
+        .where('descendantId = :uuid', { uuid: category.uuid })
+        .execute();
 
       const newCategory = await runner.manager
         .createQueryBuilder(CategoryClosureModel, 'closure')
@@ -237,34 +247,22 @@ export class CategoryRepository {
         .where('closure.descendantId = :uuid', { uuid: category.uuid })
         .getOneOrFail();
 
+      const isRoot = newCategory.ancestor.uuid === newCategory.descendant.uuid;
       const updatedCategory = plainToInstance(CategoryEntity, {
         ...newCategory.descendant,
-        parentUuid: newCategory.ancestor.uuid,
-        parent: newCategory.ancestor,
+        parentUuid: isRoot ? null : newCategory.ancestor.uuid,
+        parent: isRoot ? null : newCategory.ancestor,
       });
-
-      console.log('category', updatedCategory);
 
       await runner.commitTransaction();
 
       return updatedCategory;
     } catch (error) {
-      console.error(error);
       await runner.rollbackTransaction();
+      throw error;
     } finally {
       await runner.release();
     }
-    // return this.prismaService.category.update({
-    //   where: {
-    //     uuid: dto.uuid,
-    //   },
-    //   data: {
-    //     uuid: dto.uuid,
-    //     parentUuid: dto.parentUuid,
-    //     name: dto.name,
-    //     description: dto.description,
-    //   },
-    // });
   }
 
   remove(uuid: string) {

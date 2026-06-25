@@ -36,9 +36,12 @@ export class ProductRepository {
       .leftJoinAndSelect('variants.properties', 'properties')
       .leftJoinAndSelect('properties.property', 'property')
       .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variants.images', 'images')
+      .leftJoinAndSelect('images.image', 'image')
       .orderBy('product.createdAt', 'DESC')
       .addOrderBy('variants.createdAt', 'ASC')
       .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('images.sortOrder', 'ASC')
       .getMany();
 
     const resultInstance = result.map((entity) =>
@@ -61,9 +64,12 @@ export class ProductRepository {
       .leftJoinAndSelect('variants.properties', 'properties')
       .leftJoinAndSelect('properties.property', 'property')
       .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variants.images', 'images')
+      .leftJoinAndSelect('images.image', 'image')
       .where('product.uuid = :uuid', { uuid })
       .orderBy('variants.createdAt', 'ASC')
       .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('images.sortOrder', 'ASC')
       .getOneOrFail();
 
     const resultInstance = plainToInstance(ProductEntity, result, {
@@ -129,9 +135,12 @@ export class ProductRepository {
         .leftJoinAndSelect('variants.properties', 'properties')
         .leftJoinAndSelect('properties.property', 'property')
         .leftJoinAndSelect('property.unit', 'unit')
+        .leftJoinAndSelect('variants.images', 'images')
+        .leftJoinAndSelect('images.image', 'image')
         .where('product.uuid = :uuid', { uuid: newUuid })
         .orderBy('variants.createdAt', 'ASC')
         .addOrderBy('properties.order', 'ASC')
+        .addOrderBy('images.sortOrder', 'ASC')
         .getOneOrFail();
 
       const resultInstance = plainToInstance(ProductEntity, result, {
@@ -250,9 +259,12 @@ export class ProductRepository {
         .leftJoinAndSelect('variants.properties', 'properties')
         .leftJoinAndSelect('properties.property', 'property')
         .leftJoinAndSelect('property.unit', 'unit')
+        .leftJoinAndSelect('variants.images', 'images')
+        .leftJoinAndSelect('images.image', 'image')
         .where('product.uuid = :uuid', { uuid: dto.uuid })
         .orderBy('variants.createdAt', 'ASC')
         .addOrderBy('properties.order', 'ASC')
+        .addOrderBy('images.sortOrder', 'ASC')
         .getOneOrFail();
 
       const resultInstance = plainToInstance(ProductEntity, result, {
@@ -278,4 +290,5 @@ export class ProductRepository {
       await runner.release();
     }
   }
+
 }

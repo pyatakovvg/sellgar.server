@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
 import { ApiProductV2Module } from '@/api/product_srv/v2/api.module';
+import { ApiFileV1Module } from '@/api/file_srv/v1/api.module';
 
 import { IdentitySrvModule } from '@/api/identity_srv/identity-srv.module';
 
@@ -10,12 +11,13 @@ import { IdentitySrvModule } from '@/api/identity_srv/identity-srv.module';
   imports: [
     IdentitySrvModule,
     ApiProductV2Module,
+    ApiFileV1Module,
 
     HttpModule.register({
       global: true,
     }),
     ConfigModule.forRoot({
-      envFilePath: './.env',
+      envFilePath: ['gateways/admin/.env', './.env'],
       cache: true,
       isGlobal: true,
     }),

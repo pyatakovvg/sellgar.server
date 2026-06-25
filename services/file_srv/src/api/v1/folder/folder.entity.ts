@@ -1,9 +1,7 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, IsDate, ValidateNested } from 'class-validator';
+import { IsUUID, IsString, IsDate, IsOptional, ValidateNested } from 'class-validator';
 
-import { Folder } from '@/prisma/client';
-
-export class FolderEntity implements Omit<Folder, 'parentUuid'> {
+export class FolderEntity {
   @Expose()
   @IsUUID()
   uuid: string;
@@ -13,12 +11,19 @@ export class FolderEntity implements Omit<Folder, 'parentUuid'> {
   name: string;
 
   @Expose()
+  @IsUUID()
+  @IsOptional()
+  parentUuid?: string | null;
+
+  @Expose()
+  @IsOptional()
   @ValidateNested()
   @Type(() => FolderEntity)
   parent?: FolderEntity;
 
   @Expose()
-  @ValidateNested()
+  @IsOptional()
+  @ValidateNested({ each: true })
   @Type(() => FolderEntity)
   children: FolderEntity[];
 

@@ -9,9 +9,6 @@ class Property {
   @IsUUID()
   propertyUuid: string;
 
-  @IsUUID()
-  variantUuid: string;
-
   @IsString()
   value: string;
 }

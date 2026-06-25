@@ -63,11 +63,11 @@ export class ImageRepository {
     try {
       await runner.manager
         .createQueryBuilder()
-        .update(ImageEntity)
+        .update(ImageModel)
         .set({
-          uuid: dto.uuid,
           fileName: dto.name,
         })
+        .where('uuid = :uuid', { uuid: dto.uuid })
         .execute();
 
       const result = await runner.manager

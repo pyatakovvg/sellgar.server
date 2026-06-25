@@ -15,7 +15,7 @@ export class ProductService {
   constructor(@Inject('PRODUCT_SERVICE') private readonly productService: ClientProxy) {}
 
   async findAll() {
-    const message = this.productService.send({ cmd: 'product.findAll' }, {});
+    const message = this.productService.send({ cmd: 'product.getAll' }, {});
 
     const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(ProductResultEntity, result, {
@@ -28,7 +28,7 @@ export class ProductService {
   }
 
   async findByUuid(uuid: string) {
-    const message = this.productService.send({ cmd: 'product.findByUuid' }, { uuid });
+    const message = this.productService.send({ cmd: 'product.getByUuid' }, { uuid });
 
     const result = await firstValueFrom(message);
     const resultInstance = plainToInstance(ProductEntity, result, {

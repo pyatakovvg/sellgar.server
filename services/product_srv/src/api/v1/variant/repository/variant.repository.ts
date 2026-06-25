@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 
 // import * as uuid from 'uuid';
@@ -8,6 +8,9 @@ import { plainToInstance } from 'class-transformer';
 
 import { VariantModel } from '../variant.model';
 import { VariantEntity } from '../variant.entity';
+import { AddVariantImageDto } from './dto/add-variant-image.dto';
+import { ImageModel } from '../../image/image.model';
+import { VariantImageModel } from '../variant-image.model';
 
 @Injectable()
 export class VariantRepository {
@@ -23,6 +26,8 @@ export class VariantRepository {
       .leftJoinAndSelect('variant.properties', 'properties')
       .leftJoinAndSelect('properties.property', 'property')
       .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variant.images', 'images')
+      .leftJoinAndSelect('images.image', 'image')
       .leftJoinAndSelect('variant.product', 'product')
       .leftJoinAndSelect('product.brand', 'brand')
       .leftJoinAndSelect('product.category', 'category')
@@ -30,6 +35,7 @@ export class VariantRepository {
       .orderBy('product.createdAt', 'DESC')
       .addOrderBy('variant.createdAt', 'ASC')
       .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('images.sortOrder', 'ASC')
       .getMany();
 
     const resultInstance = result.map((entity) =>
@@ -43,20 +49,30 @@ export class VariantRepository {
     return resultInstance;
   }
 
-  async findByUuid() {
-    // const result = await this.prismaService.productVariant.findUnique({
-    //   where: {
-    //     uuid,
-    //   },
-    //   select: this.productVariantSelect,
-    // });
-    // const resultInstance = plainToInstance(ProductVariantEntity, result, {
-    //   strategy: 'excludeAll',
-    // });
-    //
-    // await validateOrReject(resultInstance);
-    //
-    // return resultInstance;
+  async findByUuid(uuid: string) {
+    const result = await this.dataSource
+      .createQueryBuilder(VariantModel, 'variant')
+      .leftJoinAndSelect('variant.properties', 'properties')
+      .leftJoinAndSelect('properties.property', 'property')
+      .leftJoinAndSelect('property.unit', 'unit')
+      .leftJoinAndSelect('variant.images', 'images')
+      .leftJoinAndSelect('images.image', 'image')
+      .leftJoinAndSelect('variant.product', 'product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category')
+      .where('variant.uuid = :uuid', { uuid })
+      .orderBy('variant.createdAt', 'ASC')
+      .addOrderBy('properties.order', 'ASC')
+      .addOrderBy('images.sortOrder', 'ASC')
+      .getOneOrFail();
+
+    const resultInstance = plainToInstance(VariantEntity, result, {
+      strategy: 'excludeAll',
+    });
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
   async create() {
@@ -145,5 +161,163 @@ export class VariantRepository {
     // await validateOrReject(resultInstance);
     //
     // return resultInstance;
+  }
+
+  async addImage(dto: AddVariantImageDto) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const variantExists = await runner.manager
+        .createQueryBuilder(VariantModel, 'variant')
+        .where('variant.uuid = :uuid', { uuid: dto.variantUuid })
+        .getExists();
+
+      if (!variantExists) {
+        throw new NotFoundException(`Variant ${dto.variantUuid} not found`);
+      }
+
+      const imageExists = await runner.manager
+        .createQueryBuilder(ImageModel, 'image')
+        .where('image.uuid = :uuid', { uuid: dto.imageUuid })
+        .getExists();
+
+      if (!imageExists) {
+        if (!dto.fileName) {
+          throw new NotFoundException(`Image ${dto.imageUuid} not found`);
+        }
+
+        await runner.manager
+          .createQueryBuilder()
+          .insert()
+          .into(ImageModel)
+          .values({
+            uuid: dto.imageUuid,
+            fileName: dto.fileName,
+          })
+          .execute();
+      }
+
+      const existing = await runner.manager
+        .createQueryBuilder(VariantImageModel, 'variantImage')
+        .where('variantImage.variantUuid = :variantUuid', { variantUuid: dto.variantUuid })
+        .andWhere('variantImage.imageUuid = :imageUuid', { imageUuid: dto.imageUuid })
+        .getOne();
+
+      const hasImages = await runner.manager
+        .createQueryBuilder(VariantImageModel, 'variantImage')
+        .where('variantImage.variantUuid = :variantUuid', { variantUuid: dto.variantUuid })
+        .getExists();
+
+      const shouldBePrimary = dto.isPrimary ?? !hasImages;
+
+      if (shouldBePrimary) {
+        await runner.manager
+          .createQueryBuilder()
+          .update(VariantImageModel)
+          .set({ isPrimary: false })
+          .where('variant_uuid = :variantUuid', { variantUuid: dto.variantUuid })
+          .execute();
+      }
+
+      const sortOrder =
+        dto.sortOrder ??
+        existing?.sortOrder ??
+        ((await runner.manager
+          .createQueryBuilder(VariantImageModel, 'variantImage')
+          .where('variantImage.variantUuid = :variantUuid', { variantUuid: dto.variantUuid })
+          .select('COALESCE(MAX(variantImage.sortOrder), -1)', 'max')
+          .getRawOne()
+          .then((row) => Number(row.max))) + 1);
+
+      if (existing) {
+        await runner.manager
+          .createQueryBuilder()
+          .update(VariantImageModel)
+          .set({
+            sortOrder,
+            isPrimary: shouldBePrimary,
+            alt: dto.alt ?? existing.alt,
+          })
+          .where('uuid = :uuid', { uuid: existing.uuid })
+          .execute();
+      } else {
+        await runner.manager
+          .createQueryBuilder()
+          .insert()
+          .into(VariantImageModel)
+          .values({
+            variantUuid: dto.variantUuid,
+            imageUuid: dto.imageUuid,
+            sortOrder,
+            isPrimary: shouldBePrimary,
+            alt: dto.alt ?? null,
+          })
+          .execute();
+      }
+
+      await runner.commitTransaction();
+
+      return this.findByUuid(dto.variantUuid);
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
+  }
+
+  async removeImage(variantUuid: string, imageUuid: string) {
+    const runner = this.dataSource.createQueryRunner();
+
+    await runner.connect();
+    await runner.startTransaction();
+
+    try {
+      const existing = await runner.manager
+        .createQueryBuilder(VariantImageModel, 'variantImage')
+        .where('variantImage.variantUuid = :variantUuid', { variantUuid })
+        .andWhere('variantImage.imageUuid = :imageUuid', { imageUuid })
+        .getOne();
+
+      if (!existing) {
+        throw new NotFoundException(`Image ${imageUuid} is not attached to variant ${variantUuid}`);
+      }
+
+      await runner.manager
+        .createQueryBuilder()
+        .delete()
+        .from(VariantImageModel)
+        .where('uuid = :uuid', { uuid: existing.uuid })
+        .execute();
+
+      if (existing.isPrimary) {
+        const nextPrimary = await runner.manager
+          .createQueryBuilder(VariantImageModel, 'variantImage')
+          .where('variantImage.variantUuid = :variantUuid', { variantUuid })
+          .orderBy('variantImage.sortOrder', 'ASC')
+          .getOne();
+
+        if (nextPrimary) {
+          await runner.manager
+            .createQueryBuilder()
+            .update(VariantImageModel)
+            .set({ isPrimary: true })
+            .where('uuid = :uuid', { uuid: nextPrimary.uuid })
+            .execute();
+        }
+      }
+
+      await runner.commitTransaction();
+
+      return this.findByUuid(variantUuid);
+    } catch (error) {
+      await runner.rollbackTransaction();
+      throw error;
+    } finally {
+      await runner.release();
+    }
   }
 }

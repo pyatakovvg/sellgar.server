@@ -8,9 +8,10 @@ import { VariantController } from './controller/variant.controller';
 import { VariantModel } from './variant.model';
 import { VariantImageModel } from './variant-image.model';
 import { VariantPropertyModel } from './variant-property.model';
+import { ImageModel } from '../image/image.model';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VariantModel, VariantImageModel, VariantPropertyModel])],
+  imports: [TypeOrmModule.forFeature([VariantModel, VariantImageModel, VariantPropertyModel, ImageModel])],
   controllers: [VariantController],
   providers: [VariantService, VariantRepository],
 })
