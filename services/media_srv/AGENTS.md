@@ -1,7 +1,7 @@
 # @service/media
 
 `services/media_srv` - data-plane сервис над MinIO для публичной доставки
-изображений и будущих write/delete операций над объектами.
+изображений и внутренних write/delete операций над объектами.
 
 ## Что здесь находится
 
@@ -14,6 +14,8 @@
 ## Правила изменений
 
 - Публичный CDN path использует `GET /images/:fileUuid`.
+- Внутренняя запись объекта идет через `PUT /internal/objects` от `admin_gw`;
+  браузер не должен вызывать этот endpoint напрямую.
 - Не храните каталожную модель и связи с товарами здесь. `product_srv` хранит
   `variant_image`, `file_srv` хранит file metadata, этот сервис работает с
   bytes/object storage.

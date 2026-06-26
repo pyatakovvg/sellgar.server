@@ -4,6 +4,8 @@ export interface FileMetadataEntity {
   storageKey: string;
   mime: string;
   size: number;
+  status: string;
+  expiresAt?: string | null;
   folderUuid: string | null;
   createdAt: string;
   updatedAt: string;

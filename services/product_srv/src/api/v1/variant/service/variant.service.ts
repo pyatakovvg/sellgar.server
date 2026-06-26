@@ -55,4 +55,8 @@ export class VariantService {
   removeImage(variantUuid: string, imageUuid: string) {
     return this.productVariantRepository.removeImage(variantUuid, imageUuid);
   }
+
+  detachImage(imageUuid: string) {
+    return this.productVariantRepository.detachImage(imageUuid);
+  }
 }

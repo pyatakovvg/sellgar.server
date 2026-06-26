@@ -21,6 +21,12 @@ export class FileModel {
   @Column({ name: 'size', type: 'int' })
   size: number;
 
+  @Column({ name: 'status', type: 'text', default: 'ready' })
+  status: string;
+
+  @Column({ name: 'expires_at', type: 'timestamp', nullable: true })
+  expiresAt: Date | null;
+
   @Column({ name: 'folder_uuid', type: 'uuid', nullable: true })
   folderUuid: string | null;
 

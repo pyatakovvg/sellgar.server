@@ -1,10 +1,7 @@
-export interface FileUploadDto {
+export interface ProductUploadFileDto {
   fieldname: string;
   originalname: string;
-  encoding: string;
   mimetype: string;
   size: number;
-  width: number;
-  height: number;
   buffer: Buffer;
 }

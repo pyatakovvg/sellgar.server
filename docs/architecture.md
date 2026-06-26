@@ -66,15 +66,17 @@ Gateway-адаптеры:
 - `image` - проекция файла из `file_srv` по UUID файла;
 - `variant_image` - связь варианта с изображением, порядок и primary-флаг.
 
-`services/file_srv` владеет файловыми метаданными, папками и объектами в MinIO.
+`services/file_srv` владеет файловыми метаданными, папками и lifecycle файла.
 Он не знает, к какому товару или варианту относится файл. Сервисы каталога
 используют UUID файла как внешний идентификатор и хранят только доменную связь.
+Object bytes и MinIO-адаптер принадлежат `services/media_srv`.
 
 Gateway-слой не должен подменять эту границу публичными ссылками. Для admin UI
-download/preview файла идет через защищенный endpoint gateway, например
-`GET /v1/files/:uuid`, с обычной admin session авторизацией. Клиент может
-превратить бинарный ответ в локальный `blob:` URL для отображения, но этот URL
-не является внешним API и не должен сохраняться в доменной модели.
+file CRUD идет через защищенный `admin_gw`: браузер загружает файл в
+`POST /v1/files`, а `admin_gw` после проверки доступа сам записывает bytes во
+внутренний endpoint `media_srv`. Клиент может превратить бинарный ответ в
+локальный `blob:` URL для отображения, но этот URL не является внешним API и не
+должен сохраняться в доменной модели.
 
 Публичная доставка изображений отделена от admin file API. Локальная CDN-схема
 для разработки:
@@ -87,9 +89,9 @@ browser -> http://localhost:8088/images/:fileUuid
 ```
 
 `media_srv` является data-plane сервисом над MinIO. CDN использует его read
-endpoint, а будущие write/delete операции должны оставаться internal-only и
-координироваться с `file_srv` metadata/lifecycle через RabbitMQ. HTTP между
-сервисами не используется для внутренней коммуникации.
+endpoint. Write/delete остаются internal-only: metadata/lifecycle
+координируется с `file_srv` через RabbitMQ, а file bytes передаются из gateway в
+`media_srv` отдельным internal HTTP data-plane запросом, не через RabbitMQ.
 
 ## Проверки
 

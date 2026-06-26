@@ -31,6 +31,8 @@ export class FileRepository {
         'file.storageKey',
         'file.mime',
         'file.size',
+        'file.status',
+        'file.expiresAt',
         'file.folderUuid',
         'file.createdAt',
         'file.updatedAt',
@@ -64,17 +66,25 @@ export class FileRepository {
     await runner.startTransaction();
 
     try {
+      const values: Partial<FileModel> = {
+        name: fileDto.name,
+        storageKey: fileDto.storageKey,
+        mime: fileDto.mime,
+        size: fileDto.size,
+        status: fileDto.status ?? 'ready',
+        expiresAt: fileDto.expiresAt ?? null,
+        folderUuid: folderUuid ?? null,
+      };
+
+      if (fileDto.uuid) {
+        values.uuid = fileDto.uuid;
+      }
+
       const insertResult = await runner.manager
         .createQueryBuilder()
         .insert()
         .into(FileModel)
-        .values({
-          name: fileDto.name,
-          storageKey: fileDto.storageKey,
-          mime: fileDto.mime,
-          size: fileDto.size,
-          folderUuid: folderUuid ?? null,
-        })
+        .values(values)
         .execute();
 
       const uuid = insertResult.raw[0].uuid;
@@ -87,6 +97,8 @@ export class FileRepository {
           'file.storageKey',
           'file.mime',
           'file.size',
+          'file.status',
+          'file.expiresAt',
           'file.folderUuid',
           'file.createdAt',
           'file.updatedAt',
@@ -114,11 +126,48 @@ export class FileRepository {
         'file.storageKey',
         'file.mime',
         'file.size',
+        'file.status',
+        'file.expiresAt',
         'file.folderUuid',
         'file.createdAt',
         'file.updatedAt',
       ])
       .where('file.uuid = :uuid', { uuid })
       .getOne();
+  }
+
+  async updateUploadState(
+    uuid: string,
+    dto: {
+      status: string;
+      expiresAt?: Date | null;
+      size?: number;
+      mime?: string;
+    },
+  ) {
+    const patch: Partial<FileModel> = {
+      status: dto.status,
+    };
+
+    if ('expiresAt' in dto) {
+      patch.expiresAt = dto.expiresAt;
+    }
+
+    if ('size' in dto) {
+      patch.size = dto.size;
+    }
+
+    if ('mime' in dto) {
+      patch.mime = dto.mime;
+    }
+
+    await this.dataSource
+      .createQueryBuilder()
+      .update(FileModel)
+      .set(patch)
+      .where('uuid = :uuid', { uuid })
+      .execute();
+
+    return this.findByUuid(uuid);
   }
 }

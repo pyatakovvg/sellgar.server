@@ -4,6 +4,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MinioModule } from 'nestjs-minio-client';
 
 import { MinioStorageRepository } from './minio-storage.repository';
+import { StorageController } from './storage.controller';
 
 @Module({
   imports: [
@@ -25,7 +26,6 @@ import { MinioStorageRepository } from './minio-storage.repository';
               },
             ],
             queue: config.get('AMQP_MEDIA_SRV_EVENT_QUEUE'),
-            noAck: false,
             queueOptions: {
               durable: true,
             },
@@ -45,6 +45,7 @@ import { MinioStorageRepository } from './minio-storage.repository';
       }),
     }),
   ],
+  controllers: [StorageController],
   providers: [MinioStorageRepository],
   exports: [MinioStorageRepository],
 })

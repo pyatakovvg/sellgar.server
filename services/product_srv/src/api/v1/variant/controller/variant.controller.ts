@@ -32,4 +32,9 @@ export class VariantController {
   removeImage(@Payload() dto: { variantUuid: string; imageUuid: string }) {
     return this.productVariantService.removeImage(dto.variantUuid, dto.imageUuid);
   }
+
+  @MessagePattern({ cmd: 'product.variant.detachImage' })
+  detachImage(@Payload() dto: { imageUuid: string }) {
+    return this.productVariantService.detachImage(dto.imageUuid);
+  }
 }

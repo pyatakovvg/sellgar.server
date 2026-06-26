@@ -2852,15 +2852,12 @@ __metadata:
     "@types/amqplib": "npm:0.10.8"
     "@types/express": "npm:5.0.6"
     "@types/jest": "npm:30.0.0"
-    "@types/multer": "npm:2.1.0"
     "@types/node": "npm:26.0.0"
     "@types/supertest": "npm:7.2.0"
     amqplib: "npm:2.0.1"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.15.1"
     jest: "npm:30.4.2"
-    multer: "npm:2.2.0"
-    nestjs-minio-client: "npm:2.2.0"
     pg: "npm:8.22.0"
     reflect-metadata: "npm:0.2.2"
     rxjs: "npm:7.8.2"
@@ -9389,18 +9386,6 @@ __metadata:
     concat-stream: "npm:^2.0.0"
     type-is: "npm:^1.6.18"
   checksum: 10/fb22868caaed37d725715c14c60b740b81665265da3a026bb61954414f65b99f76b360128413b8a2a7cc1a95ecae28a42bf831fe172bb79682d19ec105b556bd
-  languageName: node
-  linkType: hard
-
-"multer@npm:2.2.0":
-  version: 2.2.0
-  resolution: "multer@npm:2.2.0"
-  dependencies:
-    append-field: "npm:^1.0.0"
-    busboy: "npm:^1.6.0"
-    concat-stream: "npm:^2.0.0"
-    type-is: "npm:^1.6.18"
-  checksum: 10/24525113776291c1909e6ca6ee260c41a6dc4bc6dea944485f6cc0d1442a7690829a07f2dcdea5edd5886bb6ab87df795da6ffb6de7289e1c140ec98b8e9d253
   languageName: node
   linkType: hard
 

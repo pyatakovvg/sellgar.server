@@ -1,13 +1,13 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 
 import * as uuid from 'uuid';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductDto, ProductVariantImage } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 import { ProductModel } from '../product.model';
@@ -15,6 +15,8 @@ import { ProductModel } from '../product.model';
 import { ProductEntity } from '../product.entity';
 import { VariantModel } from '../../variant/variant.model';
 import { VariantPropertyModel } from '../../variant/variant-property.model';
+import { ImageModel } from '../../image/image.model';
+import { VariantImageModel } from '../../variant/variant-image.model';
 
 @Injectable()
 export class ProductRepository {
@@ -125,6 +127,8 @@ export class ProductRepository {
             };
           }),
         );
+
+        await this.syncVariantImages(runner.manager, newVariant.raw[0].uuid, variant.images);
       }
 
       const result = await runner.manager
@@ -228,6 +232,10 @@ export class ProductRepository {
             }),
             ['uuid'],
           );
+
+          if (variant.images) {
+            await this.syncVariantImages(runner.manager, variant.uuid, variant.images);
+          }
         } else {
           const newVariant = await runner.manager.insert(VariantModel, [
             {
@@ -248,6 +256,8 @@ export class ProductRepository {
               };
             }),
           );
+
+          await this.syncVariantImages(runner.manager, newVariant.raw[0].uuid, variant.images);
         }
       }
 
@@ -291,4 +301,57 @@ export class ProductRepository {
     }
   }
 
+  private async syncVariantImages(manager: EntityManager, variantUuid: string, images: ProductVariantImage[] = []) {
+    const imageMap = new Map<string, ProductVariantImage>();
+
+    for (const image of images) {
+      if (image.imageUuid) {
+        imageMap.set(image.imageUuid, image);
+      }
+    }
+
+    const normalizedImages = Array.from(imageMap.values());
+
+    await manager.createQueryBuilder().delete().from(VariantImageModel).where('variant_uuid = :variantUuid', { variantUuid }).execute();
+
+    for (const [index, image] of normalizedImages.entries()) {
+      if (!image.imageUuid) {
+        continue;
+      }
+
+      const imageExists = await manager
+        .createQueryBuilder(ImageModel, 'image')
+        .where('image.uuid = :uuid', { uuid: image.imageUuid })
+        .getExists();
+
+      if (!imageExists) {
+        if (!image.fileName) {
+          throw new NotFoundException(`Image ${image.imageUuid} not found`);
+        }
+
+        await manager
+          .createQueryBuilder()
+          .insert()
+          .into(ImageModel)
+          .values({
+            uuid: image.imageUuid,
+            fileName: image.fileName,
+          })
+          .execute();
+      }
+
+      await manager
+        .createQueryBuilder()
+        .insert()
+        .into(VariantImageModel)
+        .values({
+          variantUuid,
+          imageUuid: image.imageUuid,
+          sortOrder: index,
+          isPrimary: index === 0,
+          alt: image.alt ?? null,
+        })
+        .execute();
+    }
+  }
 }

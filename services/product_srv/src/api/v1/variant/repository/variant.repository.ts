@@ -320,4 +320,17 @@ export class VariantRepository {
       await runner.release();
     }
   }
+
+  async detachImage(imageUuid: string) {
+    const result = await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(VariantImageModel)
+      .where('image_uuid = :imageUuid', { imageUuid })
+      .execute();
+
+    return {
+      affected: result.affected ?? 0,
+    };
+  }
 }

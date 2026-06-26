@@ -17,7 +17,7 @@ export class MinioStorageRepository {
     return this.minioService.client.getObject(this.config.get('MINIO_BUCKET'), storageKey);
   }
 
-  async putObject(storageKey: string, stream: Readable, metaData?: Record<string, string>): Promise<unknown> {
+  async putObject(storageKey: string, stream: Readable | Buffer, metaData?: Record<string, string>): Promise<unknown> {
     const result = await this.minioService.client.putObject(this.config.get('MINIO_BUCKET'), storageKey, stream, metaData);
 
     await firstValueFrom(this.events.emit(this.config.get('AMQP_MEDIA_OBJECT_WRITE'), { storageKey }));

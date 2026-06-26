@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 
-import { PassThrough } from 'stream';
-
 import { GetFileQueryDto } from './dto/get-file-query.dto';
+import { FileUploadDto } from './dto/file-upload.dto';
 
 import { FileGateway } from './file.gateway';
 
@@ -15,11 +14,15 @@ export class FileService {
     return this.fileGateway.getAll(folderUuid);
   }
 
-  upload(tunnel: PassThrough, headers: any) {
-    return this.fileGateway.upload(tunnel, headers);
+  upload(files: FileUploadDto[], folderUuid?: string) {
+    return this.fileGateway.upload(files, folderUuid);
   }
 
   getByUuid(uuid: string, query: GetFileQueryDto): Promise<AxiosResponse> {
     return this.fileGateway.getByUuid(uuid, query);
+  }
+
+  deleteByUuid(uuid: string) {
+    return this.fileGateway.deleteByUuid(uuid);
   }
 }

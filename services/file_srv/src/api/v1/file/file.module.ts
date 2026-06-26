@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileService } from './service/file.service';
 import { FileRepository } from './repository/file.repository';
 import { FileController } from './controller/file.controller';
-import { MinioClientRepository } from './repository/minio-client.repository';
 import { FileModel } from './file.model';
 import { FolderModel } from '../folder/folder.model';
 
@@ -44,6 +43,6 @@ import { FolderModel } from '../folder/folder.model';
     ]),
   ],
   controllers: [FileController],
-  providers: [FileService, FileRepository, MinioClientRepository, ConfigService],
+  providers: [FileService, FileRepository, ConfigService],
 })
 export class FileModule {}

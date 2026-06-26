@@ -1,22 +1,17 @@
-import { randomUUID } from 'crypto';
-
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { map, catchError, firstValueFrom, of } from 'rxjs';
-
-import { FileUploadDto } from '../repository/dto/file-upload.dto';
+import { firstValueFrom } from 'rxjs';
 
 import { FileRepository } from '../repository/file.repository';
-import { MinioClientRepository } from '../repository/minio-client.repository';
+import { FileDto } from '../repository/dto/file.dto';
 
 @Injectable()
 export class FileService {
   constructor(
     private readonly config: ConfigService,
     private readonly fileRepository: FileRepository,
-    private readonly minioClientRepository: MinioClientRepository,
     @Inject('FILE_SERVICE') private readonly rmqService: ClientProxy,
   ) {}
 
@@ -29,49 +24,6 @@ export class FileService {
     };
   }
 
-  async upload(dto: FileUploadDto[], folderUuid: string) {
-    return await Promise.all(
-      dto.map(async (file) => {
-        const storageKey = `files/${randomUUID()}.webp`;
-
-        await this.minioClientRepository.upload(storageKey, Buffer.from(file.buffer), {});
-
-        const result = await this.fileRepository.create(
-          {
-            name: file.originalname,
-            storageKey,
-            size: file.size,
-            mime: file.mimetype,
-          },
-          folderUuid,
-        );
-
-        await firstValueFrom(
-          this.rmqService.emit(this.config.get('AMQP_FILE_SRV_FILE_CREATE'), result).pipe(
-            map((data) => {
-              return data;
-            }),
-            catchError((err) => {
-              return of(err);
-            }),
-          ),
-        );
-
-        return result;
-      }),
-    );
-  }
-
-  async getByUuid(uuid: string) {
-    const file = await this.fileRepository.findByUuid(uuid);
-
-    if (!file) {
-      throw new NotFoundException(`File ${uuid} not found`);
-    }
-
-    return this.minioClientRepository.getByStorageKey(file.storageKey);
-  }
-
   async getMetadataByUuid(uuid: string) {
     const file = await this.fileRepository.findByUuid(uuid);
 
@@ -80,5 +32,50 @@ export class FileService {
     }
 
     return file;
+  }
+
+  async create(dto: FileDto) {
+    const result = await this.fileRepository.create(
+      {
+        ...dto,
+        status: dto.status ?? 'ready',
+        expiresAt: dto.expiresAt ?? null,
+      },
+      dto.folderUuid ?? undefined,
+    );
+
+    await firstValueFrom(this.rmqService.emit(this.config.get('AMQP_FILE_SRV_FILE_CREATE'), result));
+
+    return result;
+  }
+
+  async completeUpload(uuid: string) {
+    const file = await this.getMetadataByUuid(uuid);
+
+    if (file.status !== 'pending') {
+      return file;
+    }
+
+    const result = await this.fileRepository.updateUploadState(uuid, {
+      status: 'ready',
+      expiresAt: null,
+    });
+
+    await firstValueFrom(this.rmqService.emit(this.config.get('AMQP_FILE_SRV_FILE_CREATE'), result));
+
+    return result;
+  }
+
+  async deleteByUuid(uuid: string) {
+    const file = await this.getMetadataByUuid(uuid);
+
+    if (file.status === 'deleted') {
+      return file;
+    }
+
+    return this.fileRepository.updateUploadState(uuid, {
+      status: 'deleted',
+      expiresAt: null,
+    });
   }
 }
