@@ -2560,45 +2560,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@service/product@workspace:services/product_srv":
-  version: 0.0.0-use.local
-  resolution: "@service/product@workspace:services/product_srv"
-  dependencies:
-    "@mkfyi/nestjs-rmq": 1.5.0
-    "@nestjs/cli": 11.0.16
-    "@nestjs/common": 11.1.12
-    "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.12
-    "@nestjs/mapped-types": ^2.1.0
-    "@nestjs/microservices": 11.1.12
-    "@nestjs/platform-express": 11.1.12
-    "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.12
-    "@nestjs/typeorm": 11.0.0
-    "@types/amqplib": 0.10.8
-    "@types/express": 5.0.6
-    "@types/jest": 30.0.0
-    "@types/node": 25.0.10
-    "@types/supertest": 6.0.3
-    amqp-connection-manager: 5.0.0
-    amqplib: 0.10.9
-    class-transformer: 0.5.1
-    class-validator: 0.14.3
-    jest: 30.2.0
-    pg: 8.17.2
-    reflect-metadata: 0.2.2
-    rxjs: 7.8.2
-    source-map-support: 0.5.21
-    supertest: 7.2.2
-    ts-jest: 29.4.6
-    ts-loader: 9.5.4
-    ts-node: 10.9.2
-    tsconfig-paths: 4.2.0
-    typeorm: 0.3.28
-    typescript: 5.9.3
-  languageName: unknown
-  linkType: soft
-
 "@sinclair/typebox@npm:^0.34.0":
   version: 0.34.41
   resolution: "@sinclair/typebox@npm:0.34.41"
