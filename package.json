@@ -4,12 +4,9 @@
   "scripts": {
     "update": "yarn upgrade-interactive",
     "dev:mailer_srv": "yarn workspace @service/mailer start:dev",
-    "dev:identity_srv": "yarn workspace @service/identity start:dev",
     "dev:file_srv": "yarn workspace @service/file start:dev",
     "start:mailer_srv": "yarn workspace @service/mailer start",
-    "start:identity_srv": "yarn workspace @service/identity start",
-    "build:mailer_srv": "yarn workspaces foreach -tR --from '@service/user' run build",
-    "build:identity_srv": "yarn workspaces foreach -tR --from '@service/identity' run build"
+    "build:mailer_srv": "yarn workspaces foreach -tR --from '@service/user' run build"
   },
   "dependencies": {
     "rimraf": "6.1.2",

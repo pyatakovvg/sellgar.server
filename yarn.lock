@@ -2445,50 +2445,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@service/identity@workspace:services/identity_srv":
-  version: 0.0.0-use.local
-  resolution: "@service/identity@workspace:services/identity_srv"
-  dependencies:
-    "@mkfyi/nestjs-rmq": 1.5.0
-    "@nestjs/cli": 11.0.16
-    "@nestjs/common": 11.1.12
-    "@nestjs/config": 4.0.2
-    "@nestjs/core": 11.1.12
-    "@nestjs/jwt": 11.0.2
-    "@nestjs/microservices": 11.1.12
-    "@nestjs/passport": 11.0.5
-    "@nestjs/platform-express": 11.1.12
-    "@nestjs/schematics": 11.0.9
-    "@nestjs/testing": 11.1.12
-    "@nestjs/typeorm": 11.0.0
-    "@types/amqplib": 0.10.8
-    "@types/express": 5.0.6
-    "@types/jest": 30.0.0
-    "@types/node": 25.0.10
-    "@types/passport-jwt": 4.0.1
-    "@types/passport-local": 1.0.38
-    "@types/supertest": 6.0.3
-    "@types/uuid": 11.0.0
-    class-transformer: 0.5.1
-    class-validator: 0.14.3
-    jest: 30.2.0
-    passport: 0.7.0
-    passport-jwt: 4.0.1
-    passport-local: 1.0.0
-    pg: 8.17.2
-    reflect-metadata: 0.2.2
-    rxjs: 7.8.2
-    source-map-support: 0.5.21
-    supertest: 7.2.2
-    ts-jest: 29.4.6
-    ts-loader: 9.5.4
-    tsconfig-paths: 4.2.0
-    typeorm: 0.3.28
-    typescript: 5.9.3
-    uuid: 13.0.0
-  languageName: unknown
-  linkType: soft
-
 "@service/mailer@workspace:services/mailer_srv":
   version: 0.0.0-use.local
   resolution: "@service/mailer@workspace:services/mailer_srv"
